@@ -198,6 +198,6 @@ function ImagePage() {
   )
 }
 
-export const Route = createFileRoute('/demo/ai/image')({
+export const Route = createFileRoute('/demo/ai-image')({
   component: ImagePage,
 })
