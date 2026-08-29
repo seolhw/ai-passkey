@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: true
+  lightningcss: true
+  sharp: true
+  workerd: true
+  better-sqlite3: true
+  "@google/genai": true
+  protobufjs: true

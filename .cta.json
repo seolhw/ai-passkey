@@ -1,0 +1,34 @@
+{
+  "projectName": "ai-passkey",
+  "mode": "file-router",
+  "typescript": true,
+  "packageManager": "npm",
+  "includeExamples": true,
+  "tailwind": true,
+  "projectPreset": "default",
+  "addOnOptions": {
+    "drizzle": {
+      "database": "sqlite"
+    }
+  },
+  "git": true,
+  "install": true,
+  "intent": true,
+  "routerOnly": false,
+  "version": 1,
+  "framework": "react",
+  "chosenAddOns": [
+    "biome",
+    "cloudflare",
+    "ai",
+    "drizzle",
+    "form",
+    "mcp",
+    "shadcn",
+    "t3env",
+    "table",
+    "better-auth",
+    "store",
+    "tanstack-query"
+  ]
+}
