@@ -1,12 +1,3 @@
-import * as mammoth from "mammoth";
-import * as pdfjs from "pdfjs-dist";
-
-// 配置 pdfjs worker（Vite 环境用打包产物）
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-	"pdfjs-dist/build/pdf.worker.min.mjs",
-	import.meta.url,
-).toString();
-
 /** HTML 转纯文本（去除标签，保留换行） */
 export function htmlToText(html: string) {
 	const doc = new DOMParser().parseFromString(html, "text/html");
@@ -59,6 +50,12 @@ export async function parseFileToPlainText(file: File) {
 }
 
 async function parsePdf(file: File) {
+	const pdfjs = await import("pdfjs-dist");
+	// 配置 pdfjs worker（Vite 环境用打包产物）
+	pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+		"pdfjs-dist/build/pdf.worker.min.mjs",
+		import.meta.url,
+	).toString();
 	const buf = await file.arrayBuffer();
 	const pdf = await pdfjs.getDocument({ data: buf }).promise;
 	let text = "";
@@ -74,6 +71,7 @@ async function parsePdf(file: File) {
 }
 
 async function parseDocx(file: File) {
+	const mammoth = await import("mammoth");
 	const result = await mammoth.extractRawText({
 		arrayBuffer: await file.arrayBuffer(),
 	});

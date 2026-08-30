@@ -27,7 +27,7 @@ export const listCompanies = createServerFn({ method: "GET" }).handler(
 
 /** 公司详情 + 岗位列表 */
 export const getCompanyJobs = createServerFn({ method: "GET" })
-	.inputValidator((data: { companyId: number }) => data)
+	.validator((data: { companyId: number }) => data)
 	.handler(async ({ data }) => {
 		const company = await db.query.companies.findFirst({
 			where: eq(companies.id, data.companyId),
@@ -51,7 +51,7 @@ export const listJobs = createServerFn({ method: "GET" }).handler(async () => {
 
 /** 手动添加岗位 JD（个人库） */
 export const createJob = createServerFn({ method: "POST" })
-	.inputValidator(
+	.validator(
 		(data: {
 			companyName: string;
 			title: string;

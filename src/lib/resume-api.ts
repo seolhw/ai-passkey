@@ -20,7 +20,7 @@ export const listResumes = createServerFn({ method: "GET" }).handler(
 
 /** 新建简历，返回新简历 */
 export const createResume = createServerFn({ method: "POST" })
-	.inputValidator(
+	.validator(
 		(data: { title: string; content: string; plainText: string }) => data,
 	)
 	.handler(async ({ data }) => {
@@ -51,7 +51,7 @@ export const createResume = createServerFn({ method: "POST" })
 
 /** 读取单个简历（校验归属） */
 export const getResume = createServerFn({ method: "GET" })
-	.inputValidator((data: { id: number }) => data)
+	.validator((data: { id: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return null;
@@ -64,7 +64,7 @@ export const getResume = createServerFn({ method: "GET" })
 
 /** 保存简历内容并生成新版本 */
 export const saveResume = createServerFn({ method: "POST" })
-	.inputValidator(
+	.validator(
 		(data: {
 			id: number;
 			title: string;
@@ -111,7 +111,7 @@ export const saveResume = createServerFn({ method: "POST" })
 
 /** 简历版本列表 */
 export const listVersions = createServerFn({ method: "GET" })
-	.inputValidator((data: { id: number }) => data)
+	.validator((data: { id: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return [];
@@ -129,7 +129,7 @@ export const listVersions = createServerFn({ method: "GET" })
 
 /** 回滚到指定版本 */
 export const rollbackVersion = createServerFn({ method: "POST" })
-	.inputValidator((data: { resumeId: number; versionId: number }) => data)
+	.validator((data: { resumeId: number; versionId: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return null;
@@ -158,7 +158,7 @@ export const rollbackVersion = createServerFn({ method: "POST" })
 
 /** 删除简历 */
 export const deleteResume = createServerFn({ method: "POST" })
-	.inputValidator((data: { id: number }) => data)
+	.validator((data: { id: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return null;
@@ -174,7 +174,7 @@ export const deleteResume = createServerFn({ method: "POST" })
 
 /** 简历已选目标岗位（含公司与 JD） */
 export const listResumeTargets = createServerFn({ method: "GET" })
-	.inputValidator((data: { resumeId: number }) => data)
+	.validator((data: { resumeId: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return [];
@@ -199,7 +199,7 @@ export const listResumeTargets = createServerFn({ method: "GET" })
 
 /** 设置目标岗位（全量覆盖） */
 export const setResumeTargets = createServerFn({ method: "POST" })
-	.inputValidator((data: { resumeId: number; jobIds: number[] }) => data)
+	.validator((data: { resumeId: number; jobIds: number[] }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return null;

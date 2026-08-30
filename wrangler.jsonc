@@ -12,7 +12,7 @@
     {
       "binding": "DB",
       "database_name": "ai-passkey",
-      "database_id": "00000000-0000-0000-0000-000000000000",
+      "database_id": "820e185f-cf0b-47a6-a804-5224ec33c643",
       // Drizzle 生成的迁移文件目录（pnpm db:generate 输出）
       "migrations_dir": "drizzle"
     }

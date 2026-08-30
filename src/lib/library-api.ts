@@ -17,7 +17,7 @@ export const listLibraryItems = createServerFn({ method: "GET" }).handler(
 
 /** 读取大厅简历详情 */
 export const getLibraryItem = createServerFn({ method: "GET" })
-	.inputValidator((data: { id: number }) => data)
+	.validator((data: { id: number }) => data)
 	.handler(async ({ data }) => {
 		return (
 			(await db.query.resumeLibrary.findFirst({
@@ -28,7 +28,7 @@ export const getLibraryItem = createServerFn({ method: "GET" })
 
 /** 一键复制：把大厅简历复制为「我的简历」并跳到编辑器 */
 export const copyLibraryToResume = createServerFn({ method: "POST" })
-	.inputValidator((data: { id: number }) => data)
+	.validator((data: { id: number }) => data)
 	.handler(async ({ data }) => {
 		const user = await getSessionUser();
 		if (!user) return null;
