@@ -4,17 +4,17 @@ import { auth } from "#/lib/auth";
 
 /** 服务端获取当前登录用户 session */
 export const getSession = createServerFn({ method: "GET" }).handler(
-	async () => {
-		const { getRequest } = await import("@tanstack/react-start/server");
-		const request = getRequest();
-		return await auth.api.getSession({ headers: request.headers });
-	},
+  async () => {
+    const { getRequest } = await import("@tanstack/react-start/server");
+    const request = getRequest();
+    return await auth.api.getSession({ headers: request.headers });
+  },
 );
 
 /** 服务端获取当前登录用户，未登录返回 null */
 export const getSessionUser = createServerFn({ method: "GET" }).handler(
-	async () => {
-		const session = await getSession();
-		return session?.user ?? null;
-	},
+  async () => {
+    const session = await getSession();
+    return session?.user ?? null;
+  },
 );

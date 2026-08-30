@@ -11,7 +11,7 @@
     "generate-routes": "tsr generate",
     "build": "vite build",
     "preview": "vite preview",
-    "format": "biome format",
+    "format": "biome format --write",
     "lint": "biome lint",
     "check": "biome check",
     "deploy": "npm run build && wrangler deploy",

@@ -8,7 +8,7 @@ export type AppDb = DrizzleD1Database<typeof schema>;
 export const db: AppDb = await createWorkerDb();
 
 async function createWorkerDb(): Promise<AppDb> {
-	const { env } = await import(/* @vite-ignore */ "cloudflare:workers");
-	const { drizzle } = await import("drizzle-orm/d1");
-	return drizzle(env.DB, { schema });
+  const { env } = await import(/* @vite-ignore */ "cloudflare:workers");
+  const { drizzle } = await import("drizzle-orm/d1");
+  return drizzle(env.DB, { schema });
 }

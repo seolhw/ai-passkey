@@ -6,217 +6,217 @@ import TextAlign from "@tiptap/extension-text-align";
 import { EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
-	AlignCenter,
-	AlignLeft,
-	AlignRight,
-	Bold,
-	Code,
-	Heading1,
-	Heading2,
-	Highlighter,
-	Italic,
-	Link as LinkIcon,
-	List,
-	ListChecks,
-	ListOrdered,
-	Minus,
-	Quote,
-	Redo2,
-	RemoveFormatting,
-	Strikethrough,
-	Underline as UnderlineIcon,
-	Undo2,
+  AlignCenter,
+  AlignLeft,
+  AlignRight,
+  Bold,
+  Code,
+  Heading1,
+  Heading2,
+  Highlighter,
+  Italic,
+  Link as LinkIcon,
+  List,
+  ListChecks,
+  ListOrdered,
+  Minus,
+  Quote,
+  Redo2,
+  RemoveFormatting,
+  Strikethrough,
+  Underline as UnderlineIcon,
+  Undo2,
 } from "lucide-react";
 
 export default function ResumeEditor({
-	content,
-	placeholder = "开始撰写你的简历…",
-	onChange,
+  content,
+  placeholder = "开始撰写你的简历…",
+  onChange,
 }: {
-	content: string;
-	placeholder?: string;
-	onChange?: (html: string) => void;
+  content: string;
+  placeholder?: string;
+  onChange?: (html: string) => void;
 }) {
-	const editor = useEditor({
-		extensions: [
-			StarterKit.configure({
-				heading: { levels: [1, 2, 3] },
-			}),
-			Highlight,
-			Placeholder.configure({ placeholder }),
-			TextAlign.configure({ types: ["heading", "paragraph"] }),
-			TaskList,
-			TaskItem.configure({ nested: true }),
-		],
-		content,
-		immediatelyRender: false,
-		editorProps: {
-			attributes: {
-				class:
-					"resume-editor-content prose prose-sm sm:prose max-w-none min-h-[40rem] px-5 py-4 outline-none focus:outline-none",
-			},
-		},
-		onUpdate: ({ editor: e }) => {
-			onChange?.(e.getHTML());
-		},
-	});
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        heading: { levels: [1, 2, 3] },
+      }),
+      Highlight,
+      Placeholder.configure({ placeholder }),
+      TextAlign.configure({ types: ["heading", "paragraph"] }),
+      TaskList,
+      TaskItem.configure({ nested: true }),
+    ],
+    content,
+    immediatelyRender: false,
+    editorProps: {
+      attributes: {
+        class:
+          "resume-editor-content prose prose-sm sm:prose max-w-none min-h-[40rem] px-5 py-4 outline-none focus:outline-none",
+      },
+    },
+    onUpdate: ({ editor: e }) => {
+      onChange?.(e.getHTML());
+    },
+  });
 
-	if (!editor) return null;
+  if (!editor) return null;
 
-	const btn = (
-		active: boolean,
-		onClick: () => void,
-		label: string,
-		children: React.ReactNode,
-	) => (
-		<button
-			type="button"
-			onMouseDown={(e) => e.preventDefault()}
-			onClick={onClick}
-			title={label}
-			className={`inline-flex h-8 w-8 items-center justify-center rounded-md transition ${
-				active
-					? "bg-[var(--lagoon-deep)] text-white"
-					: "text-[var(--sea-ink-soft)] hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
-			}`}
-		>
-			{children}
-		</button>
-	);
+  const btn = (
+    active: boolean,
+    onClick: () => void,
+    label: string,
+    children: React.ReactNode,
+  ) => (
+    <button
+      type="button"
+      onMouseDown={(e) => e.preventDefault()}
+      onClick={onClick}
+      title={label}
+      className={`inline-flex h-8 w-8 items-center justify-center rounded-md transition ${
+        active
+          ? "bg-[var(--lagoon-deep)] text-white"
+          : "text-[var(--sea-ink-soft)] hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+      }`}
+    >
+      {children}
+    </button>
+  );
 
-	return (
-		<div className="resume-editor overflow-hidden rounded-2xl border border-[var(--line)] bg-white dark:bg-[var(--surface-strong)]">
-			<div className="flex flex-wrap items-center gap-1 border-b border-[var(--line)] px-3 py-2">
-				{btn(
-					editor.isActive("bold"),
-					() => editor.chain().focus().toggleBold().run(),
-					"加粗",
-					<Bold className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("italic"),
-					() => editor.chain().focus().toggleItalic().run(),
-					"斜体",
-					<Italic className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("underline"),
-					() => editor.chain().focus().toggleUnderline().run(),
-					"下划线",
-					<UnderlineIcon className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("strike"),
-					() => editor.chain().focus().toggleStrike().run(),
-					"删除线",
-					<Strikethrough className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("highlight"),
-					() => editor.chain().focus().toggleHighlight().run(),
-					"高亮",
-					<Highlighter className="size-4" />,
-				)}
-				<span className="mx-1 h-5 w-px bg-[var(--line)]" />
-				{btn(
-					editor.isActive("heading", { level: 1 }),
-					() => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-					"一级标题",
-					<Heading1 className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("heading", { level: 2 }),
-					() => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-					"二级标题",
-					<Heading2 className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("bulletList"),
-					() => editor.chain().focus().toggleBulletList().run(),
-					"无序列表",
-					<List className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("orderedList"),
-					() => editor.chain().focus().toggleOrderedList().run(),
-					"有序列表",
-					<ListOrdered className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("taskList"),
-					() => editor.chain().focus().toggleTaskList().run(),
-					"任务列表",
-					<ListChecks className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("blockquote"),
-					() => editor.chain().focus().toggleBlockquote().run(),
-					"引用",
-					<Quote className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("codeBlock"),
-					() => editor.chain().focus().toggleCodeBlock().run(),
-					"代码块",
-					<Code className="size-4" />,
-				)}
-				<span className="mx-1 h-5 w-px bg-[var(--line)]" />
-				{btn(
-					editor.isActive({ textAlign: "left" }),
-					() => editor.chain().focus().setTextAlign("left").run(),
-					"左对齐",
-					<AlignLeft className="size-4" />,
-				)}
-				{btn(
-					editor.isActive({ textAlign: "center" }),
-					() => editor.chain().focus().setTextAlign("center").run(),
-					"居中",
-					<AlignCenter className="size-4" />,
-				)}
-				{btn(
-					editor.isActive({ textAlign: "right" }),
-					() => editor.chain().focus().setTextAlign("right").run(),
-					"右对齐",
-					<AlignRight className="size-4" />,
-				)}
-				{btn(
-					editor.isActive("horizontalRule"),
-					() => editor.chain().focus().setHorizontalRule().run(),
-					"分割线",
-					<Minus className="size-4" />,
-				)}
-				<span className="mx-1 h-5 w-px bg-[var(--line)]" />
-				{btn(
-					false,
-					() => {
-						const url = window.prompt("输入链接地址");
-						if (url) editor.chain().focus().setLink({ href: url }).run();
-					},
-					"插入链接",
-					<LinkIcon className="size-4" />,
-				)}
-				{btn(
-					false,
-					() => editor.chain().focus().clearNodes().unsetAllMarks().run(),
-					"清除格式",
-					<RemoveFormatting className="size-4" />,
-				)}
-				<span className="mx-1 h-5 w-px bg-[var(--line)]" />
-				{btn(
-					false,
-					() => editor.chain().focus().undo().run(),
-					"撤销",
-					<Undo2 className="size-4" />,
-				)}
-				{btn(
-					false,
-					() => editor.chain().focus().redo().run(),
-					"重做",
-					<Redo2 className="size-4" />,
-				)}
-			</div>
-			<EditorContent editor={editor} />
-			<style>{`
+  return (
+    <div className="resume-editor overflow-hidden rounded-2xl border border-[var(--line)] bg-white dark:bg-[var(--surface-strong)]">
+      <div className="flex flex-wrap items-center gap-1 border-b border-[var(--line)] px-3 py-2">
+        {btn(
+          editor.isActive("bold"),
+          () => editor.chain().focus().toggleBold().run(),
+          "加粗",
+          <Bold className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("italic"),
+          () => editor.chain().focus().toggleItalic().run(),
+          "斜体",
+          <Italic className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("underline"),
+          () => editor.chain().focus().toggleUnderline().run(),
+          "下划线",
+          <UnderlineIcon className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("strike"),
+          () => editor.chain().focus().toggleStrike().run(),
+          "删除线",
+          <Strikethrough className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("highlight"),
+          () => editor.chain().focus().toggleHighlight().run(),
+          "高亮",
+          <Highlighter className="size-4" />,
+        )}
+        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        {btn(
+          editor.isActive("heading", { level: 1 }),
+          () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
+          "一级标题",
+          <Heading1 className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("heading", { level: 2 }),
+          () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
+          "二级标题",
+          <Heading2 className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("bulletList"),
+          () => editor.chain().focus().toggleBulletList().run(),
+          "无序列表",
+          <List className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("orderedList"),
+          () => editor.chain().focus().toggleOrderedList().run(),
+          "有序列表",
+          <ListOrdered className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("taskList"),
+          () => editor.chain().focus().toggleTaskList().run(),
+          "任务列表",
+          <ListChecks className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("blockquote"),
+          () => editor.chain().focus().toggleBlockquote().run(),
+          "引用",
+          <Quote className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("codeBlock"),
+          () => editor.chain().focus().toggleCodeBlock().run(),
+          "代码块",
+          <Code className="size-4" />,
+        )}
+        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        {btn(
+          editor.isActive({ textAlign: "left" }),
+          () => editor.chain().focus().setTextAlign("left").run(),
+          "左对齐",
+          <AlignLeft className="size-4" />,
+        )}
+        {btn(
+          editor.isActive({ textAlign: "center" }),
+          () => editor.chain().focus().setTextAlign("center").run(),
+          "居中",
+          <AlignCenter className="size-4" />,
+        )}
+        {btn(
+          editor.isActive({ textAlign: "right" }),
+          () => editor.chain().focus().setTextAlign("right").run(),
+          "右对齐",
+          <AlignRight className="size-4" />,
+        )}
+        {btn(
+          editor.isActive("horizontalRule"),
+          () => editor.chain().focus().setHorizontalRule().run(),
+          "分割线",
+          <Minus className="size-4" />,
+        )}
+        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        {btn(
+          false,
+          () => {
+            const url = window.prompt("输入链接地址");
+            if (url) editor.chain().focus().setLink({ href: url }).run();
+          },
+          "插入链接",
+          <LinkIcon className="size-4" />,
+        )}
+        {btn(
+          false,
+          () => editor.chain().focus().clearNodes().unsetAllMarks().run(),
+          "清除格式",
+          <RemoveFormatting className="size-4" />,
+        )}
+        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        {btn(
+          false,
+          () => editor.chain().focus().undo().run(),
+          "撤销",
+          <Undo2 className="size-4" />,
+        )}
+        {btn(
+          false,
+          () => editor.chain().focus().redo().run(),
+          "重做",
+          <Redo2 className="size-4" />,
+        )}
+      </div>
+      <EditorContent editor={editor} />
+      <style>{`
         .resume-editor-content p { margin: 0.5em 0; }
         .resume-editor-content ul, .resume-editor-content ol { padding-left: 1.5em; }
         .resume-editor-content ul { list-style: disc; }
@@ -240,6 +240,6 @@ export default function ResumeEditor({
         .resume-editor-content ul[data-type="taskList"] { list-style: none; padding-left: 0; }
         .resume-editor-content ul[data-type="taskList"] li { display: flex; gap: 0.5em; align-items: flex-start; }
       `}</style>
-		</div>
-	);
+    </div>
+  );
 }
