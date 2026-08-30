@@ -122,7 +122,7 @@ function TargetsPage() {
             选择目标公司与岗位
           </h1>
           <p className="mt-1 text-sm text-(--sea-ink-soft)">
-            润色时会把所选岗位的 JD 注入提示词，精准匹配简历
+            修改时会把所选岗位的 JD 注入提示词，精准匹配简历
           </p>
         </div>
       </header>
@@ -229,7 +229,7 @@ function TargetsPage() {
           ) : (
             <Save className="size-4" />
           )}
-          {selectedIds.size === 0 ? "请先选择岗位" : "保存并开始润色"}
+          {selectedIds.size === 0 ? "请先选择岗位" : "保存并开始修改"}
         </button>
       </div>
     </main>

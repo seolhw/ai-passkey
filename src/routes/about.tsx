@@ -12,7 +12,7 @@ export const Route = createFileRoute("/about")({ component: About });
 const PILLARS = [
   {
     icon: Sparkles,
-    title: "JD 驱动的润色",
+    title: "JD 驱动的修改",
     desc: "AI 不产出通用套话，而是读取目标岗位的完整 JD，逐条给出原文与建议改法的对照。",
   },
   {

@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
-import { Sparkles } from "lucide-react";
 import { AI_COMPANIES } from "@/constants/models";
+import BrandLogo from "./BrandLogo";
 
 const FOOTER_LINKS = [
   { to: "/resumes", label: "我的简历" },
@@ -19,14 +19,8 @@ export default function Footer() {
         <div className="flex flex-col gap-8 sm:flex-row sm:items-start sm:justify-between">
           <div className="max-w-sm">
             <p className="m-0 flex items-center gap-2 text-sm font-bold tracking-tight text-(--sea-ink)">
-              <span className="btn-gradient flex size-6 items-center justify-center rounded-md">
-                <Sparkles className="size-3.5" />
-              </span>
+              <BrandLogo className="size-8" />
               跨界简历
-            </p>
-            <p className="mt-3 text-sm leading-relaxed text-(--sea-ink-soft)">
-              给 AI 求职者的简历工作台：上传简历，AI 按目标岗位 JD
-              逐条打磨，版本管理随时回滚。
             </p>
           </div>
 
@@ -43,10 +37,23 @@ export default function Footer() {
           </nav>
         </div>
 
-        <p className="m-0 mt-8 border-t border-(--line) pt-6 text-xs text-(--sea-ink-soft)">
-          &copy; {year} 跨界简历 · 面向 {AI_COMPANIES.slice(0, 3).join("、")}{" "}
-          等国内 AI 公司求职者的简历工作台
-        </p>
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-(--line) pt-6 text-xs text-(--sea-ink-soft)">
+          <p className="m-0">
+            跨界简历 · 面向 {AI_COMPANIES.slice(0, 3).join("、")} 等国内 AI
+            公司求职者的简历工作台
+          </p>
+          <p className="m-0 flex items-center gap-3">
+            <span>&copy; {year} 北京明日创界科技有限公司</span>
+            <a
+              href="https://beian.miit.gov.cn/"
+              target="_blank"
+              rel="noreferrer"
+              className="transition hover:text-(--sea-ink)"
+            >
+              京ICP备2024067515号
+            </a>
+          </p>
+        </div>
       </div>
     </footer>
   );

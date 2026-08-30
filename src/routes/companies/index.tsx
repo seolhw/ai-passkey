@@ -68,7 +68,7 @@ function CompaniesPage() {
             AI 公司与岗位汇聚
           </h1>
           <p className="mt-1 text-sm text-(--sea-ink-soft)">
-            浏览各家 AI 公司的在招岗位，选择目标岗位后结合 JD 润色简历
+            浏览各家 AI 公司的在招岗位，选择目标岗位后结合 JD 修改简历
           </p>
         </div>
         <Link

@@ -2,12 +2,14 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRight,
   Briefcase,
+  Compass,
   FileUp,
   Layers,
   MessagesSquare,
   Sparkles,
   Target,
   Wand2,
+  Zap,
 } from "lucide-react";
 import { AI_COMPANIES } from "@/constants/models";
 
@@ -26,7 +28,7 @@ const STEPS = [
   },
   {
     icon: Wand2,
-    title: "AI 润色 · 版本管理",
+    title: "AI 修改 · 版本管理",
     desc: "逐条给出「原文 → 建议改法」，一键应用并生成新版本，随时可回滚。",
   },
 ];
@@ -34,7 +36,7 @@ const STEPS = [
 const FEATURES = [
   {
     icon: Sparkles,
-    title: "JD 精准润色",
+    title: "JD 精准修改",
     desc: "把岗位 JD 注入提示词，针对关键词命中逐句打磨，而不是通用套话。",
   },
   {
@@ -45,12 +47,17 @@ const FEATURES = [
   {
     icon: Briefcase,
     title: "AI 公司岗位库",
-    desc: "汇聚字节、OpenAI、Anthropic、DeepSeek 等在招岗位与完整 JD。",
+    desc: `汇聚 ${AI_COMPANIES.slice(0, 3).join("、")} 等十多家顶尖 AI 公司在招岗位与完整 JD。`,
   },
   {
     icon: MessagesSquare,
     title: "AI 求职顾问",
     desc: "基于真实岗位库问答：薪资行情、方向选择、转行路径。",
+  },
+  {
+    icon: Compass,
+    title: "能力风向标",
+    desc: "提醒你当下 AI 公司更看重哪些核心能力，优先补齐最值钱的短板，不盲目学习。",
   },
 ];
 
@@ -62,22 +69,23 @@ function LandingPage() {
         <p className="island-kicker relative mb-5">跨界简历 · AI 求职工作台</p>
         <h1 className="display-title relative  text-4xl font-bold leading-[1.1] tracking-tight text-(--sea-ink) sm:text-6xl  lg:text-7xl lg:leading-[1.05]">
           上传简历，选择岗位，
-          <span className="btn-gradient-text">按目标岗位逐条打磨</span>
+          <span className="btn-gradient-text">按目标岗位逐条修改简历</span>
         </h1>
         <p className="relative mt-6  text-base leading-relaxed text-(--sea-ink-soft) sm:text-lg">
           {"面向国内 "}
           {AI_COMPANIES.map((name, index) => (
             <span key={name}>
-              <span className="btn-gradient-text font-semibold text-[1.2rem]">
+              <span className="btn-gradient-text font-semibold text-[1.3rem]">
                 {name}
               </span>
               {index < AI_COMPANIES.length - 1 ? "、" : ""}
             </span>
           ))}
           {
-            " 等十几家顶尖 AI 公司求职者的简历工作台。AI 读取真实岗位 JD，逐条给出「原文 → 建议改法」，接受即生成可回滚的新版本。"
+            " 等十几家顶尖 AI 公司求职者的简历工作台。AI 读取真实岗位 JD，逐条给出符合所选岗位的「原文 → 建议改法」，接受即生成可回滚的新版本。"
           }
         </p>
+
         <div className="relative mt-9 flex flex-wrap gap-3">
           <Link
             to="/resumes/new"
@@ -93,8 +101,11 @@ function LandingPage() {
             浏览招聘简章
           </Link>
         </div>
-        <p className="relative mt-4 text-sm font-medium text-(--sea-ink-soft)">
-          约 30 分钟完成一轮 AI 修改，再花几小时认真打磨——不靠运气靠匹配度。
+        <p className="relative mt-5 flex flex-wrap items-center gap-x-2 text-lg font-bold text-(--sea-ink)">
+          <Zap className="size-5 text-(--lagoon-deep)" />
+          <span className="btn-gradient-text">
+            认真花上30分钟，换一份能进AI大厂的简历
+          </span>
         </p>
       </section>
 
@@ -146,7 +157,7 @@ function LandingPage() {
       {/* CTA */}
       <section className="btn-gradient relative mt-10 overflow-hidden rounded-2xl px-6 py-12 text-center sm:px-10">
         <h2 className="display-title text-2xl font-bold text-white sm:text-3xl">
-          认真花上几小时，换一份能进大厂的简历
+          认真花上30分钟，换一份能进AI大厂的简历
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/85">
           上传你的现有简历，选出目标岗位，AI 约 30

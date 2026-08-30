@@ -122,10 +122,13 @@
   --sidebar-ring: #8b5cf6;
 }
 
-@theme inline {
+@theme {
   --font-sans:
     'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system, 'PingFang SC',
     'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+
+@theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -186,15 +189,17 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  color: var(--lagoon-deep);
-  text-decoration-color: color-mix(in oklab, var(--lagoon-deep) 35%, transparent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
-}
+@layer base {
+  a {
+    color: var(--lagoon-deep);
+    text-decoration-color: color-mix(in oklab, var(--lagoon-deep) 35%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  }
 
-a:hover {
-  color: var(--ai-violet-strong);
+  a:hover {
+    color: var(--ai-violet-strong);
+  }
 }
 
 code {
@@ -285,7 +290,7 @@ pre code {
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 0.7rem;
+  font-size: 1rem;
   color: var(--kicker);
 }
 

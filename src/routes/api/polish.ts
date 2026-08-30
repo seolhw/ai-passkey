@@ -107,7 +107,7 @@ export const Route = createFileRoute("/api/polish")({
           return new Response(
             JSON.stringify({
               error:
-                error instanceof Error ? error.message : "润色失败，请稍后重试",
+                error instanceof Error ? error.message : "修改失败，请稍后重试",
             }),
             { status: 500, headers: { "Content-Type": "application/json" } },
           );

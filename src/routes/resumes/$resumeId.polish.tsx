@@ -79,7 +79,7 @@ function PolishPage() {
     });
     const data = (await res.json()) as PolishResult & { error?: string };
     if (!res.ok) {
-      setError(data.error || "润色失败");
+      setError(data.error || "修改失败");
       setLoading(false);
       return;
     }
@@ -122,7 +122,7 @@ function PolishPage() {
         title: resume.title,
         content: html,
         plainText: currentText,
-        note: `应用 AI 润色（${accepted.size} 条建议）`,
+        note: `应用 AI 修改（${accepted.size} 条建议）`,
       },
     });
     if (fixed) {
@@ -156,9 +156,9 @@ function PolishPage() {
           返回编辑器
         </Link>
         <div className="min-w-0 flex-1">
-          <p className="island-kicker mb-1">AI 润色</p>
+          <p className="island-kicker mb-1">AI 修改</p>
           <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
-            简历润色：{resume.title}
+            简历修改：{resume.title}
           </h1>
         </div>
         <button
@@ -172,7 +172,7 @@ function PolishPage() {
           ) : (
             <Sparkles className="size-4" />
           )}
-          {loading ? "AI 润色中…" : result ? "重新润色" : "开始润色"}
+          {loading ? "AI 修改中…" : result ? "重新修改" : "开始修改"}
         </button>
       </header>
 
@@ -180,7 +180,7 @@ function PolishPage() {
         <section className="island-shell mb-6 flex items-center gap-3 rounded-2xl p-4">
           <AlertTriangle className="size-5 text-amber-500" />
           <p className="text-sm text-(--sea-ink-soft)">
-            尚未选择目标岗位，润色将缺少精准方向。
+            尚未选择目标岗位，修改将缺少精准方向。
           </p>
           <Link
             to="/resumes/$resumeId/targets"
@@ -196,7 +196,7 @@ function PolishPage() {
       {targets.length > 0 && !loading && !result && !error && (
         <section className="island-shell rounded-2xl p-4">
           <h3 className="mb-2 text-sm font-semibold text-(--sea-ink)">
-            本次润色将参考以下目标岗位 JD
+            本次修改将参考以下目标岗位 JD
           </h3>
           <div className="flex flex-wrap gap-2">
             {targets.map((job) => (

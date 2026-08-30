@@ -37,7 +37,7 @@ function ResumesPage() {
             我的简历
           </h1>
           <p className="mt-2 text-sm text-(--sea-ink-soft)">
-            上传、润色、版本管理，全流程闭环
+            上传、修改、版本管理，全流程闭环
           </p>
         </div>
         <Link

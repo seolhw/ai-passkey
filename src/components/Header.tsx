@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut, Sparkles } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { authClient } from "#/lib/auth-client";
+import BrandLogo from "./BrandLogo";
 import ThemeToggle from "./ThemeToggle";
 
 const NAV_LINKS = [
@@ -18,9 +19,7 @@ export default function Header() {
       <nav className="page-wrap flex h-14 items-center gap-6">
         <h2 className="m-0 shrink-0">
           <Link to="/" className="flex items-center gap-2 no-underline">
-            <span className="btn-gradient flex size-7 shrink-0 items-center justify-center rounded-lg">
-              <Sparkles className="size-4" />
-            </span>
+            <BrandLogo className="size-8" />
             <span className="flex flex-col leading-none">
               <span className="text-[15px] font-bold tracking-tight text-(--sea-ink)">
                 跨界简历

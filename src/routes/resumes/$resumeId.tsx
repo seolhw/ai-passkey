@@ -197,7 +197,7 @@ function ResumeDetailPage() {
           className="btn-gradient inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-4 text-sm font-medium no-underline"
         >
           <Sparkles className="size-4" />
-          AI 润色
+          AI 修改
         </Link>
         <div className="relative">
           <button
@@ -278,7 +278,7 @@ function ResumeDetailPage() {
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="h-8 min-w-0 flex-1 rounded-md border border-input bg-transparent px-3 text-xs shadow-xs outline-none focus-visible:border-ring dark:bg-input/30"
-              placeholder="本次修改说明（如：润色后 v3）"
+              placeholder="本次修改说明（如：修改后 v3）"
             />
             <span className="text-xs text-(--sea-ink-soft)">
               保存时写入版本说明
