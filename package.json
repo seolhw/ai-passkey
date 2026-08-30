@@ -33,7 +33,7 @@
     "@faker-js/faker": "^10.3.0",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@t3-oss/env-core": "^0.13.10",
-    "@tailwindcss/vite": "^4.1.18",
+    "@tailwindcss/vite": "^4.3.3",
     "@tanstack/ai": "latest",
     "@tanstack/ai-anthropic": "latest",
     "@tanstack/ai-client": "latest",
@@ -78,7 +78,7 @@
     "react-dom": "^19.2.0",
     "streamdown": "^2.3.0",
     "tailwind-merge": "^3.0.2",
-    "tailwindcss": "^4.1.18",
+    "tailwindcss": "^4.3.3",
     "tw-animate-css": "^1.3.6",
     "zod": "^4.3.6"
   },

@@ -151,13 +151,13 @@ function PolishPage() {
         <Link
           to="/resumes/$resumeId"
           params={{ resumeId: String(resume.id) }}
-          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           返回编辑器
         </Link>
         <div className="min-w-0 flex-1">
           <p className="island-kicker mb-1">AI 润色</p>
-          <h1 className="display-title text-2xl font-bold text-[var(--sea-ink)]">
+          <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
             简历润色：{resume.title}
           </h1>
         </div>
@@ -179,7 +179,7 @@ function PolishPage() {
       {!canRun && (
         <section className="island-shell mb-6 flex items-center gap-3 rounded-2xl p-4">
           <AlertTriangle className="size-5 text-amber-500" />
-          <p className="text-sm text-[var(--sea-ink-soft)]">
+          <p className="text-sm text-(--sea-ink-soft)">
             尚未选择目标岗位，润色将缺少精准方向。
           </p>
           <Link
@@ -195,14 +195,14 @@ function PolishPage() {
 
       {targets.length > 0 && !loading && !result && !error && (
         <section className="island-shell rounded-2xl p-4">
-          <h3 className="mb-2 text-sm font-semibold text-[var(--sea-ink)]">
+          <h3 className="mb-2 text-sm font-semibold text-(--sea-ink)">
             本次润色将参考以下目标岗位 JD
           </h3>
           <div className="flex flex-wrap gap-2">
             {targets.map((job) => (
               <span
                 key={job.id}
-                className="rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1 text-xs text-[var(--sea-ink)]"
+                className="rounded-full border border-(--chip-line) bg-(--chip-bg) px-3 py-1 text-xs text-(--sea-ink)"
               >
                 {job.company?.name ?? ""} · {job.title}
               </span>
@@ -219,11 +219,11 @@ function PolishPage() {
 
       {loading && (
         <section className="island-shell rounded-2xl px-6 py-16 text-center">
-          <Loader2 className="mx-auto mb-4 size-10 animate-spin text-[var(--lagoon-deep)]" />
-          <h2 className="mb-1 text-lg font-semibold text-[var(--sea-ink)]">
+          <Loader2 className="mx-auto mb-4 size-10 animate-spin text-(--lagoon-deep)" />
+          <h2 className="mb-1 text-lg font-semibold text-(--sea-ink)">
             AI 正在分析简历与目标 JD…
           </h2>
-          <p className="text-sm text-[var(--sea-ink-soft)]">
+          <p className="text-sm text-(--sea-ink-soft)">
             逐条生成修改建议与知识薄弱点，可能需要 30 秒左右
           </p>
         </section>
@@ -233,10 +233,10 @@ function PolishPage() {
         <div className="grid gap-6">
           {/* 总览 */}
           <section className="island-shell rounded-2xl p-5">
-            <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
+            <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
               整体修改思路
             </h2>
-            <p className="text-sm leading-relaxed text-[var(--sea-ink-soft)]">
+            <p className="text-sm leading-relaxed text-(--sea-ink-soft)">
               {result.summary}
             </p>
           </section>
@@ -244,10 +244,10 @@ function PolishPage() {
           {/* 修改建议 */}
           <section className="island-shell rounded-2xl p-5">
             <div className="mb-4 flex flex-wrap items-center gap-2">
-              <h2 className="text-base font-semibold text-[var(--sea-ink)]">
+              <h2 className="text-base font-semibold text-(--sea-ink)">
                 修改建议（{result.suggestions.length} 条）
               </h2>
-              <span className="text-xs text-[var(--sea-ink-soft)]">
+              <span className="text-xs text-(--sea-ink-soft)">
                 已接受 {accepted.size} · 已拒绝 {rejected.size} · 待处理{" "}
                 {pendingCount}
               </span>
@@ -255,7 +255,7 @@ function PolishPage() {
                 <button
                   type="button"
                   onClick={acceptAll}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-3 text-xs font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-3 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
                 >
                   <Check className="size-3.5" />
                   全部接受
@@ -263,7 +263,7 @@ function PolishPage() {
                 <button
                   type="button"
                   onClick={rejectAll}
-                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-3 text-xs font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+                  className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-3 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
                 >
                   <X className="size-3.5" />
                   全部拒绝
@@ -283,12 +283,12 @@ function PolishPage() {
                       isAccepted
                         ? "border-emerald-300 bg-emerald-50/60 dark:border-emerald-800 dark:bg-emerald-950/30"
                         : isRejected
-                          ? "border-[var(--line)] bg-[var(--surface)] opacity-60"
-                          : "border-[var(--line)] bg-[var(--surface)]"
+                          ? "border-(--line) bg-(--surface) opacity-60"
+                          : "border-(--line) bg-(--surface)"
                     }`}
                   >
                     <div className="mb-2 flex flex-wrap items-center gap-2">
-                      <span className="rounded-full bg-[var(--chip-bg)] px-2.5 py-0.5 text-xs font-medium text-[var(--sea-ink)]">
+                      <span className="rounded-full bg-(--chip-bg) px-2.5 py-0.5 text-xs font-medium text-(--sea-ink)">
                         {s.section}
                       </span>
                       <span
@@ -313,7 +313,7 @@ function PolishPage() {
                         <p className="mb-1 text-xs font-medium text-red-500">
                           原文
                         </p>
-                        <p className="rounded-lg border border-[var(--line)] bg-white/60 p-2.5 text-sm leading-relaxed text-[var(--sea-ink-soft)] line-through decoration-red-300 dark:bg-black/20">
+                        <p className="rounded-lg border border-(--line) bg-white/60 p-2.5 text-sm leading-relaxed text-(--sea-ink-soft) line-through decoration-red-300 dark:bg-black/20">
                           {s.original}
                         </p>
                       </div>
@@ -321,14 +321,14 @@ function PolishPage() {
                         <p className="mb-1 text-xs font-medium text-emerald-600">
                           建议改为
                         </p>
-                        <p className="rounded-lg border border-emerald-200 bg-white/60 p-2.5 text-sm leading-relaxed text-[var(--sea-ink)] dark:border-emerald-900 dark:bg-black/20">
+                        <p className="rounded-lg border border-emerald-200 bg-white/60 p-2.5 text-sm leading-relaxed text-(--sea-ink) dark:border-emerald-900 dark:bg-black/20">
                           {s.replacement}
                         </p>
                       </div>
                     </div>
 
-                    <p className="mt-3 text-xs leading-relaxed text-[var(--sea-ink-soft)]">
-                      <span className="font-medium text-[var(--sea-ink)]">
+                    <p className="mt-3 text-xs leading-relaxed text-(--sea-ink-soft)">
+                      <span className="font-medium text-(--sea-ink)">
                         理由：{" "}
                       </span>
                       {s.reason}
@@ -351,7 +351,7 @@ function PolishPage() {
                         className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition ${
                           isAccepted
                             ? "bg-emerald-500 text-white"
-                            : "border border-input text-[var(--sea-ink-soft)] hover:bg-accent"
+                            : "border border-input text-(--sea-ink-soft) hover:bg-accent"
                         }`}
                       >
                         <Check className="size-3.5" />
@@ -373,7 +373,7 @@ function PolishPage() {
                         className={`inline-flex h-8 items-center gap-1.5 rounded-md px-3 text-xs font-medium transition ${
                           isRejected
                             ? "bg-neutral-400 text-white"
-                            : "border border-input text-[var(--sea-ink-soft)] hover:bg-accent"
+                            : "border border-input text-(--sea-ink-soft) hover:bg-accent"
                         }`}
                       >
                         <X className="size-3.5" />
@@ -402,7 +402,7 @@ function PolishPage() {
 
           {/* 知识薄弱点 */}
           <section className="island-shell rounded-2xl p-5">
-            <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-[var(--sea-ink)]">
+            <h2 className="mb-4 flex items-center gap-2 text-base font-semibold text-(--sea-ink)">
               <AlertTriangle className="size-4 text-amber-500" />
               知识薄弱点（面试前重点准备）
             </h2>
@@ -411,28 +411,26 @@ function PolishPage() {
                 <article
                   // biome-ignore lint/suspicious/noArrayIndexKey: 薄弱点无稳定唯一 id
                   key={i}
-                  className="rounded-xl border border-[var(--line)] bg-[var(--surface)] p-4"
+                  className="rounded-xl border border-(--line) bg-(--surface) p-4"
                 >
-                  <h3 className="mb-1 text-sm font-semibold text-[var(--sea-ink)]">
+                  <h3 className="mb-1 text-sm font-semibold text-(--sea-ink)">
                     {w.area}
                   </h3>
-                  <p className="mb-2 text-xs leading-relaxed text-[var(--sea-ink-soft)]">
+                  <p className="mb-2 text-xs leading-relaxed text-(--sea-ink-soft)">
                     {w.detail}
                   </p>
                   <p className="text-xs leading-relaxed">
-                    <span className="font-medium text-[var(--lagoon-deep)]">
+                    <span className="font-medium text-(--lagoon-deep)">
                       建议：{" "}
                     </span>
-                    <span className="text-[var(--sea-ink-soft)]">
-                      {w.advice}
-                    </span>
+                    <span className="text-(--sea-ink-soft)">{w.advice}</span>
                   </p>
                 </article>
               ))}
             </div>
           </section>
 
-          <p className="flex items-center justify-center gap-1.5 text-xs text-[var(--sea-ink-soft)]">
+          <p className="flex items-center justify-center gap-1.5 text-xs text-(--sea-ink-soft)">
             <RotateCcw className="size-3" />
             所有应用均生成新版本，可在编辑器「版本历史」中随时回滚
           </p>

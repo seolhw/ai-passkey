@@ -46,10 +46,10 @@ function AdvisorPage() {
     <main className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-3xl flex-col px-4 pb-6 pt-8">
       <header className="mb-6 text-center">
         <p className="island-kicker mb-1">AI 顾问</p>
-        <h1 className="display-title text-2xl font-bold text-[var(--sea-ink)]">
+        <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
           问问你的 AI 求职顾问
         </h1>
-        <p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
+        <p className="mt-1 text-sm text-(--sea-ink-soft)">
           基于真实岗位库回答，比如「哪些岗位更高薪」
         </p>
       </header>
@@ -62,7 +62,7 @@ function AdvisorPage() {
                 type="button"
                 key={s}
                 onClick={() => submit(s)}
-                className="island-shell rounded-xl px-4 py-3 text-left text-sm text-[var(--sea-ink)] transition hover:border-[var(--lagoon-deep)]"
+                className="island-shell rounded-xl px-4 py-3 text-left text-sm text-(--sea-ink) transition hover:border-(--lagoon-deep)"
               >
                 {s}
               </button>
@@ -79,8 +79,8 @@ function AdvisorPage() {
               <div
                 className={`flex size-8 shrink-0 items-center justify-center rounded-lg text-sm font-medium text-white ${
                   message.role === "assistant"
-                    ? "bg-[var(--lagoon-deep)]"
-                    : "bg-[var(--sea-ink-soft)]"
+                    ? "bg-(--lagoon-deep)"
+                    : "bg-(--sea-ink-soft)"
                 }`}
               >
                 {message.role === "assistant" ? "AI" : "我"}
@@ -88,8 +88,8 @@ function AdvisorPage() {
               <div
                 className={`max-w-[85%] rounded-2xl px-4 py-3 text-sm leading-relaxed ${
                   message.role === "assistant"
-                    ? "island-shell text-[var(--sea-ink)]"
-                    : "bg-[var(--lagoon-deep)] text-white"
+                    ? "island-shell text-(--sea-ink)"
+                    : "bg-(--lagoon-deep) text-white"
                 }`}
               >
                 {message.parts.map((part, index) =>
@@ -115,7 +115,7 @@ function AdvisorPage() {
             <button
               type="button"
               onClick={stop}
-              className="inline-flex h-8 items-center rounded-full border border-input px-3 text-xs font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+              className="inline-flex h-8 items-center rounded-full border border-input px-3 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
             >
               停止生成
             </button>
@@ -138,7 +138,7 @@ function AdvisorPage() {
           <button
             type="submit"
             disabled={!input.trim() || isLoading}
-            className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-[var(--lagoon-deep)] px-4 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-10 items-center gap-1.5 rounded-xl bg-(--lagoon-deep) px-4 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
           >
             {isLoading ? (
               <Loader2 className="size-4 animate-spin" />
@@ -147,7 +147,7 @@ function AdvisorPage() {
             )}
           </button>
         </form>
-        <p className="mt-2 flex items-center justify-center gap-1 text-xs text-[var(--sea-ink-soft)]">
+        <p className="mt-2 flex items-center justify-center gap-1 text-xs text-(--sea-ink-soft)">
           <MessageSquareText className="size-3.5" />
           回答基于当前岗位库，数据可能不完整
         </p>

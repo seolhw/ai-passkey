@@ -68,10 +68,10 @@ function NewResumePage() {
     <main className="page-wrap px-4 pb-16 pt-12">
       <header className="mb-8">
         <p className="island-kicker mb-2">跨界简历</p>
-        <h1 className="display-title text-3xl font-bold text-[var(--sea-ink)]">
+        <h1 className="display-title text-3xl font-bold text-(--sea-ink)">
           新建简历
         </h1>
-        <p className="mt-2 text-sm text-[var(--sea-ink-soft)]">
+        <p className="mt-2 text-sm text-(--sea-ink-soft)">
           支持上传 PDF / Word / TXT，解析后自动转为可编辑内容
         </p>
       </header>
@@ -84,7 +84,7 @@ function NewResumePage() {
             className={`inline-flex h-9 items-center gap-2 rounded-md px-4 text-sm font-medium transition ${
               mode === "upload"
                 ? "bg-primary text-primary-foreground"
-                : "border border-input text-[var(--sea-ink-soft)] hover:bg-accent"
+                : "border border-input text-(--sea-ink-soft) hover:bg-accent"
             }`}
           >
             <Upload className="size-4" />
@@ -96,7 +96,7 @@ function NewResumePage() {
             className={`inline-flex h-9 items-center gap-2 rounded-md px-4 text-sm font-medium transition ${
               mode === "paste"
                 ? "bg-primary text-primary-foreground"
-                : "border border-input text-[var(--sea-ink-soft)] hover:bg-accent"
+                : "border border-input text-(--sea-ink-soft) hover:bg-accent"
             }`}
           >
             <ClipboardPaste className="size-4" />
@@ -125,17 +125,17 @@ function NewResumePage() {
             <div className="grid gap-3">
               <label
                 htmlFor="file-upload"
-                className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-[var(--line)] bg-[var(--surface)] p-6 text-center transition hover:border-[var(--lagoon-deep)] hover:bg-[var(--link-bg-hover)]"
+                className="flex min-h-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed border-(--line) bg-(--surface) p-6 text-center transition hover:border-(--lagoon-deep) hover:bg-(--link-bg-hover)"
               >
                 {parsing ? (
-                  <Loader2 className="size-8 animate-spin text-[var(--lagoon-deep)]" />
+                  <Loader2 className="size-8 animate-spin text-(--lagoon-deep)" />
                 ) : (
-                  <Upload className="size-8 text-[var(--sea-ink-soft)]" />
+                  <Upload className="size-8 text-(--sea-ink-soft)" />
                 )}
-                <span className="text-sm font-medium text-[var(--sea-ink)]">
+                <span className="text-sm font-medium text-(--sea-ink)">
                   {parsing ? "正在解析…" : "点击选择或拖拽文件"}
                 </span>
-                <span className="text-xs text-[var(--sea-ink-soft)]">
+                <span className="text-xs text-(--sea-ink-soft)">
                   支持 .pdf / .docx / .txt
                 </span>
               </label>
@@ -169,11 +169,11 @@ function NewResumePage() {
           )}
 
           {plainText && (
-            <div className="rounded-lg border border-[var(--line)] bg-[var(--surface)] p-3">
-              <p className="mb-1 text-xs font-medium text-[var(--sea-ink-soft)]">
+            <div className="rounded-lg border border-(--line) bg-(--surface) p-3">
+              <p className="mb-1 text-xs font-medium text-(--sea-ink-soft)">
                 解析结果预览（{plainText.length} 字）
               </p>
-              <pre className="max-h-48 overflow-auto whitespace-pre-wrap text-xs text-[var(--sea-ink-soft)]">
+              <pre className="max-h-48 overflow-auto whitespace-pre-wrap text-xs text-(--sea-ink-soft)">
                 {plainText}
               </pre>
             </div>

@@ -150,7 +150,7 @@ function ResumeDetailPage() {
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Link
           to="/resumes"
-          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           返回列表
         </Link>
@@ -178,7 +178,7 @@ function ResumeDetailPage() {
         <button
           type="button"
           onClick={() => setShowVersions(!showVersions)}
-          className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           <History className="size-4" />
           版本历史
@@ -186,7 +186,7 @@ function ResumeDetailPage() {
         <Link
           to="/resumes/$resumeId/targets"
           params={{ resumeId: String(resume.id) }}
-          className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           <Target className="size-4" />
           目标岗位
@@ -203,24 +203,24 @@ function ResumeDetailPage() {
           <button
             type="button"
             onClick={() => setShowPrint(!showPrint)}
-            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
           >
             <Download className="size-4" />
             下载
           </button>
           {showPrint && (
-            <div className="absolute right-0 z-20 mt-1 w-40 overflow-hidden rounded-xl border border-[var(--line)] bg-[var(--surface-strong)] p-1 shadow-lg">
+            <div className="absolute right-0 z-20 mt-1 w-40 overflow-hidden rounded-xl border border-(--line) bg-(--surface-strong) p-1 shadow-lg">
               <button
                 type="button"
                 onClick={() => void handleDownloadDocx()}
-                className="block w-full rounded-lg px-3 py-2 text-left text-sm text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+                className="block w-full rounded-lg px-3 py-2 text-left text-sm text-(--sea-ink-soft) transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
               >
                 Word (.docx)
               </button>
               <button
                 type="button"
                 onClick={handlePrint}
-                className="block w-full rounded-lg px-3 py-2 text-left text-sm text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+                className="block w-full rounded-lg px-3 py-2 text-left text-sm text-(--sea-ink-soft) transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
               >
                 PDF（打印另存）
               </button>
@@ -238,20 +238,20 @@ function ResumeDetailPage() {
       {/* 版本历史面板 */}
       {showVersions && (
         <section className="island-shell mb-6 rounded-2xl p-4">
-          <h3 className="mb-3 text-sm font-semibold text-[var(--sea-ink)]">
+          <h3 className="mb-3 text-sm font-semibold text-(--sea-ink)">
             版本历史（共 {versions.length} 个版本）
           </h3>
           <div className="max-h-72 space-y-2 overflow-auto pr-1">
             {versions.map((v) => (
               <div
                 key={v.id}
-                className="flex items-center justify-between rounded-xl border border-[var(--line)] bg-[var(--surface)] px-3 py-2"
+                className="flex items-center justify-between rounded-xl border border-(--line) bg-(--surface) px-3 py-2"
               >
                 <div>
-                  <p className="text-sm font-medium text-[var(--sea-ink)]">
+                  <p className="text-sm font-medium text-(--sea-ink)">
                     v{v.versionNo} · {v.note || "未命名"}
                   </p>
-                  <p className="text-xs text-[var(--sea-ink-soft)]">
+                  <p className="text-xs text-(--sea-ink-soft)">
                     {v.createdAt
                       ? new Date(v.createdAt).toLocaleString("zh-CN")
                       : "-"}
@@ -261,7 +261,7 @@ function ResumeDetailPage() {
                   type="button"
                   onClick={() => void handleRollback(v.id)}
                   disabled={rollbacking === v.id}
-                  className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-input px-2.5 text-xs font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent disabled:opacity-50"
+                  className="inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md border border-input px-2.5 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent disabled:opacity-50"
                 >
                   {rollbacking === v.id ? (
                     <Loader2 className="size-3.5 animate-spin" />
@@ -280,7 +280,7 @@ function ResumeDetailPage() {
               className="h-8 min-w-0 flex-1 rounded-md border border-input bg-transparent px-3 text-xs shadow-xs outline-none focus-visible:border-ring dark:bg-input/30"
               placeholder="本次修改说明（如：润色后 v3）"
             />
-            <span className="text-xs text-[var(--sea-ink-soft)]">
+            <span className="text-xs text-(--sea-ink-soft)">
               保存时写入版本说明
             </span>
           </div>

@@ -112,16 +112,16 @@ function TargetsPage() {
         <Link
           to="/resumes/$resumeId"
           params={{ resumeId: String(resume.id) }}
-          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           返回编辑器
         </Link>
         <div>
           <p className="island-kicker mb-1">目标岗位</p>
-          <h1 className="display-title text-2xl font-bold text-[var(--sea-ink)]">
+          <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
             选择目标公司与岗位
           </h1>
-          <p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
+          <p className="mt-1 text-sm text-(--sea-ink-soft)">
             润色时会把所选岗位的 JD 注入提示词，精准匹配简历
           </p>
         </div>
@@ -134,15 +134,15 @@ function TargetsPage() {
           className="h-9 w-full max-w-xs rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
           placeholder="搜索公司 / 岗位 / 地点…"
         />
-        <span className="text-sm text-[var(--sea-ink-soft)]">
+        <span className="text-sm text-(--sea-ink-soft)">
           已选 {selectedIds.size} 个岗位
         </span>
       </div>
 
       {filtered.length === 0 ? (
         <section className="island-shell rounded-2xl px-6 py-14 text-center">
-          <Target className="mx-auto mb-3 size-10 text-[var(--sea-ink-soft)]" />
-          <p className="text-sm text-[var(--sea-ink-soft)]">未找到匹配岗位</p>
+          <Target className="mx-auto mb-3 size-10 text-(--sea-ink-soft)" />
+          <p className="text-sm text-(--sea-ink-soft)">未找到匹配岗位</p>
         </section>
       ) : (
         <div className="grid gap-4">
@@ -152,20 +152,20 @@ function TargetsPage() {
             return (
               <section key={name} className="island-shell rounded-2xl p-4">
                 <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-[var(--sea-ink)]">
+                  <h2 className="text-base font-semibold text-(--sea-ink)">
                     {name}
                   </h2>
                   <button
                     type="button"
                     onClick={() => toggleCompany(name)}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-2.5 text-xs font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-2.5 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
                   >
                     <span
                       className={`flex size-4 items-center justify-center rounded border ${
                         allSelected
-                          ? "border-[var(--lagoon-deep)] bg-[var(--lagoon-deep)] text-white"
+                          ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white"
                           : someSelected
-                            ? "border-[var(--lagoon-deep)]"
+                            ? "border-(--lagoon-deep)"
                             : "border-input"
                       }`}
                     >
@@ -184,24 +184,24 @@ function TargetsPage() {
                         onClick={() => toggle(job.id)}
                         className={`flex items-start gap-3 rounded-xl border p-3 text-left transition ${
                           isOn
-                            ? "border-[var(--lagoon-deep)] bg-[rgba(124,58,237,0.08)]"
-                            : "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--lagoon-deep)]"
+                            ? "border-(--lagoon-deep) bg-[rgba(124,58,237,0.08)]"
+                            : "border-(--line) bg-(--surface) hover:border-(--lagoon-deep)"
                         }`}
                       >
                         <span
                           className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border ${
                             isOn
-                              ? "border-[var(--lagoon-deep)] bg-[var(--lagoon-deep)] text-white"
+                              ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white"
                               : "border-input"
                           }`}
                         >
                           {isOn && <Check className="size-3.5" />}
                         </span>
                         <span className="min-w-0">
-                          <span className="block truncate text-sm font-medium text-[var(--sea-ink)]">
+                          <span className="block truncate text-sm font-medium text-(--sea-ink)">
                             {job.title}
                           </span>
-                          <span className="mt-0.5 block text-xs text-[var(--sea-ink-soft)]">
+                          <span className="mt-0.5 block text-xs text-(--sea-ink-soft)">
                             {[job.salary, job.location]
                               .filter(Boolean)
                               .join(" · ") || "薪资面议"}

@@ -53,7 +53,7 @@ export default function ResumeEditor({
     editorProps: {
       attributes: {
         class:
-          "resume-editor-content prose prose-sm sm:prose max-w-none min-h-[40rem] px-5 py-4 outline-none focus:outline-none",
+          "resume-editor-content prose prose-sm sm:prose max-w-none min-h-160 px-5 py-4 outline-none focus:outline-none",
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -76,8 +76,8 @@ export default function ResumeEditor({
       title={label}
       className={`inline-flex h-8 w-8 items-center justify-center rounded-md transition ${
         active
-          ? "bg-[var(--lagoon-deep)] text-white"
-          : "text-[var(--sea-ink-soft)] hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+          ? "bg-(--lagoon-deep) text-white"
+          : "text-(--sea-ink-soft) hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
       }`}
     >
       {children}
@@ -85,8 +85,8 @@ export default function ResumeEditor({
   );
 
   return (
-    <div className="resume-editor overflow-hidden rounded-2xl border border-[var(--line)] bg-white dark:bg-[var(--surface-strong)]">
-      <div className="flex flex-wrap items-center gap-1 border-b border-[var(--line)] px-3 py-2">
+    <div className="resume-editor overflow-hidden rounded-2xl border border-(--line) bg-white dark:bg-(--surface-strong)">
+      <div className="flex flex-wrap items-center gap-1 border-b border-(--line) px-3 py-2">
         {btn(
           editor.isActive("bold"),
           () => editor.chain().focus().toggleBold().run(),
@@ -117,7 +117,7 @@ export default function ResumeEditor({
           "高亮",
           <Highlighter className="size-4" />,
         )}
-        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           editor.isActive("heading", { level: 1 }),
           () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
@@ -160,7 +160,7 @@ export default function ResumeEditor({
           "代码块",
           <Code className="size-4" />,
         )}
-        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           editor.isActive({ textAlign: "left" }),
           () => editor.chain().focus().setTextAlign("left").run(),
@@ -185,7 +185,7 @@ export default function ResumeEditor({
           "分割线",
           <Minus className="size-4" />,
         )}
-        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           false,
           () => {
@@ -201,7 +201,7 @@ export default function ResumeEditor({
           "清除格式",
           <RemoveFormatting className="size-4" />,
         )}
-        <span className="mx-1 h-5 w-px bg-[var(--line)]" />
+        <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           false,
           () => editor.chain().focus().undo().run(),

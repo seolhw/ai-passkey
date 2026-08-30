@@ -59,15 +59,15 @@ function NewJobPage() {
       <header className="mb-6">
         <Link
           to="/companies"
-          className="mb-4 inline-flex h-9 items-center gap-1 rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink-soft)] transition hover:bg-accent"
+          className="mb-4 inline-flex h-9 items-center gap-1 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           <ArrowLeft className="size-4" /> 返回
         </Link>
         <p className="island-kicker mb-1">招聘简章</p>
-        <h1 className="display-title text-2xl font-bold text-[var(--sea-ink)]">
+        <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
           手动添加岗位
         </h1>
-        <p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
+        <p className="mt-1 text-sm text-(--sea-ink-soft)">
           添加自己关注的岗位 JD，之后可在目标岗位选择中使用
         </p>
       </header>
@@ -80,7 +80,7 @@ function NewJobPage() {
         }}
       >
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
             公司名 *
             <input
               value={companyName}
@@ -89,7 +89,7 @@ function NewJobPage() {
               placeholder="如：OpenAI"
             />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
             岗位名称 *
             <input
               value={title}
@@ -101,7 +101,7 @@ function NewJobPage() {
         </div>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
             薪资
             <input
               value={salary}
@@ -110,7 +110,7 @@ function NewJobPage() {
               placeholder="如：30-50K·16薪"
             />
           </label>
-          <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
             地点
             <input
               value={location}
@@ -121,7 +121,7 @@ function NewJobPage() {
           </label>
         </div>
 
-        <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+        <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
           JD 内容 *
           <textarea
             value={jd}
@@ -132,7 +132,7 @@ function NewJobPage() {
           />
         </label>
 
-        <label className="grid gap-1.5 text-sm font-medium text-[var(--sea-ink)]">
+        <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
           来源链接
           <input
             value={sourceUrl}
@@ -151,7 +151,7 @@ function NewJobPage() {
         <button
           type="submit"
           disabled={saving}
-          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-[var(--lagoon-deep)] px-6 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-md bg-(--lagoon-deep) px-6 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
         >
           {saving ? (
             <Loader2 className="size-4 animate-spin" />

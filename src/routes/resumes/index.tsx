@@ -33,10 +33,10 @@ function ResumesPage() {
       <header className="mb-8 flex items-end justify-between">
         <div>
           <p className="island-kicker mb-2">跨界简历</p>
-          <h1 className="display-title text-3xl font-bold text-[var(--sea-ink)]">
+          <h1 className="display-title text-3xl font-bold text-(--sea-ink)">
             我的简历
           </h1>
-          <p className="mt-2 text-sm text-[var(--sea-ink-soft)]">
+          <p className="mt-2 text-sm text-(--sea-ink-soft)">
             上传、润色、版本管理，全流程闭环
           </p>
         </div>
@@ -51,11 +51,11 @@ function ResumesPage() {
 
       {resumes.length === 0 ? (
         <section className="island-shell rounded-2xl px-6 py-16 text-center">
-          <FileText className="mx-auto mb-4 size-12 text-[var(--sea-ink-soft)]" />
-          <h2 className="mb-2 text-lg font-semibold text-[var(--sea-ink)]">
+          <FileText className="mx-auto mb-4 size-12 text-(--sea-ink-soft)" />
+          <h2 className="mb-2 text-lg font-semibold text-(--sea-ink)">
             还没有简历
           </h2>
-          <p className="mb-6 text-sm text-[var(--sea-ink-soft)]">
+          <p className="mb-6 text-sm text-(--sea-ink-soft)">
             上传一份现有简历，或用简历大厅的优质模板快速开始
           </p>
           <Link
@@ -78,13 +78,13 @@ function ResumesPage() {
                 params={{ resumeId: String(resume.id) }}
                 className="block no-underline"
               >
-                <h2 className="mb-1 truncate text-base font-semibold text-[var(--sea-ink)]">
+                <h2 className="mb-1 truncate text-base font-semibold text-(--sea-ink)">
                   {resume.title}
                 </h2>
-                <p className="mb-4 line-clamp-3 text-sm text-[var(--sea-ink-soft)]">
+                <p className="mb-4 line-clamp-3 text-sm text-(--sea-ink-soft)">
                   {resume.plainText.slice(0, 120) || "（空简历）"}
                 </p>
-                <p className="text-xs text-[var(--sea-ink-soft)]">
+                <p className="text-xs text-(--sea-ink-soft)">
                   更新于{" "}
                   {resume.updatedAt
                     ? new Date(resume.updatedAt).toLocaleDateString("zh-CN")
@@ -94,7 +94,7 @@ function ResumesPage() {
               <button
                 type="button"
                 onClick={() => handleDelete(resume.id)}
-                className="absolute right-3 top-3 rounded-full p-2 text-[var(--sea-ink-soft)] opacity-0 transition group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/40"
+                className="absolute right-3 top-3 rounded-full p-2 text-(--sea-ink-soft) opacity-0 transition group-hover:opacity-100 hover:bg-red-50 hover:text-red-500 dark:hover:bg-red-950/40"
                 title="删除"
               >
                 <Trash2 className="size-4" />

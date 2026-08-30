@@ -64,16 +64,16 @@ function CompaniesPage() {
       <header className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
           <p className="island-kicker mb-1">招聘简章</p>
-          <h1 className="display-title text-2xl font-bold text-[var(--sea-ink)]">
+          <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
             AI 公司与岗位汇聚
           </h1>
-          <p className="mt-1 text-sm text-[var(--sea-ink-soft)]">
+          <p className="mt-1 text-sm text-(--sea-ink-soft)">
             浏览各家 AI 公司的在招岗位，选择目标岗位后结合 JD 润色简历
           </p>
         </div>
         <Link
           to="/companies/new"
-          className="inline-flex h-9 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-[var(--sea-ink)] transition hover:bg-accent"
+          className="inline-flex h-9 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink) transition hover:bg-accent"
         >
           <Briefcase className="size-4" />
           手动添加岗位
@@ -82,8 +82,8 @@ function CompaniesPage() {
 
       {companies.length === 0 ? (
         <section className="island-shell rounded-2xl px-6 py-14 text-center">
-          <Briefcase className="mx-auto mb-3 size-10 text-[var(--sea-ink-soft)]" />
-          <p className="text-sm text-[var(--sea-ink-soft)]">
+          <Briefcase className="mx-auto mb-3 size-10 text-(--sea-ink-soft)" />
+          <p className="text-sm text-(--sea-ink-soft)">
             还没有公司数据，点击下方「一键抓取
             JD」从各家公司官网拉取，或手动添加
           </p>
@@ -98,23 +98,21 @@ function CompaniesPage() {
               className="island-shell group rounded-2xl p-5 no-underline transition hover:-translate-y-0.5 hover:shadow-lg"
             >
               <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-base font-semibold text-[var(--sea-ink)]">
+                <h2 className="text-base font-semibold text-(--sea-ink)">
                   {company.name}
                 </h2>
-                <span className="inline-flex h-6 items-center rounded-full bg-[var(--chip-bg)] px-2.5 text-xs font-medium text-[var(--lagoon-deep)]">
+                <span className="inline-flex h-6 items-center rounded-full bg-(--chip-bg) px-2.5 text-xs font-medium text-(--lagoon-deep)">
                   {company.jobCount} 个岗位
                 </span>
               </div>
               {company.intro ? (
-                <p className="mb-4 line-clamp-2 text-sm text-[var(--sea-ink-soft)]">
+                <p className="mb-4 line-clamp-2 text-sm text-(--sea-ink-soft)">
                   {company.intro}
                 </p>
               ) : (
-                <p className="mb-4 text-sm text-[var(--sea-ink-soft)]">
-                  暂无简介
-                </p>
+                <p className="mb-4 text-sm text-(--sea-ink-soft)">暂无简介</p>
               )}
-              <span className="inline-flex items-center gap-1 text-sm font-medium text-[var(--lagoon-deep)] opacity-0 transition group-hover:opacity-100">
+              <span className="inline-flex items-center gap-1 text-sm font-medium text-(--lagoon-deep) opacity-0 transition group-hover:opacity-100">
                 查看岗位 <ArrowRight className="size-4" />
               </span>
             </Link>
@@ -125,10 +123,10 @@ function CompaniesPage() {
       <section className="island-shell mt-10 rounded-2xl p-5">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-base font-semibold text-[var(--sea-ink)]">
+            <h2 className="text-base font-semibold text-(--sea-ink)">
               JD 自动抓取
             </h2>
-            <p className="mt-0.5 text-sm text-[var(--sea-ink-soft)]">
+            <p className="mt-0.5 text-sm text-(--sea-ink-soft)">
               从各家公司官网（Greenhouse / Lever / Ashby）同步岗位，Boss
               直聘需在 .env.local 配置 BOSS_COOKIE
             </p>
@@ -137,7 +135,7 @@ function CompaniesPage() {
             type="button"
             onClick={() => void handleFetchAll()}
             disabled={fetching}
-            className="inline-flex h-9 items-center gap-2 rounded-md bg-[var(--lagoon-deep)] px-4 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+            className="inline-flex h-9 items-center gap-2 rounded-md bg-(--lagoon-deep) px-4 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
           >
             {fetching ? (
               <Loader2 className="size-4 animate-spin" />
@@ -149,7 +147,7 @@ function CompaniesPage() {
         </div>
 
         {fetchMsg && (
-          <p className="mb-3 rounded-md bg-[var(--chip-bg)] px-3 py-2 text-sm text-[var(--sea-ink)]">
+          <p className="mb-3 rounded-md bg-(--chip-bg) px-3 py-2 text-sm text-(--sea-ink)">
             {fetchMsg}
           </p>
         )}
@@ -159,17 +157,17 @@ function CompaniesPage() {
             {statuses.map((s) => (
               <div
                 key={s.name}
-                className="flex items-center justify-between gap-2 rounded-lg border border-[var(--line)] px-3 py-2 text-sm"
+                className="flex items-center justify-between gap-2 rounded-lg border border-(--line) px-3 py-2 text-sm"
               >
-                <span className="min-w-0 truncate font-medium text-[var(--sea-ink)]">
+                <span className="min-w-0 truncate font-medium text-(--sea-ink)">
                   {s.name}
                 </span>
                 <span
                   className={`shrink-0 text-xs ${
                     s.status === "idle"
-                      ? "text-[var(--sea-ink-soft)]"
+                      ? "text-(--sea-ink-soft)"
                       : s.status.startsWith("success")
-                        ? "text-[var(--lagoon-deep)]"
+                        ? "text-(--lagoon-deep)"
                         : "text-red-500"
                   }`}
                 >

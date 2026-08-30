@@ -9,6 +9,7 @@ import {
   Target,
   Wand2,
 } from "lucide-react";
+import { AI_COMPANIES } from "@/constants/models";
 
 export const Route = createFileRoute("/")({ component: LandingPage });
 
@@ -59,32 +60,41 @@ function LandingPage() {
       {/* Hero */}
       <section className="relative px-1 pb-20 pt-16 sm:pt-24 lg:pt-28 lg:pb-24">
         <p className="island-kicker relative mb-5">跨界简历 · AI 求职工作台</p>
-        <h1 className="display-title relative  text-4xl font-bold leading-[1.1] tracking-tight text-[var(--sea-ink)] sm:text-6xl  lg:text-7xl lg:leading-[1.05]">
+        <h1 className="display-title relative  text-4xl font-bold leading-[1.1] tracking-tight text-(--sea-ink) sm:text-6xl  lg:text-7xl lg:leading-[1.05]">
           上传简历，选择岗位，
           <span className="btn-gradient-text">按目标岗位逐条打磨</span>
         </h1>
-        <p className="relative mt-6 max-w-2xl text-base leading-relaxed text-[var(--sea-ink-soft)] sm:text-lg">
-          面向字节、OpenAI、Anthropic、DeepSeek 等 AI 公司求职者。AI
-          读取真实岗位 JD，逐条给出「原文 →
-          建议改法」，接受即生成可回滚的新版本。
+        <p className="relative mt-6  text-base leading-relaxed text-(--sea-ink-soft) sm:text-lg">
+          {"面向国内 "}
+          {AI_COMPANIES.map((name, index) => (
+            <span key={name}>
+              <span className="btn-gradient-text font-semibold text-[1.2rem]">
+                {name}
+              </span>
+              {index < AI_COMPANIES.length - 1 ? "、" : ""}
+            </span>
+          ))}
+          {
+            " 等十几家顶尖 AI 公司求职者的简历工作台。AI 读取真实岗位 JD，逐条给出「原文 → 建议改法」，接受即生成可回滚的新版本。"
+          }
         </p>
         <div className="relative mt-9 flex flex-wrap gap-3">
           <Link
             to="/resumes/new"
             className="btn-gradient inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold no-underline"
           >
-            免费开始润色
+            开始修改简历
             <ArrowRight className="size-4" />
           </Link>
           <Link
             to="/companies"
-            className="inline-flex h-11 items-center gap-2 rounded-lg border border-[var(--line)] bg-[var(--surface-strong)] px-6 text-sm font-medium text-[var(--sea-ink)] no-underline transition hover:border-[var(--lagoon-deep)]"
+            className="inline-flex h-11 items-center gap-2 rounded-lg border border-(--line) bg-(--surface-strong) px-6 text-sm font-medium text-(--sea-ink) no-underline transition hover:border-(--lagoon-deep)"
           >
             浏览招聘简章
           </Link>
         </div>
-        <p className="relative mt-4 text-xs text-[var(--sea-ink-soft)]">
-          认真操作数小时的求职工作流，不靠运气靠匹配度。
+        <p className="relative mt-4 text-sm font-medium text-(--sea-ink-soft)">
+          约 30 分钟完成一轮 AI 修改，再花几小时认真打磨——不靠运气靠匹配度。
         </p>
       </section>
 
@@ -95,17 +105,17 @@ function LandingPage() {
           {STEPS.map((step, index) => (
             <article key={step.title} className="feature-card p-6">
               <div className="mb-4 flex items-center gap-3">
-                <span className="flex size-9 items-center justify-center rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)]">
+                <span className="flex size-9 items-center justify-center rounded-lg bg-(--accent) text-(--accent-foreground)">
                   <step.icon className="size-4.5" />
                 </span>
-                <span className="text-xs font-bold text-[var(--sea-ink-soft)]">
+                <span className="text-xs font-bold text-(--sea-ink-soft)">
                   STEP {index + 1}
                 </span>
               </div>
-              <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
+              <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
                 {step.title}
               </h2>
-              <p className="m-0 text-sm leading-relaxed text-[var(--sea-ink-soft)]">
+              <p className="m-0 text-sm leading-relaxed text-(--sea-ink-soft)">
                 {step.desc}
               </p>
             </article>
@@ -119,13 +129,13 @@ function LandingPage() {
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {FEATURES.map((feature) => (
             <article key={feature.title} className="feature-card p-6">
-              <span className="mb-4 flex size-9 items-center justify-center rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)]">
+              <span className="mb-4 flex size-9 items-center justify-center rounded-lg bg-(--accent) text-(--accent-foreground)">
                 <feature.icon className="size-4.5" />
               </span>
-              <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
+              <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
                 {feature.title}
               </h2>
-              <p className="m-0 text-sm leading-relaxed text-[var(--sea-ink-soft)]">
+              <p className="m-0 text-sm leading-relaxed text-(--sea-ink-soft)">
                 {feature.desc}
               </p>
             </article>
@@ -139,11 +149,12 @@ function LandingPage() {
           认真花上几小时，换一份能进大厂的简历
         </h2>
         <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-white/85">
-          上传你的现有简历，选出目标岗位，剩下交给 AI 逐条打磨——每一步都可回滚。
+          上传你的现有简历，选出目标岗位，AI 约 30
+          分钟完成一轮逐条打磨，每一步都可回滚。
         </p>
         <Link
           to="/resumes/new"
-          className="mt-7 inline-flex h-11 items-center gap-2 rounded-lg bg-white px-7 text-sm font-semibold text-[var(--ai-violet)] no-underline transition hover:opacity-90"
+          className="mt-7 inline-flex h-11 items-center gap-2 rounded-lg bg-white px-7 text-sm font-semibold text-(--ai-violet) no-underline transition hover:opacity-90"
         >
           上传简历，立即开始
           <ArrowRight className="size-4" />

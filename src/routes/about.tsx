@@ -37,15 +37,15 @@ function About() {
     <main className="page-wrap px-4 py-14">
       <section className="max-w-3xl">
         <p className="island-kicker mb-4">关于跨界简历</p>
-        <h1 className="display-title text-3xl font-bold tracking-tight text-[var(--sea-ink)] sm:text-5xl">
+        <h1 className="display-title text-3xl font-bold tracking-tight text-(--sea-ink) sm:text-5xl">
           为 AI 求职者打造的简历工作台
         </h1>
-        <p className="mt-6 text-base leading-relaxed text-[var(--sea-ink-soft)]">
+        <p className="mt-6 text-base leading-relaxed text-(--sea-ink-soft)">
           「跨界简历」服务一个具体的场景：想进字节、OpenAI、Anthropic、DeepSeek
           等 AI 公司的求职者，认真花上几个小时打磨一份能通过 ATS
           与面试官双重筛选的简历。
         </p>
-        <p className="mt-4 text-base leading-relaxed text-[var(--sea-ink-soft)]">
+        <p className="mt-4 text-base leading-relaxed text-(--sea-ink-soft)">
           我们的做法很朴素：上传简历 → 选择目标岗位 → AI 读取真实 JD 逐条打磨 →
           版本管理随时回滚。整个过程可解释、可审查、可回退——你不必盲信 AI。
         </p>
@@ -54,13 +54,13 @@ function About() {
       <section className="mt-12 grid gap-4 sm:grid-cols-2">
         {PILLARS.map((pillar) => (
           <article key={pillar.title} className="feature-card p-6">
-            <span className="mb-4 flex size-9 items-center justify-center rounded-lg bg-[var(--accent)] text-[var(--accent-foreground)]">
+            <span className="mb-4 flex size-9 items-center justify-center rounded-lg bg-(--accent) text-(--accent-foreground)">
               <pillar.icon className="size-4.5" />
             </span>
-            <h2 className="mb-2 text-base font-semibold text-[var(--sea-ink)]">
+            <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
               {pillar.title}
             </h2>
-            <p className="m-0 text-sm leading-relaxed text-[var(--sea-ink-soft)]">
+            <p className="m-0 text-sm leading-relaxed text-(--sea-ink-soft)">
               {pillar.desc}
             </p>
           </article>

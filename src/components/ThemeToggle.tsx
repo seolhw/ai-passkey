@@ -89,7 +89,7 @@ export default function ThemeToggle() {
       onClick={cycleMode}
       aria-label={label}
       title={label}
-      className="inline-flex size-8 items-center justify-center rounded-md border border-[var(--line)] bg-transparent text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
+      className="inline-flex size-8 items-center justify-center rounded-md border border-(--line) bg-transparent text-(--sea-ink-soft) transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
     >
       <ModeIcon className="size-4" />
     </button>

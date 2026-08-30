@@ -56,10 +56,10 @@ function LoginPage() {
           <span className="btn-gradient flex size-11 items-center justify-center rounded-xl">
             <Sparkles className="size-5 text-white" />
           </span>
-          <h1 className="display-title mt-4 text-xl font-bold text-[var(--sea-ink)]">
+          <h1 className="display-title mt-4 text-xl font-bold text-(--sea-ink)">
             {isSignUp ? "创建账号" : "欢迎回来"}
           </h1>
-          <p className="mt-1.5 text-sm text-[var(--sea-ink-soft)]">
+          <p className="mt-1.5 text-sm text-(--sea-ink-soft)">
             {isSignUp
               ? "注册后即可上传简历，开启 AI 通关之旅"
               : "登录以管理你的简历"}
@@ -146,7 +146,7 @@ function LoginPage() {
               setIsSignUp(!isSignUp);
               setError("");
             }}
-            className="text-sm text-[var(--sea-ink-soft)] transition-colors hover:text-[var(--sea-ink)]"
+            className="text-sm text-(--sea-ink-soft) transition-colors hover:text-(--sea-ink)"
           >
             {isSignUp ? "已有账号？去登录" : "没有账号？立即注册"}
           </button>
