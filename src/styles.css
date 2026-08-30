@@ -167,11 +167,6 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
-html,
-body,
-#app {
-  min-height: 100%;
-}
 
 body {
   margin: 0;
