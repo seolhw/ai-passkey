@@ -52,7 +52,6 @@ function LibraryPage() {
   return (
     <main className="page-wrap px-4 pb-16 pt-10">
       <header className="mb-8">
-        <p className="island-kicker mb-1">简历大厅</p>
         <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
           优质简历参考
         </h1>

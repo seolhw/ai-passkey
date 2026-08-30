@@ -67,7 +67,6 @@ function NewResumePage() {
   return (
     <main className="page-wrap px-4 pb-16 pt-12">
       <header className="mb-8">
-        <p className="island-kicker mb-2">跨界简历</p>
         <h1 className="display-title text-3xl font-bold text-(--sea-ink)">
           新建简历
         </h1>
