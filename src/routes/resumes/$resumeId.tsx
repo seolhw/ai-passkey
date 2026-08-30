@@ -194,7 +194,7 @@ function ResumeDetailPage() {
 				<Link
 					to="/resumes/$resumeId/polish"
 					params={{ resumeId: String(resume.id) }}
-					className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md bg-[var(--lagoon-deep)] px-4 text-sm font-medium text-white transition-all hover:opacity-90"
+					className="btn-gradient inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-4 text-sm font-medium no-underline"
 				>
 					<Sparkles className="size-4" />
 					AI 润色

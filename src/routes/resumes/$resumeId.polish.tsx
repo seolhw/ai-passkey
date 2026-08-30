@@ -165,7 +165,7 @@ function PolishPage() {
 					type="button"
 					onClick={() => void handlePolish()}
 					disabled={loading || !canRun}
-					className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md bg-[var(--lagoon-deep)] px-5 text-sm font-medium text-white transition-all hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+					className="btn-gradient inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-5 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
 				>
 					{loading ? (
 						<Loader2 className="size-4 animate-spin" />

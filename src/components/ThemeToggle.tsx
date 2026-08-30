@@ -1,6 +1,19 @@
+import { Monitor, Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
 type ThemeMode = "light" | "dark" | "auto";
+
+const MODE_ICONS: Record<ThemeMode, typeof Sun> = {
+	light: Sun,
+	dark: Moon,
+	auto: Monitor,
+};
+
+const MODE_LABELS: Record<ThemeMode, string> = {
+	light: "浅色",
+	dark: "深色",
+	auto: "跟随系统",
+};
 
 function getInitialMode(): ThemeMode {
 	if (typeof window === "undefined") {
@@ -31,6 +44,12 @@ function applyThemeMode(mode: ThemeMode) {
 	document.documentElement.style.colorScheme = resolved;
 }
 
+const NEXT_MODE: Record<ThemeMode, ThemeMode> = {
+	light: "dark",
+	dark: "auto",
+	auto: "light",
+};
+
 export default function ThemeToggle() {
 	const [mode, setMode] = useState<ThemeMode>("auto");
 
@@ -54,28 +73,25 @@ export default function ThemeToggle() {
 		};
 	}, [mode]);
 
-	function toggleMode() {
-		const nextMode: ThemeMode =
-			mode === "light" ? "dark" : mode === "dark" ? "auto" : "light";
+	function cycleMode() {
+		const nextMode = NEXT_MODE[mode];
 		setMode(nextMode);
 		applyThemeMode(nextMode);
 		window.localStorage.setItem("theme", nextMode);
 	}
 
-	const label =
-		mode === "auto"
-			? "Theme mode: auto (system). Click to switch to light mode."
-			: `Theme mode: ${mode}. Click to switch mode.`;
+	const ModeIcon = MODE_ICONS[mode];
+	const label = `主题模式：${MODE_LABELS[mode]}，点击切换`;
 
 	return (
 		<button
 			type="button"
-			onClick={toggleMode}
+			onClick={cycleMode}
 			aria-label={label}
 			title={label}
-			className="rounded-full border border-[var(--chip-line)] bg-[var(--chip-bg)] px-3 py-1.5 text-sm font-semibold text-[var(--sea-ink)] shadow-[0_8px_22px_rgba(30,90,72,0.08)] transition hover:-translate-y-0.5"
+			className="inline-flex size-8 items-center justify-center rounded-md border border-[var(--line)] bg-transparent text-[var(--sea-ink-soft)] transition hover:bg-[var(--link-bg-hover)] hover:text-[var(--sea-ink)]"
 		>
-			{mode === "auto" ? "Auto" : mode === "dark" ? "Dark" : "Light"}
+			<ModeIcon className="size-4" />
 		</button>
 	);
 }

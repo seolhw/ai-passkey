@@ -184,7 +184,7 @@ function TargetsPage() {
 												onClick={() => toggle(job.id)}
 												className={`flex items-start gap-3 rounded-xl border p-3 text-left transition ${
 													isOn
-														? "border-[var(--lagoon-deep)] bg-[rgba(79,184,178,0.12)]"
+														? "border-[var(--lagoon-deep)] bg-[rgba(124,58,237,0.08)]"
 														: "border-[var(--line)] bg-[var(--surface)] hover:border-[var(--lagoon-deep)]"
 												}`}
 											>
@@ -222,7 +222,7 @@ function TargetsPage() {
 					type="button"
 					onClick={() => void handleSave()}
 					disabled={saving || selectedIds.size === 0}
-					className="inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md bg-[var(--lagoon-deep)] px-6 text-sm font-medium text-white shadow-lg transition-all hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+					className="btn-gradient inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-6 text-sm font-medium shadow-lg disabled:pointer-events-none disabled:opacity-50"
 				>
 					{saving ? (
 						<Loader2 className="size-4 animate-spin" />

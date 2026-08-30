@@ -1,4 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
+import { Sparkles } from "lucide-react";
 import { useState } from "react";
 import { authClient } from "#/lib/auth-client";
 import { getSession } from "#/lib/session";
@@ -49,19 +50,26 @@ function LoginPage() {
 	};
 
 	return (
-		<main className="page-wrap flex min-h-[70vh] items-center justify-center px-4 py-14">
-			<section className="island-shell w-full max-w-md rounded-[1.5rem] px-6 py-8 sm:px-8">
-				<p className="island-kicker mb-2">跨界简历</p>
-				<h1 className="display-title mb-1 text-2xl font-bold text-[var(--sea-ink)]">
-					{isSignUp ? "创建账号" : "欢迎回来"}
-				</h1>
-				<p className="mb-6 text-sm text-[var(--sea-ink-soft)]">
-					{isSignUp
-						? "注册后即可上传简历，开启 AI 通关之旅"
-						: "登录以管理你的简历"}
-				</p>
+		<main className="page-wrap flex min-h-[75vh] items-center justify-center px-4 py-14">
+			<section className="w-full max-w-sm">
+				<div className="mb-8 flex flex-col items-center text-center">
+					<span className="btn-gradient flex size-11 items-center justify-center rounded-xl">
+						<Sparkles className="size-5 text-white" />
+					</span>
+					<h1 className="display-title mt-4 text-xl font-bold text-[var(--sea-ink)]">
+						{isSignUp ? "创建账号" : "欢迎回来"}
+					</h1>
+					<p className="mt-1.5 text-sm text-[var(--sea-ink-soft)]">
+						{isSignUp
+							? "注册后即可上传简历，开启 AI 通关之旅"
+							: "登录以管理你的简历"}
+					</p>
+				</div>
 
-				<form onSubmit={handleSubmit} className="grid gap-4">
+				<form
+					onSubmit={handleSubmit}
+					className="island-shell grid gap-4 rounded-2xl p-6"
+				>
 					{isSignUp && (
 						<div className="grid gap-2">
 							<label
@@ -117,7 +125,7 @@ function LoginPage() {
 					</div>
 
 					{error && (
-						<div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
+						<div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
 							{error}
 						</div>
 					)}
@@ -125,13 +133,13 @@ function LoginPage() {
 					<button
 						type="submit"
 						disabled={loading}
-						className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all outline-none hover:bg-primary/90 focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50"
+						className="btn-gradient inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
 					>
 						{loading ? "请稍候…" : isSignUp ? "创建账号" : "登录"}
 					</button>
 				</form>
 
-				<div className="mt-4 text-center">
+				<div className="mt-5 text-center">
 					<button
 						type="button"
 						onClick={() => {

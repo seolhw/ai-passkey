@@ -227,7 +227,7 @@ export default function ResumeEditor({
         .resume-editor-content a { color: var(--lagoon-deep); text-decoration: underline; }
         .resume-editor-content blockquote { border-left: 3px solid var(--lagoon); padding-left: 1em; color: var(--sea-ink-soft); }
         .resume-editor-content code { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 1px 5px; }
-        .resume-editor-content pre { background: #1d2e45; color: #e8efff; border-radius: 10px; padding: 1em; overflow-x: auto; }
+        .resume-editor-content pre { background: #18181b; color: #f4f4f5; border-radius: 10px; padding: 1em; overflow-x: auto; }
         .resume-editor-content pre code { background: transparent; border: 0; color: inherit; }
         .resume-editor-content .is-empty::before {
           content: attr(data-placeholder);
