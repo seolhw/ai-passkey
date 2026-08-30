@@ -6,7 +6,10 @@ import { tanstackStartCookies } from "better-auth/tanstack-start";
 import { db } from "#/db/index";
 import * as schema from "#/db/schema";
 import { env } from "#/env";
-import { sendPasswordResetEmail, sendVerificationEmail } from "#/integrations/resend";
+import {
+  sendPasswordResetEmail,
+  sendVerificationEmail,
+} from "#/integrations/resend";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -24,7 +27,7 @@ export const auth = betterAuth({
   },
   emailAndPassword: {
     enabled: true,
-    requireEmailVerification: true,
+    autoSignIn: true,
     sendResetPassword: async ({ user, url }) => {
       void sendPasswordResetEmail({
         to: user.email,
