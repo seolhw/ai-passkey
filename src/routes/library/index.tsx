@@ -9,7 +9,7 @@ export const Route = createFileRoute("/library/")({
   component: LibraryPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
-    if (!user) throw redirect({ to: "/login" });
+    if (!user) throw redirect({ href: "/?auth=login" });
   },
   loader: async () => {
     const items = await listLibraryItems();

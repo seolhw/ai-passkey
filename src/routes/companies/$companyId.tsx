@@ -9,7 +9,7 @@ export const Route = createFileRoute("/companies/$companyId")({
   component: CompanyDetailPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
-    if (!user) throw redirect({ to: "/login" });
+    if (!user) throw redirect({ href: "/?auth=login" });
   },
   loader: async ({ params }) => {
     const data = await getCompanyJobs({

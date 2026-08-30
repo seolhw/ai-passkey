@@ -130,7 +130,7 @@ export const jdSources = sqliteTable("jd_sources", {
 });
 
 /** better-auth 用户表 */
-export const authUser = sqliteTable("user", {
+export const user = sqliteTable("user", {
   id: text().primaryKey(),
   name: text().notNull(),
   email: text().notNull().unique(),
@@ -147,7 +147,7 @@ export const authUser = sqliteTable("user", {
 });
 
 /** better-auth 会话表 */
-export const authSession = sqliteTable("session", {
+export const session = sqliteTable("session", {
   id: text().primaryKey(),
   expiresAt: integer("expires_at", { mode: "timestamp" }).notNull(),
   token: text().notNull().unique(),
@@ -155,7 +155,7 @@ export const authSession = sqliteTable("session", {
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),
@@ -165,13 +165,13 @@ export const authSession = sqliteTable("session", {
 });
 
 /** better-auth 账号绑定表 */
-export const authAccount = sqliteTable("account", {
+export const account = sqliteTable("account", {
   id: text().primaryKey(),
   accountId: text("account_id").notNull(),
   providerId: text("provider_id").notNull(),
   userId: text("user_id")
     .notNull()
-    .references(() => authUser.id, { onDelete: "cascade" }),
+    .references(() => user.id, { onDelete: "cascade" }),
   accessToken: text("access_token"),
   refreshToken: text("refresh_token"),
   idToken: text("id_token"),
@@ -182,6 +182,7 @@ export const authAccount = sqliteTable("account", {
     mode: "timestamp",
   }),
   scope: text(),
+  issuer: text(),
   password: text(),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
@@ -192,7 +193,7 @@ export const authAccount = sqliteTable("account", {
 });
 
 /** better-auth 验证码表 */
-export const authVerification = sqliteTable("verification", {
+export const verification = sqliteTable("verification", {
   id: text().primaryKey(),
   identifier: text().notNull(),
   value: text().notNull(),

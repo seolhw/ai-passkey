@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { LogOut } from "lucide-react";
 import { authClient } from "#/lib/auth-client";
+import { openAuthDialog } from "#/stores/auth-dialog";
 import BrandLogo from "./BrandLogo";
 import ThemeToggle from "./ThemeToggle";
 
@@ -67,12 +68,13 @@ export default function Header() {
               </button>
             </>
           ) : (
-            <Link
-              to="/login"
+            <button
+              type="button"
+              onClick={openAuthDialog}
               className="inline-flex h-8 items-center rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground no-underline transition hover:bg-primary/90"
             >
               登录
-            </Link>
+            </button>
           )}
           <ThemeToggle />
         </div>

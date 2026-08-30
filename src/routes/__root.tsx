@@ -7,6 +7,7 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
+import AuthDialog from "../components/AuthDialog";
 import Footer from "../components/Footer";
 import Header from "../components/Header";
 
@@ -58,6 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Header />
         {children}
         <Footer />
+        <AuthDialog />
         <TanStackDevtools
           config={{
             position: "bottom-right",

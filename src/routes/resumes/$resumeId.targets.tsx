@@ -18,7 +18,7 @@ export const Route = createFileRoute("/resumes/$resumeId/targets")({
   component: TargetsPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
-    if (!user) throw redirect({ to: "/login" });
+    if (!user) throw redirect({ href: "/?auth=login" });
   },
   loader: async ({ params }) => {
     const resume = await getResume({ data: { id: Number(params.resumeId) } });

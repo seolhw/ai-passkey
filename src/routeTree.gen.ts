@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AdvisorRouteImport } from './routes/advisor'
-import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
 import { Route as ApiFetchJobsRouteImport } from './routes/api/fetch-jobs'
@@ -41,11 +40,6 @@ const AboutRoute = AboutRouteImport.update({
 const AdvisorRoute = AdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -123,7 +117,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/advisor': typeof AdvisorRoute
-  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
@@ -143,7 +136,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/advisor': typeof AdvisorRoute
-  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
@@ -164,7 +156,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/advisor': typeof AdvisorRoute
-  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
@@ -186,7 +177,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/advisor'
-    | '/login'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
@@ -206,7 +196,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/advisor'
-    | '/login'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
@@ -226,7 +215,6 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/advisor'
-    | '/login'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
@@ -247,7 +235,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AdvisorRoute: typeof AdvisorRoute
-  LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiFetchJobsRoute: typeof ApiFetchJobsRoute
@@ -283,13 +270,6 @@ declare module '@tanstack/react-router' {
       path: '/advisor'
       fullPath: '/advisor'
       preLoaderRoute: typeof AdvisorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -411,7 +391,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AdvisorRoute: AdvisorRoute,
-  LoginRoute: LoginRoute,
   McpRoute: McpRoute,
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiFetchJobsRoute: ApiFetchJobsRoute,
