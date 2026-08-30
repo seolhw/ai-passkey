@@ -1,7 +1,24 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "tanstack-start-app",
+  "name": "ai-passkey",
   "compatibility_date": "2025-09-02",
   "compatibility_flags": ["nodejs_compat"],
-  "main": "@tanstack/react-start/server-entry"
+  "main": "src/server.ts",
+  "observability": {
+    "enabled": true
+  },
+  // 生产数据库：先用 `pnpm db:d1:create` 创建并替换下面的 database_id
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ai-passkey",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      // Drizzle 生成的迁移文件目录（pnpm db:generate 输出）
+      "migrations_dir": "drizzle"
+    }
+  ],
+  // 每天 08:00（UTC）定时抓取一次 AI 公司 JD
+  "triggers": {
+    "crons": ["0 8 * * *"]
+  }
 }

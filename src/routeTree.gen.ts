@@ -11,27 +11,22 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
+import { Route as AdvisorRouteImport } from './routes/advisor'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as McpRouteImport } from './routes/mcp'
-import { Route as DemoAiChatRouteImport } from './routes/demo/ai-chat'
-import { Route as DemoAiImageRouteImport } from './routes/demo/ai-image'
-import { Route as DemoAiStructuredRouteImport } from './routes/demo/ai-structured'
-import { Route as DemoBetterAuthRouteImport } from './routes/demo/better-auth'
-import { Route as DemoDrizzleRouteImport } from './routes/demo/drizzle'
-import { Route as DemoMcpTodosRouteImport } from './routes/demo/mcp-todos'
-import { Route as DemoStoreRouteImport } from './routes/demo/store'
-import { Route as DemoTableRouteImport } from './routes/demo/table'
-import { Route as DemoTanstackQueryRouteImport } from './routes/demo/tanstack-query'
+import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
+import { Route as ApiFetchJobsRouteImport } from './routes/api/fetch-jobs'
+import { Route as ApiPolishRouteImport } from './routes/api/polish'
+import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
+import { Route as CompaniesCompanyIdRouteImport } from './routes/companies/$companyId'
+import { Route as CompaniesNewRouteImport } from './routes/companies/new'
+import { Route as LibraryIndexRouteImport } from './routes/library/index'
+import { Route as ResumesIndexRouteImport } from './routes/resumes/index'
+import { Route as ResumesResumeIdRouteImport } from './routes/resumes/$resumeId'
+import { Route as ResumesNewRouteImport } from './routes/resumes/new'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as DemoApiMcpTodosRouteImport } from './routes/demo/api.mcp-todos'
-import { Route as DemoFormAddressRouteImport } from './routes/demo/form.address'
-import { Route as DemoFormSimpleRouteImport } from './routes/demo/form.simple'
-import { Route as DemoGuitarsIndexRouteImport } from './routes/demo/guitars/index'
-import { Route as DemoGuitarsGuitarIdRouteImport } from './routes/demo/guitars/$guitarId'
-import { Route as DemoApiAiChatRouteImport } from './routes/demo/api.ai.chat'
-import { Route as DemoApiAiImageRouteImport } from './routes/demo/api.ai.image'
-import { Route as DemoApiAiStructuredRouteImport } from './routes/demo/api.ai.structured'
-import { Route as DemoApiAiTranscriptionRouteImport } from './routes/demo/api.ai.transcription'
-import { Route as DemoApiAiTtsRouteImport } from './routes/demo/api.ai.tts'
+import { Route as ResumesResumeIdPolishRouteImport } from './routes/resumes/$resumeId.polish'
+import { Route as ResumesResumeIdTargetsRouteImport } from './routes/resumes/$resumeId.targets'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -43,54 +38,69 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdvisorRoute = AdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoAiChatRoute = DemoAiChatRouteImport.update({
-  id: '/demo/ai-chat',
-  path: '/demo/ai-chat',
+const ApiAdvisorRoute = ApiAdvisorRouteImport.update({
+  id: '/api/advisor',
+  path: '/api/advisor',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoAiImageRoute = DemoAiImageRouteImport.update({
-  id: '/demo/ai-image',
-  path: '/demo/ai-image',
+const ApiFetchJobsRoute = ApiFetchJobsRouteImport.update({
+  id: '/api/fetch-jobs',
+  path: '/api/fetch-jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoAiStructuredRoute = DemoAiStructuredRouteImport.update({
-  id: '/demo/ai-structured',
-  path: '/demo/ai-structured',
+const ApiPolishRoute = ApiPolishRouteImport.update({
+  id: '/api/polish',
+  path: '/api/polish',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoBetterAuthRoute = DemoBetterAuthRouteImport.update({
-  id: '/demo/better-auth',
-  path: '/demo/better-auth',
+const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoDrizzleRoute = DemoDrizzleRouteImport.update({
-  id: '/demo/drizzle',
-  path: '/demo/drizzle',
+const CompaniesCompanyIdRoute = CompaniesCompanyIdRouteImport.update({
+  id: '/companies/$companyId',
+  path: '/companies/$companyId',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoMcpTodosRoute = DemoMcpTodosRouteImport.update({
-  id: '/demo/mcp-todos',
-  path: '/demo/mcp-todos',
+const CompaniesNewRoute = CompaniesNewRouteImport.update({
+  id: '/companies/new',
+  path: '/companies/new',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoStoreRoute = DemoStoreRouteImport.update({
-  id: '/demo/store',
-  path: '/demo/store',
+const LibraryIndexRoute = LibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoTableRoute = DemoTableRouteImport.update({
-  id: '/demo/table',
-  path: '/demo/table',
+const ResumesIndexRoute = ResumesIndexRouteImport.update({
+  id: '/resumes/',
+  path: '/resumes/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoTanstackQueryRoute = DemoTanstackQueryRouteImport.update({
-  id: '/demo/tanstack-query',
-  path: '/demo/tanstack-query',
+const ResumesResumeIdRoute = ResumesResumeIdRouteImport.update({
+  id: '/resumes/$resumeId',
+  path: '/resumes/$resumeId',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResumesNewRoute = ResumesNewRouteImport.update({
+  id: '/resumes/new',
+  path: '/resumes/new',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
@@ -98,235 +108,158 @@ const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const DemoApiMcpTodosRoute = DemoApiMcpTodosRouteImport.update({
-  id: '/demo/api/mcp-todos',
-  path: '/demo/api/mcp-todos',
-  getParentRoute: () => rootRouteImport,
+const ResumesResumeIdPolishRoute = ResumesResumeIdPolishRouteImport.update({
+  id: '/polish',
+  path: '/polish',
+  getParentRoute: () => ResumesResumeIdRoute,
 } as any)
-const DemoFormAddressRoute = DemoFormAddressRouteImport.update({
-  id: '/demo/form/address',
-  path: '/demo/form/address',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoFormSimpleRoute = DemoFormSimpleRouteImport.update({
-  id: '/demo/form/simple',
-  path: '/demo/form/simple',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoGuitarsIndexRoute = DemoGuitarsIndexRouteImport.update({
-  id: '/demo/guitars/',
-  path: '/demo/guitars/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoGuitarsGuitarIdRoute = DemoGuitarsGuitarIdRouteImport.update({
-  id: '/demo/guitars/$guitarId',
-  path: '/demo/guitars/$guitarId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoApiAiChatRoute = DemoApiAiChatRouteImport.update({
-  id: '/demo/api/ai/chat',
-  path: '/demo/api/ai/chat',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoApiAiImageRoute = DemoApiAiImageRouteImport.update({
-  id: '/demo/api/ai/image',
-  path: '/demo/api/ai/image',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoApiAiStructuredRoute = DemoApiAiStructuredRouteImport.update({
-  id: '/demo/api/ai/structured',
-  path: '/demo/api/ai/structured',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoApiAiTranscriptionRoute = DemoApiAiTranscriptionRouteImport.update({
-  id: '/demo/api/ai/transcription',
-  path: '/demo/api/ai/transcription',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DemoApiAiTtsRoute = DemoApiAiTtsRouteImport.update({
-  id: '/demo/api/ai/tts',
-  path: '/demo/api/ai/tts',
-  getParentRoute: () => rootRouteImport,
+const ResumesResumeIdTargetsRoute = ResumesResumeIdTargetsRouteImport.update({
+  id: '/targets',
+  path: '/targets',
+  getParentRoute: () => ResumesResumeIdRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/advisor': typeof AdvisorRoute
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/demo/ai-chat': typeof DemoAiChatRoute
-  '/demo/ai-image': typeof DemoAiImageRoute
-  '/demo/ai-structured': typeof DemoAiStructuredRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/mcp-todos': typeof DemoMcpTodosRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/api/advisor': typeof ApiAdvisorRoute
+  '/api/fetch-jobs': typeof ApiFetchJobsRoute
+  '/api/polish': typeof ApiPolishRoute
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute
+  '/companies/new': typeof CompaniesNewRoute
+  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
+  '/resumes/new': typeof ResumesNewRoute
+  '/companies/': typeof CompaniesIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/resumes/': typeof ResumesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/api/mcp-todos': typeof DemoApiMcpTodosRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/guitars/$guitarId': typeof DemoGuitarsGuitarIdRoute
-  '/demo/guitars/': typeof DemoGuitarsIndexRoute
-  '/demo/api/ai/chat': typeof DemoApiAiChatRoute
-  '/demo/api/ai/image': typeof DemoApiAiImageRoute
-  '/demo/api/ai/structured': typeof DemoApiAiStructuredRoute
-  '/demo/api/ai/transcription': typeof DemoApiAiTranscriptionRoute
-  '/demo/api/ai/tts': typeof DemoApiAiTtsRoute
+  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
+  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/advisor': typeof AdvisorRoute
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/demo/ai-chat': typeof DemoAiChatRoute
-  '/demo/ai-image': typeof DemoAiImageRoute
-  '/demo/ai-structured': typeof DemoAiStructuredRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/mcp-todos': typeof DemoMcpTodosRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/api/advisor': typeof ApiAdvisorRoute
+  '/api/fetch-jobs': typeof ApiFetchJobsRoute
+  '/api/polish': typeof ApiPolishRoute
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute
+  '/companies/new': typeof CompaniesNewRoute
+  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
+  '/resumes/new': typeof ResumesNewRoute
+  '/companies': typeof CompaniesIndexRoute
+  '/library': typeof LibraryIndexRoute
+  '/resumes': typeof ResumesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/api/mcp-todos': typeof DemoApiMcpTodosRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/guitars/$guitarId': typeof DemoGuitarsGuitarIdRoute
-  '/demo/guitars': typeof DemoGuitarsIndexRoute
-  '/demo/api/ai/chat': typeof DemoApiAiChatRoute
-  '/demo/api/ai/image': typeof DemoApiAiImageRoute
-  '/demo/api/ai/structured': typeof DemoApiAiStructuredRoute
-  '/demo/api/ai/transcription': typeof DemoApiAiTranscriptionRoute
-  '/demo/api/ai/tts': typeof DemoApiAiTtsRoute
+  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
+  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/advisor': typeof AdvisorRoute
+  '/login': typeof LoginRoute
   '/mcp': typeof McpRoute
-  '/demo/ai-chat': typeof DemoAiChatRoute
-  '/demo/ai-image': typeof DemoAiImageRoute
-  '/demo/ai-structured': typeof DemoAiStructuredRoute
-  '/demo/better-auth': typeof DemoBetterAuthRoute
-  '/demo/drizzle': typeof DemoDrizzleRoute
-  '/demo/mcp-todos': typeof DemoMcpTodosRoute
-  '/demo/store': typeof DemoStoreRoute
-  '/demo/table': typeof DemoTableRoute
-  '/demo/tanstack-query': typeof DemoTanstackQueryRoute
+  '/api/advisor': typeof ApiAdvisorRoute
+  '/api/fetch-jobs': typeof ApiFetchJobsRoute
+  '/api/polish': typeof ApiPolishRoute
+  '/companies/$companyId': typeof CompaniesCompanyIdRoute
+  '/companies/new': typeof CompaniesNewRoute
+  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
+  '/resumes/new': typeof ResumesNewRoute
+  '/companies/': typeof CompaniesIndexRoute
+  '/library/': typeof LibraryIndexRoute
+  '/resumes/': typeof ResumesIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/demo/api/mcp-todos': typeof DemoApiMcpTodosRoute
-  '/demo/form/address': typeof DemoFormAddressRoute
-  '/demo/form/simple': typeof DemoFormSimpleRoute
-  '/demo/guitars/$guitarId': typeof DemoGuitarsGuitarIdRoute
-  '/demo/guitars/': typeof DemoGuitarsIndexRoute
-  '/demo/api/ai/chat': typeof DemoApiAiChatRoute
-  '/demo/api/ai/image': typeof DemoApiAiImageRoute
-  '/demo/api/ai/structured': typeof DemoApiAiStructuredRoute
-  '/demo/api/ai/transcription': typeof DemoApiAiTranscriptionRoute
-  '/demo/api/ai/tts': typeof DemoApiAiTtsRoute
+  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
+  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
+    | '/advisor'
+    | '/login'
     | '/mcp'
-    | '/demo/ai-chat'
-    | '/demo/ai-image'
-    | '/demo/ai-structured'
-    | '/demo/better-auth'
-    | '/demo/drizzle'
-    | '/demo/mcp-todos'
-    | '/demo/store'
-    | '/demo/table'
-    | '/demo/tanstack-query'
+    | '/api/advisor'
+    | '/api/fetch-jobs'
+    | '/api/polish'
+    | '/companies/$companyId'
+    | '/companies/new'
+    | '/resumes/$resumeId'
+    | '/resumes/new'
+    | '/companies/'
+    | '/library/'
+    | '/resumes/'
     | '/api/auth/$'
-    | '/demo/api/mcp-todos'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/demo/guitars/$guitarId'
-    | '/demo/guitars/'
-    | '/demo/api/ai/chat'
-    | '/demo/api/ai/image'
-    | '/demo/api/ai/structured'
-    | '/demo/api/ai/transcription'
-    | '/demo/api/ai/tts'
+    | '/resumes/$resumeId/polish'
+    | '/resumes/$resumeId/targets'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/advisor'
+    | '/login'
     | '/mcp'
-    | '/demo/ai-chat'
-    | '/demo/ai-image'
-    | '/demo/ai-structured'
-    | '/demo/better-auth'
-    | '/demo/drizzle'
-    | '/demo/mcp-todos'
-    | '/demo/store'
-    | '/demo/table'
-    | '/demo/tanstack-query'
+    | '/api/advisor'
+    | '/api/fetch-jobs'
+    | '/api/polish'
+    | '/companies/$companyId'
+    | '/companies/new'
+    | '/resumes/$resumeId'
+    | '/resumes/new'
+    | '/companies'
+    | '/library'
+    | '/resumes'
     | '/api/auth/$'
-    | '/demo/api/mcp-todos'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/demo/guitars/$guitarId'
-    | '/demo/guitars'
-    | '/demo/api/ai/chat'
-    | '/demo/api/ai/image'
-    | '/demo/api/ai/structured'
-    | '/demo/api/ai/transcription'
-    | '/demo/api/ai/tts'
+    | '/resumes/$resumeId/polish'
+    | '/resumes/$resumeId/targets'
   id:
     | '__root__'
     | '/'
     | '/about'
+    | '/advisor'
+    | '/login'
     | '/mcp'
-    | '/demo/ai-chat'
-    | '/demo/ai-image'
-    | '/demo/ai-structured'
-    | '/demo/better-auth'
-    | '/demo/drizzle'
-    | '/demo/mcp-todos'
-    | '/demo/store'
-    | '/demo/table'
-    | '/demo/tanstack-query'
+    | '/api/advisor'
+    | '/api/fetch-jobs'
+    | '/api/polish'
+    | '/companies/$companyId'
+    | '/companies/new'
+    | '/resumes/$resumeId'
+    | '/resumes/new'
+    | '/companies/'
+    | '/library/'
+    | '/resumes/'
     | '/api/auth/$'
-    | '/demo/api/mcp-todos'
-    | '/demo/form/address'
-    | '/demo/form/simple'
-    | '/demo/guitars/$guitarId'
-    | '/demo/guitars/'
-    | '/demo/api/ai/chat'
-    | '/demo/api/ai/image'
-    | '/demo/api/ai/structured'
-    | '/demo/api/ai/transcription'
-    | '/demo/api/ai/tts'
+    | '/resumes/$resumeId/polish'
+    | '/resumes/$resumeId/targets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdvisorRoute: typeof AdvisorRoute
+  LoginRoute: typeof LoginRoute
   McpRoute: typeof McpRoute
-  DemoAiChatRoute: typeof DemoAiChatRoute
-  DemoAiImageRoute: typeof DemoAiImageRoute
-  DemoAiStructuredRoute: typeof DemoAiStructuredRoute
-  DemoBetterAuthRoute: typeof DemoBetterAuthRoute
-  DemoDrizzleRoute: typeof DemoDrizzleRoute
-  DemoMcpTodosRoute: typeof DemoMcpTodosRoute
-  DemoStoreRoute: typeof DemoStoreRoute
-  DemoTableRoute: typeof DemoTableRoute
-  DemoTanstackQueryRoute: typeof DemoTanstackQueryRoute
+  ApiAdvisorRoute: typeof ApiAdvisorRoute
+  ApiFetchJobsRoute: typeof ApiFetchJobsRoute
+  ApiPolishRoute: typeof ApiPolishRoute
+  CompaniesCompanyIdRoute: typeof CompaniesCompanyIdRoute
+  CompaniesNewRoute: typeof CompaniesNewRoute
+  ResumesResumeIdRoute: typeof ResumesResumeIdRouteWithChildren
+  ResumesNewRoute: typeof ResumesNewRoute
+  CompaniesIndexRoute: typeof CompaniesIndexRoute
+  LibraryIndexRoute: typeof LibraryIndexRoute
+  ResumesIndexRoute: typeof ResumesIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
-  DemoApiMcpTodosRoute: typeof DemoApiMcpTodosRoute
-  DemoFormAddressRoute: typeof DemoFormAddressRoute
-  DemoFormSimpleRoute: typeof DemoFormSimpleRoute
-  DemoGuitarsGuitarIdRoute: typeof DemoGuitarsGuitarIdRoute
-  DemoGuitarsIndexRoute: typeof DemoGuitarsIndexRoute
-  DemoApiAiChatRoute: typeof DemoApiAiChatRoute
-  DemoApiAiImageRoute: typeof DemoApiAiImageRoute
-  DemoApiAiStructuredRoute: typeof DemoApiAiStructuredRoute
-  DemoApiAiTranscriptionRoute: typeof DemoApiAiTranscriptionRoute
-  DemoApiAiTtsRoute: typeof DemoApiAiTtsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -345,6 +278,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/advisor': {
+      id: '/advisor'
+      path: '/advisor'
+      fullPath: '/advisor'
+      preLoaderRoute: typeof AdvisorRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/mcp': {
       id: '/mcp'
       path: '/mcp'
@@ -352,67 +299,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof McpRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/ai-chat': {
-      id: '/demo/ai-chat'
-      path: '/demo/ai-chat'
-      fullPath: '/demo/ai-chat'
-      preLoaderRoute: typeof DemoAiChatRouteImport
+    '/api/advisor': {
+      id: '/api/advisor'
+      path: '/api/advisor'
+      fullPath: '/api/advisor'
+      preLoaderRoute: typeof ApiAdvisorRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/ai-image': {
-      id: '/demo/ai-image'
-      path: '/demo/ai-image'
-      fullPath: '/demo/ai-image'
-      preLoaderRoute: typeof DemoAiImageRouteImport
+    '/api/fetch-jobs': {
+      id: '/api/fetch-jobs'
+      path: '/api/fetch-jobs'
+      fullPath: '/api/fetch-jobs'
+      preLoaderRoute: typeof ApiFetchJobsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/ai-structured': {
-      id: '/demo/ai-structured'
-      path: '/demo/ai-structured'
-      fullPath: '/demo/ai-structured'
-      preLoaderRoute: typeof DemoAiStructuredRouteImport
+    '/api/polish': {
+      id: '/api/polish'
+      path: '/api/polish'
+      fullPath: '/api/polish'
+      preLoaderRoute: typeof ApiPolishRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/better-auth': {
-      id: '/demo/better-auth'
-      path: '/demo/better-auth'
-      fullPath: '/demo/better-auth'
-      preLoaderRoute: typeof DemoBetterAuthRouteImport
+    '/companies/': {
+      id: '/companies/'
+      path: '/companies'
+      fullPath: '/companies/'
+      preLoaderRoute: typeof CompaniesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/drizzle': {
-      id: '/demo/drizzle'
-      path: '/demo/drizzle'
-      fullPath: '/demo/drizzle'
-      preLoaderRoute: typeof DemoDrizzleRouteImport
+    '/companies/$companyId': {
+      id: '/companies/$companyId'
+      path: '/companies/$companyId'
+      fullPath: '/companies/$companyId'
+      preLoaderRoute: typeof CompaniesCompanyIdRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/mcp-todos': {
-      id: '/demo/mcp-todos'
-      path: '/demo/mcp-todos'
-      fullPath: '/demo/mcp-todos'
-      preLoaderRoute: typeof DemoMcpTodosRouteImport
+    '/companies/new': {
+      id: '/companies/new'
+      path: '/companies/new'
+      fullPath: '/companies/new'
+      preLoaderRoute: typeof CompaniesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/store': {
-      id: '/demo/store'
-      path: '/demo/store'
-      fullPath: '/demo/store'
-      preLoaderRoute: typeof DemoStoreRouteImport
+    '/library/': {
+      id: '/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof LibraryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/table': {
-      id: '/demo/table'
-      path: '/demo/table'
-      fullPath: '/demo/table'
-      preLoaderRoute: typeof DemoTableRouteImport
+    '/resumes/': {
+      id: '/resumes/'
+      path: '/resumes'
+      fullPath: '/resumes/'
+      preLoaderRoute: typeof ResumesIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/tanstack-query': {
-      id: '/demo/tanstack-query'
-      path: '/demo/tanstack-query'
-      fullPath: '/demo/tanstack-query'
-      preLoaderRoute: typeof DemoTanstackQueryRouteImport
+    '/resumes/$resumeId': {
+      id: '/resumes/$resumeId'
+      path: '/resumes/$resumeId'
+      fullPath: '/resumes/$resumeId'
+      preLoaderRoute: typeof ResumesResumeIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/resumes/new': {
+      id: '/resumes/new'
+      path: '/resumes/new'
+      fullPath: '/resumes/new'
+      preLoaderRoute: typeof ResumesNewRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/auth/$': {
@@ -422,103 +376,54 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/demo/api/mcp-todos': {
-      id: '/demo/api/mcp-todos'
-      path: '/demo/api/mcp-todos'
-      fullPath: '/demo/api/mcp-todos'
-      preLoaderRoute: typeof DemoApiMcpTodosRouteImport
-      parentRoute: typeof rootRouteImport
+    '/resumes/$resumeId/polish': {
+      id: '/resumes/$resumeId/polish'
+      path: '/polish'
+      fullPath: '/resumes/$resumeId/polish'
+      preLoaderRoute: typeof ResumesResumeIdPolishRouteImport
+      parentRoute: typeof ResumesResumeIdRoute
     }
-    '/demo/form/address': {
-      id: '/demo/form/address'
-      path: '/demo/form/address'
-      fullPath: '/demo/form/address'
-      preLoaderRoute: typeof DemoFormAddressRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/form/simple': {
-      id: '/demo/form/simple'
-      path: '/demo/form/simple'
-      fullPath: '/demo/form/simple'
-      preLoaderRoute: typeof DemoFormSimpleRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/guitars/': {
-      id: '/demo/guitars/'
-      path: '/demo/guitars'
-      fullPath: '/demo/guitars/'
-      preLoaderRoute: typeof DemoGuitarsIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/guitars/$guitarId': {
-      id: '/demo/guitars/$guitarId'
-      path: '/demo/guitars/$guitarId'
-      fullPath: '/demo/guitars/$guitarId'
-      preLoaderRoute: typeof DemoGuitarsGuitarIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/api/ai/chat': {
-      id: '/demo/api/ai/chat'
-      path: '/demo/api/ai/chat'
-      fullPath: '/demo/api/ai/chat'
-      preLoaderRoute: typeof DemoApiAiChatRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/api/ai/image': {
-      id: '/demo/api/ai/image'
-      path: '/demo/api/ai/image'
-      fullPath: '/demo/api/ai/image'
-      preLoaderRoute: typeof DemoApiAiImageRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/api/ai/structured': {
-      id: '/demo/api/ai/structured'
-      path: '/demo/api/ai/structured'
-      fullPath: '/demo/api/ai/structured'
-      preLoaderRoute: typeof DemoApiAiStructuredRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/api/ai/transcription': {
-      id: '/demo/api/ai/transcription'
-      path: '/demo/api/ai/transcription'
-      fullPath: '/demo/api/ai/transcription'
-      preLoaderRoute: typeof DemoApiAiTranscriptionRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/demo/api/ai/tts': {
-      id: '/demo/api/ai/tts'
-      path: '/demo/api/ai/tts'
-      fullPath: '/demo/api/ai/tts'
-      preLoaderRoute: typeof DemoApiAiTtsRouteImport
-      parentRoute: typeof rootRouteImport
+    '/resumes/$resumeId/targets': {
+      id: '/resumes/$resumeId/targets'
+      path: '/targets'
+      fullPath: '/resumes/$resumeId/targets'
+      preLoaderRoute: typeof ResumesResumeIdTargetsRouteImport
+      parentRoute: typeof ResumesResumeIdRoute
     }
   }
 }
 
+interface ResumesResumeIdRouteChildren {
+  ResumesResumeIdPolishRoute: typeof ResumesResumeIdPolishRoute
+  ResumesResumeIdTargetsRoute: typeof ResumesResumeIdTargetsRoute
+}
+
+const ResumesResumeIdRouteChildren: ResumesResumeIdRouteChildren = {
+  ResumesResumeIdPolishRoute: ResumesResumeIdPolishRoute,
+  ResumesResumeIdTargetsRoute: ResumesResumeIdTargetsRoute,
+}
+
+const ResumesResumeIdRouteWithChildren = ResumesResumeIdRoute._addFileChildren(
+  ResumesResumeIdRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdvisorRoute: AdvisorRoute,
+  LoginRoute: LoginRoute,
   McpRoute: McpRoute,
-  DemoAiChatRoute: DemoAiChatRoute,
-  DemoAiImageRoute: DemoAiImageRoute,
-  DemoAiStructuredRoute: DemoAiStructuredRoute,
-  DemoBetterAuthRoute: DemoBetterAuthRoute,
-  DemoDrizzleRoute: DemoDrizzleRoute,
-  DemoMcpTodosRoute: DemoMcpTodosRoute,
-  DemoStoreRoute: DemoStoreRoute,
-  DemoTableRoute: DemoTableRoute,
-  DemoTanstackQueryRoute: DemoTanstackQueryRoute,
+  ApiAdvisorRoute: ApiAdvisorRoute,
+  ApiFetchJobsRoute: ApiFetchJobsRoute,
+  ApiPolishRoute: ApiPolishRoute,
+  CompaniesCompanyIdRoute: CompaniesCompanyIdRoute,
+  CompaniesNewRoute: CompaniesNewRoute,
+  ResumesResumeIdRoute: ResumesResumeIdRouteWithChildren,
+  ResumesNewRoute: ResumesNewRoute,
+  CompaniesIndexRoute: CompaniesIndexRoute,
+  LibraryIndexRoute: LibraryIndexRoute,
+  ResumesIndexRoute: ResumesIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
-  DemoApiMcpTodosRoute: DemoApiMcpTodosRoute,
-  DemoFormAddressRoute: DemoFormAddressRoute,
-  DemoFormSimpleRoute: DemoFormSimpleRoute,
-  DemoGuitarsGuitarIdRoute: DemoGuitarsGuitarIdRoute,
-  DemoGuitarsIndexRoute: DemoGuitarsIndexRoute,
-  DemoApiAiChatRoute: DemoApiAiChatRoute,
-  DemoApiAiImageRoute: DemoApiAiImageRoute,
-  DemoApiAiStructuredRoute: DemoApiAiStructuredRoute,
-  DemoApiAiTranscriptionRoute: DemoApiAiTranscriptionRoute,
-  DemoApiAiTtsRoute: DemoApiAiTtsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
