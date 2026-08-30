@@ -140,16 +140,19 @@ function LoginPage() {
         </form>
 
         <div className="mt-5 text-center">
-          <button
-            type="button"
-            onClick={() => {
-              setIsSignUp(!isSignUp);
-              setError("");
-            }}
-            className="text-sm text-(--sea-ink-soft) transition-colors hover:text-(--sea-ink)"
-          >
-            {isSignUp ? "已有账号？去登录" : "没有账号？立即注册"}
-          </button>
+          <p className="m-0 text-sm text-(--sea-ink-soft)">
+            {isSignUp ? "已有账号？" : "没有账号？"}
+            <button
+              type="button"
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError("");
+              }}
+              className="ml-1 font-semibold text-(--lagoon-deep) transition-colors hover:text-(--ai-violet-strong) hover:underline"
+            >
+              {isSignUp ? "去登录" : "立即注册"}
+            </button>
+          </p>
         </div>
       </section>
     </main>
