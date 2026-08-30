@@ -14,11 +14,9 @@ const config = defineConfig({
 	},
 	plugins: [
 		devtools(),
-		// 本地 dev 使用 Node SSR（better-sqlite3 原生模块无法在 workerd 中加载），
-		// 生产构建才接入 Cloudflare workerd。
-		...(process.env.NODE_ENV === "production"
-			? [cloudflare({ viteEnvironment: { name: "ssr" } })]
-			: []),
+		// 本地 dev 与生产均跑在 Cloudflare workerd 上，使用同一套 D1 绑定，
+		// 本地 D1 数据由 wrangler 模拟（.wrangler/state/v3/d1/）。
+		cloudflare({ viteEnvironment: { name: "ssr" } }),
 		tailwindcss(),
 		tanstackStart(),
 		viteReact(),

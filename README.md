@@ -6,13 +6,13 @@
 
 - [TanStack Start](https://tanstack.com/start)（React 19 全栈框架，文件路由 + Server Functions）
 - [Better Auth](https://better-auth.com) 认证（Drizzle 适配器）
-- [Drizzle ORM](https://orm.drizzle.team) + SQLite
-  - 本地开发：`better-sqlite3`
-  - 生产部署：Cloudflare D1
+- [Drizzle ORM](https://orm.drizzle.team) + Cloudflare D1（本地与生产均使用 D1，本地由 wrangler 模拟）
 - Tailwind CSS v4
 - 部署：Cloudflare Workers（自定义入口 + D1 + Cron）
 
 ## 本地开发
+
+本地 dev 同样运行在 Cloudflare workerd 上，数据库为本地模拟的 D1（数据位于 `.wrangler/state/v3/d1/`）。
 
 1. 安装依赖：
 
@@ -20,25 +20,22 @@
    pnpm install
    ```
 
-2. 配置环境变量（复制到 `.env.local`）：
+2. 配置环境变量（复制到 `.dev.vars`，已被 git 忽略）：
 
    ```env
    # LLM API Key（简历润色 / AI 顾问使用）
    ANTHROPIC_API_KEY=
-
-   # 本地 SQLite 数据库文件
-   DATABASE_URL="dev.db"
 
    # Better Auth 配置
    BETTER_AUTH_URL=http://localhost:3000
    BETTER_AUTH_SECRET= # 生成方式：npx -y @better-auth/cli secret
    ```
 
-3. 初始化本地数据库（迁移 + 种子数据）：
+3. 初始化本地 D1 数据库（迁移 + 种子数据）：
 
    ```bash
-   pnpm db:migrate
-   pnpm db:seed
+   pnpm db:d1:migrate:local
+   pnpm db:d1:seed:local
    ```
 
 4. 启动开发服务器：
@@ -91,25 +88,20 @@ pnpm deploy
 - 路由：所有 `*` 请求由 [src/server.ts](src/server.ts) 处理（来自 `@tanstack/react-start/server-entry`）
 - Cron 定时任务：每天 08:00（UTC）触发 [src/lib/jd-fetcher.ts](src/lib/jd-fetcher.ts) 的 `runFetchAll()` 自动抓取 JD（`triggers.crons` 可调整）
 
-### 本地 / 生产数据库自动切换
+### 本地 / 生产统一使用 D1
 
-[src/db/index.ts](src/db/index.ts) 根据运行时环境自动选择驱动：
-
-- 存在 `DATABASE_URL`（Node 环境）→ `better-sqlite3`
-- 否则（workerd 运行时）→ D1（`env.DB`）
-
-两者均通过动态 `import` 加载，原生模块不会进入 Worker 生产 bundle。
+本地 dev 与生产均运行在 Cloudflare workerd 上，[src/db/index.ts](src/db/index.ts) 统一通过 `cloudflare:workers` 的 `env.DB` 访问 D1，无本地 / 生产驱动切换逻辑。本地 D1 由 wrangler 模拟（`--local`），数据不落盘到项目目录。
 
 ## 常用命令
 
 | 命令 | 说明 |
 | --- | --- |
-| `pnpm dev` | 本地开发 |
+| `pnpm dev` | 本地开发（workerd + 本地 D1 模拟） |
 | `pnpm build` | 生产构建 |
 | `pnpm deploy` | 构建并部署到 Cloudflare |
 | `pnpm db:generate` | 根据 schema 生成迁移文件 |
-| `pnpm db:migrate` | 应用迁移（本地） |
-| `pnpm db:seed` | 导入种子数据（本地） |
-| `pnpm db:d1:migrate` | 应用迁移（D1） |
-| `pnpm db:d1:seed` | 导入种子数据（D1） |
+| `pnpm db:d1:migrate:local` | 应用迁移到本地 D1 |
+| `pnpm db:d1:seed:local` | 导入种子数据到本地 D1 |
+| `pnpm db:d1:migrate` | 应用迁移到远程 D1 |
+| `pnpm db:d1:seed` | 导入种子数据到远程 D1 |
 | `pnpm cf:typegen` | 重新生成 Worker 类型声明 |
