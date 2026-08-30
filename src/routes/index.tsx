@@ -57,12 +57,12 @@ function LandingPage() {
 	return (
 		<main className="page-wrap px-4 pb-20">
 			{/* Hero */}
-			<section className="relative overflow-hidden px-1 pb-20 pt-16 sm:pt-24">
+			<section className="relative overflow-hidden px-1 pb-20 pt-16 sm:pt-24 lg:pt-28 lg:pb-24">
 				<div className="pointer-events-none absolute -right-32 -top-24 h-80 w-80 rounded-full bg-[radial-gradient(circle,var(--hero-b),transparent_66%)]" />
 				<div className="pointer-events-none absolute -left-28 top-10 h-64 w-64 rounded-full bg-[radial-gradient(circle,var(--hero-a),transparent_66%)]" />
 
 				<p className="island-kicker relative mb-5">跨界简历 · AI 求职工作台</p>
-				<h1 className="display-title relative max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-[var(--sea-ink)] sm:text-6xl">
+				<h1 className="display-title relative max-w-3xl text-4xl font-bold leading-[1.1] tracking-tight text-[var(--sea-ink)] sm:text-6xl lg:max-w-4xl lg:text-7xl lg:leading-[1.05]">
 					上传简历，AI 按目标岗位
 					<span className="btn-gradient-text">逐条打磨</span>
 				</h1>
