@@ -5,7 +5,7 @@ import { useState } from "react";
 import { getCompanyJobs } from "#/lib/company-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/companies/$companyId")({
+export const Route = createFileRoute("/console/companies/$companyId")({
   component: CompanyDetailPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -15,7 +15,7 @@ export const Route = createFileRoute("/companies/$companyId")({
     const data = await getCompanyJobs({
       data: { companyId: Number(params.companyId) },
     });
-    if (!data) throw redirect({ to: "/companies" });
+    if (!data) throw redirect({ to: "/console/companies" });
     return data;
   },
 });
@@ -35,7 +35,7 @@ function CompanyDetailPage() {
     <main className="page-wrap px-4 pb-16 pt-10">
       <header className="mb-8">
         <Link
-          to="/companies"
+          to="/console/companies"
           className="mb-4 inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           返回公司列表
@@ -70,7 +70,7 @@ function CompanyDetailPage() {
           在招岗位（{jobs.length}）
         </h2>
         <Link
-          to="/resumes"
+          to="/console/resumes"
           className="text-sm font-medium text-(--lagoon-deep) no-underline hover:underline"
         >
           去选择目标岗位 →

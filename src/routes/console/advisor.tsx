@@ -17,7 +17,7 @@ const SUGGESTIONS = [
   "最近各家公司都招什么 AI 岗位？",
 ];
 
-export const Route = createFileRoute("/advisor")({
+export const Route = createFileRoute("/console/advisor")({
   component: AdvisorPage,
   beforeLoad: async () => {
     const user = await getSessionUser();

@@ -11,21 +11,24 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as AdvisorRouteImport } from './routes/advisor'
+import { Route as ConsoleRouteRouteImport } from './routes/console/route'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
 import { Route as ApiFetchJobsRouteImport } from './routes/api/fetch-jobs'
 import { Route as ApiPolishRouteImport } from './routes/api/polish'
-import { Route as CompaniesIndexRouteImport } from './routes/companies/index'
-import { Route as CompaniesCompanyIdRouteImport } from './routes/companies/$companyId'
-import { Route as CompaniesNewRouteImport } from './routes/companies/new'
-import { Route as LibraryIndexRouteImport } from './routes/library/index'
-import { Route as ResumesIndexRouteImport } from './routes/resumes/index'
-import { Route as ResumesResumeIdRouteImport } from './routes/resumes/$resumeId'
-import { Route as ResumesNewRouteImport } from './routes/resumes/new'
+import { Route as ConsoleIndexRouteImport } from './routes/console/index'
+import { Route as ConsoleAdvisorRouteImport } from './routes/console/advisor'
+import { Route as ConsoleSettingsRouteImport } from './routes/console/settings'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
-import { Route as ResumesResumeIdPolishRouteImport } from './routes/resumes/$resumeId.polish'
-import { Route as ResumesResumeIdTargetsRouteImport } from './routes/resumes/$resumeId.targets'
+import { Route as ConsoleCompaniesIndexRouteImport } from './routes/console/companies/index'
+import { Route as ConsoleCompaniesCompanyIdRouteImport } from './routes/console/companies/$companyId'
+import { Route as ConsoleCompaniesNewRouteImport } from './routes/console/companies/new'
+import { Route as ConsoleLibraryIndexRouteImport } from './routes/console/library/index'
+import { Route as ConsoleResumesIndexRouteImport } from './routes/console/resumes/index'
+import { Route as ConsoleResumesResumeIdRouteImport } from './routes/console/resumes/$resumeId'
+import { Route as ConsoleResumesNewRouteImport } from './routes/console/resumes/new'
+import { Route as ConsoleResumesResumeIdPolishRouteImport } from './routes/console/resumes/$resumeId.polish'
+import { Route as ConsoleResumesResumeIdTargetsRouteImport } from './routes/console/resumes/$resumeId.targets'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -37,9 +40,9 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdvisorRoute = AdvisorRouteImport.update({
-  id: '/advisor',
-  path: '/advisor',
+const ConsoleRouteRoute = ConsoleRouteRouteImport.update({
+  id: '/console',
+  path: '/console',
   getParentRoute: () => rootRouteImport,
 } as any)
 const McpRoute = McpRouteImport.update({
@@ -62,190 +65,217 @@ const ApiPolishRoute = ApiPolishRouteImport.update({
   path: '/api/polish',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CompaniesIndexRoute = CompaniesIndexRouteImport.update({
-  id: '/companies/',
-  path: '/companies/',
-  getParentRoute: () => rootRouteImport,
+const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ConsoleRouteRoute,
 } as any)
-const CompaniesCompanyIdRoute = CompaniesCompanyIdRouteImport.update({
-  id: '/companies/$companyId',
-  path: '/companies/$companyId',
-  getParentRoute: () => rootRouteImport,
+const ConsoleAdvisorRoute = ConsoleAdvisorRouteImport.update({
+  id: '/advisor',
+  path: '/advisor',
+  getParentRoute: () => ConsoleRouteRoute,
 } as any)
-const CompaniesNewRoute = CompaniesNewRouteImport.update({
-  id: '/companies/new',
-  path: '/companies/new',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const LibraryIndexRoute = LibraryIndexRouteImport.update({
-  id: '/library/',
-  path: '/library/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResumesIndexRoute = ResumesIndexRouteImport.update({
-  id: '/resumes/',
-  path: '/resumes/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResumesResumeIdRoute = ResumesResumeIdRouteImport.update({
-  id: '/resumes/$resumeId',
-  path: '/resumes/$resumeId',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ResumesNewRoute = ResumesNewRouteImport.update({
-  id: '/resumes/new',
-  path: '/resumes/new',
-  getParentRoute: () => rootRouteImport,
+const ConsoleSettingsRoute = ConsoleSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => ConsoleRouteRoute,
 } as any)
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ResumesResumeIdPolishRoute = ResumesResumeIdPolishRouteImport.update({
-  id: '/polish',
-  path: '/polish',
-  getParentRoute: () => ResumesResumeIdRoute,
+const ConsoleCompaniesIndexRoute = ConsoleCompaniesIndexRouteImport.update({
+  id: '/companies/',
+  path: '/companies/',
+  getParentRoute: () => ConsoleRouteRoute,
 } as any)
-const ResumesResumeIdTargetsRoute = ResumesResumeIdTargetsRouteImport.update({
-  id: '/targets',
-  path: '/targets',
-  getParentRoute: () => ResumesResumeIdRoute,
+const ConsoleCompaniesCompanyIdRoute =
+  ConsoleCompaniesCompanyIdRouteImport.update({
+    id: '/companies/$companyId',
+    path: '/companies/$companyId',
+    getParentRoute: () => ConsoleRouteRoute,
+  } as any)
+const ConsoleCompaniesNewRoute = ConsoleCompaniesNewRouteImport.update({
+  id: '/companies/new',
+  path: '/companies/new',
+  getParentRoute: () => ConsoleRouteRoute,
 } as any)
+const ConsoleLibraryIndexRoute = ConsoleLibraryIndexRouteImport.update({
+  id: '/library/',
+  path: '/library/',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleResumesIndexRoute = ConsoleResumesIndexRouteImport.update({
+  id: '/resumes/',
+  path: '/resumes/',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleResumesResumeIdRoute = ConsoleResumesResumeIdRouteImport.update({
+  id: '/resumes/$resumeId',
+  path: '/resumes/$resumeId',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleResumesNewRoute = ConsoleResumesNewRouteImport.update({
+  id: '/resumes/new',
+  path: '/resumes/new',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleResumesResumeIdPolishRoute =
+  ConsoleResumesResumeIdPolishRouteImport.update({
+    id: '/polish',
+    path: '/polish',
+    getParentRoute: () => ConsoleResumesResumeIdRoute,
+  } as any)
+const ConsoleResumesResumeIdTargetsRoute =
+  ConsoleResumesResumeIdTargetsRouteImport.update({
+    id: '/targets',
+    path: '/targets',
+    getParentRoute: () => ConsoleResumesResumeIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/advisor': typeof AdvisorRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
-  '/companies/$companyId': typeof CompaniesCompanyIdRoute
-  '/companies/new': typeof CompaniesNewRoute
-  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
-  '/resumes/new': typeof ResumesNewRoute
-  '/companies/': typeof CompaniesIndexRoute
-  '/library/': typeof LibraryIndexRoute
-  '/resumes/': typeof ResumesIndexRoute
+  '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/settings': typeof ConsoleSettingsRoute
+  '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
-  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
+  '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
+  '/console/companies/new': typeof ConsoleCompaniesNewRoute
+  '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
+  '/console/resumes/new': typeof ConsoleResumesNewRoute
+  '/console/companies/': typeof ConsoleCompaniesIndexRoute
+  '/console/library/': typeof ConsoleLibraryIndexRoute
+  '/console/resumes/': typeof ConsoleResumesIndexRoute
+  '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
+  '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/advisor': typeof AdvisorRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
-  '/companies/$companyId': typeof CompaniesCompanyIdRoute
-  '/companies/new': typeof CompaniesNewRoute
-  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
-  '/resumes/new': typeof ResumesNewRoute
-  '/companies': typeof CompaniesIndexRoute
-  '/library': typeof LibraryIndexRoute
-  '/resumes': typeof ResumesIndexRoute
+  '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/settings': typeof ConsoleSettingsRoute
+  '/console': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
-  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
+  '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
+  '/console/companies/new': typeof ConsoleCompaniesNewRoute
+  '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
+  '/console/resumes/new': typeof ConsoleResumesNewRoute
+  '/console/companies': typeof ConsoleCompaniesIndexRoute
+  '/console/library': typeof ConsoleLibraryIndexRoute
+  '/console/resumes': typeof ConsoleResumesIndexRoute
+  '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
+  '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/console': typeof ConsoleRouteRouteWithChildren
   '/about': typeof AboutRoute
-  '/advisor': typeof AdvisorRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
-  '/companies/$companyId': typeof CompaniesCompanyIdRoute
-  '/companies/new': typeof CompaniesNewRoute
-  '/resumes/$resumeId': typeof ResumesResumeIdRouteWithChildren
-  '/resumes/new': typeof ResumesNewRoute
-  '/companies/': typeof CompaniesIndexRoute
-  '/library/': typeof LibraryIndexRoute
-  '/resumes/': typeof ResumesIndexRoute
+  '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/settings': typeof ConsoleSettingsRoute
+  '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
-  '/resumes/$resumeId/polish': typeof ResumesResumeIdPolishRoute
-  '/resumes/$resumeId/targets': typeof ResumesResumeIdTargetsRoute
+  '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
+  '/console/companies/new': typeof ConsoleCompaniesNewRoute
+  '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
+  '/console/resumes/new': typeof ConsoleResumesNewRoute
+  '/console/companies/': typeof ConsoleCompaniesIndexRoute
+  '/console/library/': typeof ConsoleLibraryIndexRoute
+  '/console/resumes/': typeof ConsoleResumesIndexRoute
+  '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
+  '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/console'
     | '/about'
-    | '/advisor'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
     | '/api/polish'
-    | '/companies/$companyId'
-    | '/companies/new'
-    | '/resumes/$resumeId'
-    | '/resumes/new'
-    | '/companies/'
-    | '/library/'
-    | '/resumes/'
+    | '/console/advisor'
+    | '/console/settings'
+    | '/console/'
     | '/api/auth/$'
-    | '/resumes/$resumeId/polish'
-    | '/resumes/$resumeId/targets'
+    | '/console/companies/$companyId'
+    | '/console/companies/new'
+    | '/console/resumes/$resumeId'
+    | '/console/resumes/new'
+    | '/console/companies/'
+    | '/console/library/'
+    | '/console/resumes/'
+    | '/console/resumes/$resumeId/polish'
+    | '/console/resumes/$resumeId/targets'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/advisor'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
     | '/api/polish'
-    | '/companies/$companyId'
-    | '/companies/new'
-    | '/resumes/$resumeId'
-    | '/resumes/new'
-    | '/companies'
-    | '/library'
-    | '/resumes'
+    | '/console/advisor'
+    | '/console/settings'
+    | '/console'
     | '/api/auth/$'
-    | '/resumes/$resumeId/polish'
-    | '/resumes/$resumeId/targets'
+    | '/console/companies/$companyId'
+    | '/console/companies/new'
+    | '/console/resumes/$resumeId'
+    | '/console/resumes/new'
+    | '/console/companies'
+    | '/console/library'
+    | '/console/resumes'
+    | '/console/resumes/$resumeId/polish'
+    | '/console/resumes/$resumeId/targets'
   id:
     | '__root__'
     | '/'
+    | '/console'
     | '/about'
-    | '/advisor'
     | '/mcp'
     | '/api/advisor'
     | '/api/fetch-jobs'
     | '/api/polish'
-    | '/companies/$companyId'
-    | '/companies/new'
-    | '/resumes/$resumeId'
-    | '/resumes/new'
-    | '/companies/'
-    | '/library/'
-    | '/resumes/'
+    | '/console/advisor'
+    | '/console/settings'
+    | '/console/'
     | '/api/auth/$'
-    | '/resumes/$resumeId/polish'
-    | '/resumes/$resumeId/targets'
+    | '/console/companies/$companyId'
+    | '/console/companies/new'
+    | '/console/resumes/$resumeId'
+    | '/console/resumes/new'
+    | '/console/companies/'
+    | '/console/library/'
+    | '/console/resumes/'
+    | '/console/resumes/$resumeId/polish'
+    | '/console/resumes/$resumeId/targets'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ConsoleRouteRoute: typeof ConsoleRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
-  AdvisorRoute: typeof AdvisorRoute
   McpRoute: typeof McpRoute
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiFetchJobsRoute: typeof ApiFetchJobsRoute
   ApiPolishRoute: typeof ApiPolishRoute
-  CompaniesCompanyIdRoute: typeof CompaniesCompanyIdRoute
-  CompaniesNewRoute: typeof CompaniesNewRoute
-  ResumesResumeIdRoute: typeof ResumesResumeIdRouteWithChildren
-  ResumesNewRoute: typeof ResumesNewRoute
-  CompaniesIndexRoute: typeof CompaniesIndexRoute
-  LibraryIndexRoute: typeof LibraryIndexRoute
-  ResumesIndexRoute: typeof ResumesIndexRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
 
@@ -265,11 +295,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/advisor': {
-      id: '/advisor'
-      path: '/advisor'
-      fullPath: '/advisor'
-      preLoaderRoute: typeof AdvisorRouteImport
+    '/console': {
+      id: '/console'
+      path: '/console'
+      fullPath: '/console'
+      preLoaderRoute: typeof ConsoleRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/mcp': {
@@ -300,54 +330,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPolishRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/companies/': {
-      id: '/companies/'
-      path: '/companies'
-      fullPath: '/companies/'
-      preLoaderRoute: typeof CompaniesIndexRouteImport
-      parentRoute: typeof rootRouteImport
+    '/console/': {
+      id: '/console/'
+      path: '/'
+      fullPath: '/console/'
+      preLoaderRoute: typeof ConsoleIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
     }
-    '/companies/$companyId': {
-      id: '/companies/$companyId'
-      path: '/companies/$companyId'
-      fullPath: '/companies/$companyId'
-      preLoaderRoute: typeof CompaniesCompanyIdRouteImport
-      parentRoute: typeof rootRouteImport
+    '/console/advisor': {
+      id: '/console/advisor'
+      path: '/advisor'
+      fullPath: '/console/advisor'
+      preLoaderRoute: typeof ConsoleAdvisorRouteImport
+      parentRoute: typeof ConsoleRouteRoute
     }
-    '/companies/new': {
-      id: '/companies/new'
-      path: '/companies/new'
-      fullPath: '/companies/new'
-      preLoaderRoute: typeof CompaniesNewRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/library/': {
-      id: '/library/'
-      path: '/library'
-      fullPath: '/library/'
-      preLoaderRoute: typeof LibraryIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resumes/': {
-      id: '/resumes/'
-      path: '/resumes'
-      fullPath: '/resumes/'
-      preLoaderRoute: typeof ResumesIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resumes/$resumeId': {
-      id: '/resumes/$resumeId'
-      path: '/resumes/$resumeId'
-      fullPath: '/resumes/$resumeId'
-      preLoaderRoute: typeof ResumesResumeIdRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/resumes/new': {
-      id: '/resumes/new'
-      path: '/resumes/new'
-      fullPath: '/resumes/new'
-      preLoaderRoute: typeof ResumesNewRouteImport
-      parentRoute: typeof rootRouteImport
+    '/console/settings': {
+      id: '/console/settings'
+      path: '/settings'
+      fullPath: '/console/settings'
+      preLoaderRoute: typeof ConsoleSettingsRouteImport
+      parentRoute: typeof ConsoleRouteRoute
     }
     '/api/auth/$': {
       id: '/api/auth/$'
@@ -356,52 +358,126 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiAuthSplatRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/resumes/$resumeId/polish': {
-      id: '/resumes/$resumeId/polish'
-      path: '/polish'
-      fullPath: '/resumes/$resumeId/polish'
-      preLoaderRoute: typeof ResumesResumeIdPolishRouteImport
-      parentRoute: typeof ResumesResumeIdRoute
+    '/console/companies/': {
+      id: '/console/companies/'
+      path: '/companies'
+      fullPath: '/console/companies/'
+      preLoaderRoute: typeof ConsoleCompaniesIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
     }
-    '/resumes/$resumeId/targets': {
-      id: '/resumes/$resumeId/targets'
+    '/console/companies/$companyId': {
+      id: '/console/companies/$companyId'
+      path: '/companies/$companyId'
+      fullPath: '/console/companies/$companyId'
+      preLoaderRoute: typeof ConsoleCompaniesCompanyIdRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/companies/new': {
+      id: '/console/companies/new'
+      path: '/companies/new'
+      fullPath: '/console/companies/new'
+      preLoaderRoute: typeof ConsoleCompaniesNewRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/library/': {
+      id: '/console/library/'
+      path: '/library'
+      fullPath: '/console/library/'
+      preLoaderRoute: typeof ConsoleLibraryIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/resumes/': {
+      id: '/console/resumes/'
+      path: '/resumes'
+      fullPath: '/console/resumes/'
+      preLoaderRoute: typeof ConsoleResumesIndexRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/resumes/$resumeId': {
+      id: '/console/resumes/$resumeId'
+      path: '/resumes/$resumeId'
+      fullPath: '/console/resumes/$resumeId'
+      preLoaderRoute: typeof ConsoleResumesResumeIdRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/resumes/new': {
+      id: '/console/resumes/new'
+      path: '/resumes/new'
+      fullPath: '/console/resumes/new'
+      preLoaderRoute: typeof ConsoleResumesNewRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/resumes/$resumeId/polish': {
+      id: '/console/resumes/$resumeId/polish'
+      path: '/polish'
+      fullPath: '/console/resumes/$resumeId/polish'
+      preLoaderRoute: typeof ConsoleResumesResumeIdPolishRouteImport
+      parentRoute: typeof ConsoleResumesResumeIdRoute
+    }
+    '/console/resumes/$resumeId/targets': {
+      id: '/console/resumes/$resumeId/targets'
       path: '/targets'
-      fullPath: '/resumes/$resumeId/targets'
-      preLoaderRoute: typeof ResumesResumeIdTargetsRouteImport
-      parentRoute: typeof ResumesResumeIdRoute
+      fullPath: '/console/resumes/$resumeId/targets'
+      preLoaderRoute: typeof ConsoleResumesResumeIdTargetsRouteImport
+      parentRoute: typeof ConsoleResumesResumeIdRoute
     }
   }
 }
 
-interface ResumesResumeIdRouteChildren {
-  ResumesResumeIdPolishRoute: typeof ResumesResumeIdPolishRoute
-  ResumesResumeIdTargetsRoute: typeof ResumesResumeIdTargetsRoute
+interface ConsoleResumesResumeIdRouteChildren {
+  ConsoleResumesResumeIdPolishRoute: typeof ConsoleResumesResumeIdPolishRoute
+  ConsoleResumesResumeIdTargetsRoute: typeof ConsoleResumesResumeIdTargetsRoute
 }
 
-const ResumesResumeIdRouteChildren: ResumesResumeIdRouteChildren = {
-  ResumesResumeIdPolishRoute: ResumesResumeIdPolishRoute,
-  ResumesResumeIdTargetsRoute: ResumesResumeIdTargetsRoute,
+const ConsoleResumesResumeIdRouteChildren: ConsoleResumesResumeIdRouteChildren =
+  {
+    ConsoleResumesResumeIdPolishRoute: ConsoleResumesResumeIdPolishRoute,
+    ConsoleResumesResumeIdTargetsRoute: ConsoleResumesResumeIdTargetsRoute,
+  }
+
+const ConsoleResumesResumeIdRouteWithChildren =
+  ConsoleResumesResumeIdRoute._addFileChildren(
+    ConsoleResumesResumeIdRouteChildren,
+  )
+
+interface ConsoleRouteRouteChildren {
+  ConsoleAdvisorRoute: typeof ConsoleAdvisorRoute
+  ConsoleSettingsRoute: typeof ConsoleSettingsRoute
+  ConsoleIndexRoute: typeof ConsoleIndexRoute
+  ConsoleCompaniesCompanyIdRoute: typeof ConsoleCompaniesCompanyIdRoute
+  ConsoleCompaniesNewRoute: typeof ConsoleCompaniesNewRoute
+  ConsoleResumesResumeIdRoute: typeof ConsoleResumesResumeIdRouteWithChildren
+  ConsoleResumesNewRoute: typeof ConsoleResumesNewRoute
+  ConsoleCompaniesIndexRoute: typeof ConsoleCompaniesIndexRoute
+  ConsoleLibraryIndexRoute: typeof ConsoleLibraryIndexRoute
+  ConsoleResumesIndexRoute: typeof ConsoleResumesIndexRoute
 }
 
-const ResumesResumeIdRouteWithChildren = ResumesResumeIdRoute._addFileChildren(
-  ResumesResumeIdRouteChildren,
+const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
+  ConsoleAdvisorRoute: ConsoleAdvisorRoute,
+  ConsoleSettingsRoute: ConsoleSettingsRoute,
+  ConsoleIndexRoute: ConsoleIndexRoute,
+  ConsoleCompaniesCompanyIdRoute: ConsoleCompaniesCompanyIdRoute,
+  ConsoleCompaniesNewRoute: ConsoleCompaniesNewRoute,
+  ConsoleResumesResumeIdRoute: ConsoleResumesResumeIdRouteWithChildren,
+  ConsoleResumesNewRoute: ConsoleResumesNewRoute,
+  ConsoleCompaniesIndexRoute: ConsoleCompaniesIndexRoute,
+  ConsoleLibraryIndexRoute: ConsoleLibraryIndexRoute,
+  ConsoleResumesIndexRoute: ConsoleResumesIndexRoute,
+}
+
+const ConsoleRouteRouteWithChildren = ConsoleRouteRoute._addFileChildren(
+  ConsoleRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ConsoleRouteRoute: ConsoleRouteRouteWithChildren,
   AboutRoute: AboutRoute,
-  AdvisorRoute: AdvisorRoute,
   McpRoute: McpRoute,
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiFetchJobsRoute: ApiFetchJobsRoute,
   ApiPolishRoute: ApiPolishRoute,
-  CompaniesCompanyIdRoute: CompaniesCompanyIdRoute,
-  CompaniesNewRoute: CompaniesNewRoute,
-  ResumesResumeIdRoute: ResumesResumeIdRouteWithChildren,
-  ResumesNewRoute: ResumesNewRoute,
-  CompaniesIndexRoute: CompaniesIndexRoute,
-  LibraryIndexRoute: LibraryIndexRoute,
-  ResumesIndexRoute: ResumesIndexRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
 export const routeTree = rootRouteImport

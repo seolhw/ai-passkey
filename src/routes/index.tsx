@@ -88,14 +88,14 @@ function LandingPage() {
 
         <div className="relative mt-9 flex flex-wrap gap-3">
           <Link
-            to="/resumes/new"
+            to="/console/resumes/new"
             className="btn-gradient inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold no-underline"
           >
             开始修改简历
             <ArrowRight className="size-4" />
           </Link>
           <Link
-            to="/companies"
+            to="/console/companies"
             className="inline-flex h-11 items-center gap-2 rounded-lg border border-(--line) bg-(--surface-strong) px-6 text-sm font-medium text-(--sea-ink) no-underline transition hover:border-(--lagoon-deep)"
           >
             浏览招聘简章
@@ -164,7 +164,7 @@ function LandingPage() {
           分钟完成一轮逐条打磨，每一步都可回滚。
         </p>
         <Link
-          to="/resumes/new"
+          to="/console/resumes/new"
           className="mt-7 inline-flex h-11 items-center gap-2 rounded-lg bg-white px-7 text-sm font-semibold text-(--ai-violet) no-underline transition hover:opacity-90"
         >
           上传简历，立即开始

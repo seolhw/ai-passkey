@@ -1,16 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { LogOut } from "lucide-react";
+import { LayoutGrid, LogOut } from "lucide-react";
 import { authClient } from "#/lib/auth-client";
 import { openAuthDialog } from "#/stores/auth-dialog";
 import BrandLogo from "./BrandLogo";
 import ThemeToggle from "./ThemeToggle";
-
-const NAV_LINKS = [
-  { to: "/resumes", label: "我的简历" },
-  { to: "/companies", label: "招聘简章" },
-  { to: "/library", label: "简历大厅" },
-  { to: "/advisor", label: "AI 顾问" },
-] as const;
 
 export default function Header() {
   const { data: session, isPending } = authClient.useSession();
@@ -32,27 +25,18 @@ export default function Header() {
           </Link>
         </h2>
 
-        <div className="hidden items-center gap-1 text-sm sm:flex">
-          {NAV_LINKS.map((link) => (
-            <Link
-              key={link.to}
-              to={link.to}
-              className="rounded-md px-3 py-1.5 text-(--sea-ink-soft) no-underline transition hover:bg-(--link-bg-hover) hover:text-(--sea-ink)"
-              activeProps={{ className: "nav-link is-active" }}
-            >
-              {link.label}
-            </Link>
-          ))}
-        </div>
-
         <div className="ml-auto flex items-center gap-1.5 sm:gap-2">
           {isPending ? (
             <div className="h-8 w-8 animate-pulse rounded-full bg-(--line)" />
           ) : session?.user ? (
             <>
-              <span className="hidden max-w-40 truncate text-sm text-(--sea-ink-soft) sm:block">
-                {session.user.name || session.user.email}
-              </span>
+              <Link
+                to="/console/resumes"
+                className="inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground no-underline transition hover:bg-primary/90"
+              >
+                <LayoutGrid className="size-3.5" />
+                进入控制台
+              </Link>
               <button
                 type="button"
                 onClick={() => {

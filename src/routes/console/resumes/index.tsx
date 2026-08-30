@@ -9,7 +9,7 @@ import { FileText, Plus, Trash2 } from "lucide-react";
 import { deleteResume, listResumes } from "#/lib/resume-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/resumes/")({
+export const Route = createFileRoute("/console/resumes/")({
   component: ResumesPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -40,7 +40,7 @@ function ResumesPage() {
           </p>
         </div>
         <Link
-          to="/resumes/new"
+          to="/console/resumes/new"
           className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90"
         >
           <Plus className="size-4" />
@@ -58,7 +58,7 @@ function ResumesPage() {
             上传一份现有简历，或用简历大厅的优质模板快速开始
           </p>
           <Link
-            to="/resumes/new"
+            to="/console/resumes/new"
             className="inline-flex h-9 items-center justify-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90"
           >
             <Plus className="size-4" />
@@ -73,7 +73,7 @@ function ResumesPage() {
               className="island-shell group relative rounded-2xl p-5 transition hover:-translate-y-0.5"
             >
               <Link
-                to="/resumes/$resumeId"
+                to="/console/resumes/$resumeId"
                 params={{ resumeId: String(resume.id) }}
                 className="block no-underline"
               >

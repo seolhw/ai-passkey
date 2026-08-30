@@ -10,7 +10,7 @@ import { useState } from "react";
 import { createJob } from "#/lib/company-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/companies/new")({
+export const Route = createFileRoute("/console/companies/new")({
   component: NewJobPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -51,14 +51,14 @@ function NewJobPage() {
       setError("保存失败，请重试");
       return;
     }
-    await router.navigate({ to: "/companies" });
+    await router.navigate({ to: "/console/companies" });
   };
 
   return (
     <main className="page-wrap max-w-2xl px-4 pb-16 pt-10">
       <header className="mb-6">
         <Link
-          to="/companies"
+          to="/console/companies"
           className="mb-4 inline-flex h-9 items-center gap-1 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           <ArrowLeft className="size-4" /> 返回

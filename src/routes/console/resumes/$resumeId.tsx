@@ -26,7 +26,7 @@ import {
 import { htmlToText } from "#/lib/resume-utils";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/resumes/$resumeId")({
+export const Route = createFileRoute("/console/resumes/$resumeId")({
   component: ResumeDetailPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -34,7 +34,7 @@ export const Route = createFileRoute("/resumes/$resumeId")({
   },
   loader: async ({ params }) => {
     const resume = await getResume({ data: { id: Number(params.resumeId) } });
-    if (!resume) throw redirect({ to: "/resumes" });
+    if (!resume) throw redirect({ to: "/console/resumes" });
     const versions = await listVersions({ data: { id: resume.id } });
     return { resume, versions };
   },
@@ -149,7 +149,7 @@ function ResumeDetailPage() {
       {/* 工具栏 */}
       <div className="mb-6 flex flex-wrap items-center gap-2">
         <Link
-          to="/resumes"
+          to="/console/resumes"
           className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
           返回列表
@@ -184,7 +184,7 @@ function ResumeDetailPage() {
           版本历史
         </button>
         <Link
-          to="/resumes/$resumeId/targets"
+          to="/console/resumes/$resumeId/targets"
           params={{ resumeId: String(resume.id) }}
           className="inline-flex h-9 shrink-0 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
@@ -192,7 +192,7 @@ function ResumeDetailPage() {
           目标岗位
         </Link>
         <Link
-          to="/resumes/$resumeId/polish"
+          to="/console/resumes/$resumeId/polish"
           params={{ resumeId: String(resume.id) }}
           className="btn-gradient inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-4 text-sm font-medium no-underline"
         >

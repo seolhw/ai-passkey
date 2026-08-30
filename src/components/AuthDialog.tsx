@@ -56,7 +56,7 @@ export default function AuthDialog() {
       }
     }
     closeAuthDialog();
-    void router.navigate({ to: "/resumes" });
+    void router.navigate({ to: "/console/resumes" });
   };
 
   return (

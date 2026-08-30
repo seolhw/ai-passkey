@@ -14,7 +14,7 @@ import {
 } from "#/lib/resume-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/resumes/$resumeId/targets")({
+export const Route = createFileRoute("/console/resumes/$resumeId/targets")({
   component: TargetsPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/resumes/$resumeId/targets")({
   },
   loader: async ({ params }) => {
     const resume = await getResume({ data: { id: Number(params.resumeId) } });
-    if (!resume) throw redirect({ to: "/resumes" });
+    if (!resume) throw redirect({ to: "/console/resumes" });
     const [jobs, selected] = await Promise.all([
       listJobs(),
       listResumeTargets({ data: { resumeId: resume.id } }),
@@ -101,7 +101,7 @@ function TargetsPage() {
     });
     setSaving(false);
     await router.navigate({
-      to: "/resumes/$resumeId/polish",
+      to: "/console/resumes/$resumeId/polish",
       params: { resumeId: String(resume.id) },
     });
   };
@@ -110,7 +110,7 @@ function TargetsPage() {
     <main className="page-wrap px-4 pb-16 pt-10">
       <header className="mb-6 flex flex-wrap items-center gap-3">
         <Link
-          to="/resumes/$resumeId"
+          to="/console/resumes/$resumeId"
           params={{ resumeId: String(resume.id) }}
           className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >

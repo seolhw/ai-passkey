@@ -20,7 +20,7 @@ import { getResume, listResumeTargets, saveResume } from "#/lib/resume-api";
 import { htmlToText } from "#/lib/resume-utils";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/resumes/$resumeId/polish")({
+export const Route = createFileRoute("/console/resumes/$resumeId/polish")({
   component: PolishPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -28,7 +28,7 @@ export const Route = createFileRoute("/resumes/$resumeId/polish")({
   },
   loader: async ({ params }) => {
     const resume = await getResume({ data: { id: Number(params.resumeId) } });
-    if (!resume) throw redirect({ to: "/resumes" });
+    if (!resume) throw redirect({ to: "/console/resumes" });
     const targets = await listResumeTargets({ data: { resumeId: resume.id } });
     return { resume, targets };
   },
@@ -128,7 +128,7 @@ function PolishPage() {
     if (fixed) {
       await router.invalidate();
       await router.navigate({
-        to: "/resumes/$resumeId",
+        to: "/console/resumes/$resumeId",
         params: { resumeId: String(resume.id) },
       });
     } else {
@@ -149,7 +149,7 @@ function PolishPage() {
     <main className="page-wrap px-4 pb-16 pt-10">
       <header className="mb-6 flex flex-wrap items-center gap-3">
         <Link
-          to="/resumes/$resumeId"
+          to="/console/resumes/$resumeId"
           params={{ resumeId: String(resume.id) }}
           className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
         >
@@ -183,7 +183,7 @@ function PolishPage() {
             尚未选择目标岗位，修改将缺少精准方向。
           </p>
           <Link
-            to="/resumes/$resumeId/targets"
+            to="/console/resumes/$resumeId/targets"
             params={{ resumeId: String(resume.id) }}
             className="ml-auto inline-flex h-8 shrink-0 items-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90"
           >

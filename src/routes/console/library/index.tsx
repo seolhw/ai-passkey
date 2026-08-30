@@ -5,7 +5,7 @@ import { useState } from "react";
 import { copyLibraryToResume, listLibraryItems } from "#/lib/library-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/library/")({
+export const Route = createFileRoute("/console/library/")({
   component: LibraryPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -38,7 +38,7 @@ function LibraryPage() {
     setCopyingId(null);
     if (!resume) return;
     await router.navigate({
-      to: "/resumes/$resumeId",
+      to: "/console/resumes/$resumeId",
       params: { resumeId: String(resume.id) },
     });
   };

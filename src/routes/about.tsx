@@ -69,7 +69,7 @@ function About() {
 
       <section className="mt-12">
         <Link
-          to="/resumes/new"
+          to="/console/resumes/new"
           className="btn-gradient inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold no-underline"
         >
           现在就开始

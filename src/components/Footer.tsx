@@ -3,10 +3,10 @@ import { AI_COMPANIES } from "@/constants/models";
 import BrandLogo from "./BrandLogo";
 
 const FOOTER_LINKS = [
-  { to: "/resumes", label: "我的简历" },
-  { to: "/companies", label: "招聘简章" },
-  { to: "/library", label: "简历大厅" },
-  { to: "/advisor", label: "AI 顾问" },
+  { to: "/console/resumes", label: "我的简历" },
+  { to: "/console/companies", label: "招聘简章" },
+  { to: "/console/library", label: "简历大厅" },
+  { to: "/console/advisor", label: "AI 顾问" },
   { to: "/about", label: "关于" },
 ] as const;
 

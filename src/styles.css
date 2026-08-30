@@ -307,6 +307,47 @@ pre code {
   color: var(--lagoon-deep);
 }
 
+/* ---------- 控制台侧边导航 ---------- */
+
+.console-nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  color: var(--sea-ink-soft);
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.console-nav-item:hover {
+  background: var(--link-bg-hover);
+  color: var(--sea-ink);
+}
+
+.console-nav-item.is-active {
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.console-nav-item.is-active::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: -3px;
+  top: 50%;
+  translate: 0 -50%;
+  height: 1.25rem;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
 /* ---------- AI 渐变点缀（<10% 覆盖） ---------- */
 
 .btn-gradient {

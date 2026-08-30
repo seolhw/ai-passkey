@@ -5,6 +5,7 @@ import {
   HeadContent,
   Link,
   Scripts,
+  useRouterState,
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import AuthDialog from "../components/AuthDialog";
@@ -46,6 +47,9 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isConsole = pathname.startsWith("/console");
+
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -56,9 +60,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="wrap-anywhere flex min-h-dvh flex-col font-sans antialiased selection:bg-[rgba(124,58,237,0.2)]">
-        <Header />
+        {!isConsole && <Header />}
         <div className="flex-1">{children}</div>
-        <Footer />
+        {!isConsole && <Footer />}
         <AuthDialog />
         <TanStackDevtools
           config={{

@@ -6,7 +6,7 @@ import { createResume } from "#/lib/resume-api";
 import { parseFileToPlainText, textToHtml } from "#/lib/resume-utils";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/resumes/new")({
+export const Route = createFileRoute("/console/resumes/new")({
   component: NewResumePage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -55,7 +55,7 @@ function NewResumePage() {
     });
     if (resume) {
       await navigate({
-        to: "/resumes/$resumeId",
+        to: "/console/resumes/$resumeId",
         params: { resumeId: String(resume.id) },
       });
     } else {

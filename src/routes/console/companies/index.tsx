@@ -5,7 +5,7 @@ import { useState } from "react";
 import { listCompanies } from "#/lib/company-api";
 import { getSessionUser } from "#/lib/session";
 
-export const Route = createFileRoute("/companies/")({
+export const Route = createFileRoute("/console/companies/")({
   component: CompaniesPage,
   beforeLoad: async () => {
     const user = await getSessionUser();
@@ -72,7 +72,7 @@ function CompaniesPage() {
           </p>
         </div>
         <Link
-          to="/companies/new"
+          to="/console/companies/new"
           className="inline-flex h-9 items-center gap-2 rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink) transition hover:bg-accent"
         >
           <Briefcase className="size-4" />
@@ -93,7 +93,7 @@ function CompaniesPage() {
           {companies.map((company) => (
             <Link
               key={company.id}
-              to="/companies/$companyId"
+              to="/console/companies/$companyId"
               params={{ companyId: String(company.id) }}
               className="island-shell group rounded-2xl p-5 no-underline transition hover:-translate-y-0.5 hover:shadow-lg"
             >
