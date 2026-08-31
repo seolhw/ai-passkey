@@ -45,7 +45,7 @@ function ConsoleLayout() {
             to="/console/resumes"
             className="flex items-center gap-2 no-underline"
           >
-            <BrandLogo className="size-7 rounded-md" />
+            <BrandLogo className="size-8" />
             <span className="text-sm font-bold tracking-tight text-(--sea-ink)">
               跨界简历
             </span>
@@ -112,31 +112,74 @@ function ConsoleLayout() {
 function VerifyEmailBanner({ email }: { email: string }) {
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSend = async () => {
     setSending(true);
-    const { error } = await authClient.sendVerificationEmail({
+    setError("");
+    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
       email,
-      callbackURL: "/console",
+      type: "email-verification",
     });
     setSending(false);
-    if (!error) setSent(true);
+    if (sendError) {
+      setError(sendError.message || "验证码发送失败，请重试");
+      return;
+    }
+    setSent(true);
+  };
+
+  const handleVerify = async () => {
+    setVerifying(true);
+    setError("");
+    const { error: verifyError } = await authClient.emailOtp.verifyEmail({
+      email,
+      otp: code,
+    });
+    setVerifying(false);
+    if (verifyError) setError(verifyError.message || "验证码错误，请重试");
+    // 验证成功：better-auth 会自动刷新 session，横幅随之消失
   };
 
   return (
-    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-amber-200/60 bg-amber-50 px-6 py-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
+    <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-2 border-b border-amber-200/60 bg-amber-50 px-6 py-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
       <MailWarning className="size-4 shrink-0" />
-      <span className="min-w-0 flex-1">
+      <span className="text-center">
         邮箱尚未验证，验证后即可创建简历，保障你的简历数据安全。
       </span>
-      <button
-        type="button"
-        onClick={() => void handleSend()}
-        disabled={sending || sent}
-        className="shrink-0 rounded-md bg-amber-800/10 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-800/20 disabled:pointer-events-none disabled:opacity-60 dark:bg-amber-200/10 dark:text-amber-200 dark:hover:bg-amber-200/20"
-      >
-        {sending ? "发送中…" : sent ? "已发送，请查收" : "发送验证邮件"}
-      </button>
+      {sent ? (
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+            placeholder="输入验证码"
+            maxLength={6}
+            className="w-28 rounded-md border border-amber-800/20 bg-white px-2 py-1.5 text-center text-xs tracking-widest text-amber-900 outline-none transition focus:border-amber-800/50 dark:border-amber-200/20 dark:bg-amber-950/50 dark:text-amber-100"
+          />
+          <button
+            type="button"
+            onClick={() => void handleVerify()}
+            disabled={verifying || code.length < 6}
+            className="shrink-0 rounded-md bg-amber-800/10 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-800/20 disabled:pointer-events-none disabled:opacity-60 dark:bg-amber-200/10 dark:text-amber-200 dark:hover:bg-amber-200/20"
+          >
+            {verifying ? "验证中…" : "验证"}
+          </button>
+          {error && (
+            <span className="text-xs text-red-600 dark:text-red-400">{error}</span>
+          )}
+        </div>
+      ) : (
+        <button
+          type="button"
+          onClick={() => void handleSend()}
+          disabled={sending}
+          className="shrink-0 rounded-md bg-amber-800/10 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-800/20 disabled:pointer-events-none disabled:opacity-60 dark:bg-amber-200/10 dark:text-amber-200 dark:hover:bg-amber-200/20"
+        >
+          {sending ? "发送中…" : "发送验证码"}
+        </button>
+      )}
     </div>
   );
 }

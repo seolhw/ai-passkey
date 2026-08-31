@@ -1,6 +1,7 @@
 import { i18n } from "@better-auth/i18n";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { emailOTP } from "better-auth/plugins";
 import { tanstackStartCookies } from "better-auth/tanstack-start";
 
 import { db } from "#/db/index";
@@ -8,7 +9,7 @@ import * as schema from "#/db/schema";
 import { env } from "#/env";
 import {
   sendPasswordResetEmail,
-  sendVerificationEmail,
+  sendVerificationCode,
 } from "#/integrations/resend";
 
 export const auth = betterAuth({
@@ -16,15 +17,6 @@ export const auth = betterAuth({
     provider: "sqlite",
     schema,
   }),
-  emailVerification: {
-    sendVerificationEmail: async ({ user, url }) => {
-      void sendVerificationEmail({
-        to: user.email,
-        subject: "验证你的邮箱",
-        url,
-      });
-    },
-  },
   emailAndPassword: {
     enabled: true,
     autoSignIn: true,
@@ -46,6 +38,14 @@ export const auth = betterAuth({
   secret: env.BETTER_AUTH_SECRET,
   baseURL: env.BETTER_AUTH_URL,
   plugins: [
+    emailOTP({
+      sendVerificationOTP: async ({ email, otp, type }) => {
+        if (type === "email-verification") {
+          void sendVerificationCode({ to: email, code: otp });
+        }
+      },
+      sendVerificationOnSignUp: false,
+    }),
     i18n({
       translations: {
         zh: {
