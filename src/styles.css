@@ -394,6 +394,12 @@ a {
   }
 }
 
+/* 按钮统一小手光标 */
+button:not(:disabled),
+[role="button"]:not(:disabled) {
+  cursor: pointer;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
     animation: none;

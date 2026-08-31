@@ -162,12 +162,19 @@ export const resumeTargets = sqliteTable(
   ],
 );
 
+/** 简历标签（key-value 对，如 { k: "学历", v: "硕士" }；存储为 JSON 数组） */
+export interface ResumeTag {
+  k: string;
+  v: string;
+}
+
 /** 简历大厅（优质参考简历） */
 export const resumeLibrary = sqliteTable("resume_library", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   title: text().notNull(),
   industry: text(),
-  tags: text(),
+  /** 标签（JSON 数组，如 [{"k":"学历","v":"硕士"},{"k":"经验","v":"3-5年"}]） */
+  tags: text({ mode: "json" }).$type<ResumeTag[]>().notNull().default([]),
   content: text().notNull(),
   featured: integer({ mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).default(

@@ -21,7 +21,7 @@ seed.forEach((c, i) => {
 
 librarySeed.forEach((item, i) => {
   lines.push(
-    `INSERT OR IGNORE INTO resume_library (id, title, industry, tags, content, featured, created_at) VALUES (${i + 1}, ${sqlStr(item.title)}, ${sqlStr(item.industry)}, ${sqlStr(item.tags)}, ${sqlStr(item.content)}, ${Number(item.featured)}, unixepoch());`,
+    `INSERT OR IGNORE INTO resume_library (id, title, industry, tags, content, featured, created_at) VALUES (${i + 1}, ${sqlStr(item.title)}, ${sqlStr(item.industry)}, ${sqlStr(JSON.stringify(item.tags))}, ${sqlStr(item.content)}, ${Number(item.featured)}, unixepoch());`,
   )
 })
 
