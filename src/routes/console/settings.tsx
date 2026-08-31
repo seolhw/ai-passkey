@@ -57,7 +57,9 @@ function SettingsPage() {
         </p>
       </header>
 
-      <section className="island-shell mb-6 rounded-2xl p-5">
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <section className="island-shell mb-6 rounded-2xl p-5">
         <h2 className="mb-4 text-base font-semibold text-(--sea-ink)">
           基本信息
         </h2>
@@ -125,12 +127,17 @@ function SettingsPage() {
         )}
       </section>
 
-      <section className="island-shell mb-6 rounded-2xl p-5">
+        </div>
+        <div className="space-y-6">
+          <section className="island-shell mb-6 rounded-2xl p-5">
         <h2 className="mb-4 text-base font-semibold text-(--sea-ink)">
           修改密码
         </h2>
         <ChangePasswordCard />
       </section>
+
+        </div>
+      </div>
 
       <section className="island-shell rounded-2xl p-5">
         <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">

@@ -1,10 +1,12 @@
 import Highlight from "@tiptap/extension-highlight";
-import { Markdown } from "@tiptap/markdown";
 import Placeholder from "@tiptap/extension-placeholder";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
+import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
+import { useState } from "react";
+import ConfirmDialog from "#/components/ConfirmDialog";
 import StarterKit from "@tiptap/starter-kit";
 import {
   AlignCenter,
@@ -62,6 +64,9 @@ export default function ResumeEditor({
       onChange?.(e.getHTML());
     },
   });
+
+  const [linkOpen, setLinkOpen] = useState(false);
+  const [linkUrl, setLinkUrl] = useState("");
 
   if (!editor) return null;
 
@@ -191,10 +196,7 @@ export default function ResumeEditor({
         <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           false,
-          () => {
-            const url = window.prompt("输入链接地址");
-            if (url) editor.chain().focus().setLink({ href: url }).run();
-          },
+          () => { setLinkUrl(""); setLinkOpen(true); },
           "插入链接",
           <LinkIcon className="size-4" />,
         )}
@@ -219,34 +221,30 @@ export default function ResumeEditor({
         )}
       </div>
 
-      {/* Markdown 支持提示条 */}
-      <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1.5 rounded-xl border border-(--line) bg-(--surface-strong) px-4 py-2.5 text-xs text-(--sea-ink-soft)">
-        <span className="inline-flex items-center gap-1.5 font-semibold text-(--lagoon-deep)">
-          <span className="rounded-md bg-(--lagoon-deep)/10 px-1.5 py-0.5">MD</span>
-          支持 Markdown 语法
-        </span>
-        {["# 标题", "## 二级", "**加粗**", "*斜体*", "- 列表", "1. 有序", "> 引用", "`代码`", "--- 分割线"].map(
-          (t) => (
-            <code
-              key={t}
-              className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 tabular-nums"
-            >
-              {t}
-            </code>
-          ),
-        )}
-        <span className="text-(--sea-ink-soft)">输入后按空格 / 回车自动排版</span>
-      </div>
-
-      {/* A4 白纸编辑区 */}
-      <div className="library-paper overflow-hidden rounded-[3px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] dark:border-zinc-600">
-        <div className="px-12 py-10">
-          <EditorContent editor={editor} className="min-h-[680px]" />
+      {/* A4 真实纸张：固定 A4 宽 210mm，min-height 297mm，内容超一页按页(297mm)分页 */}
+      <div className="resume-a4-paper library-paper overflow-hidden rounded-[2px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] dark:border-zinc-600">
+        <div className="px-[14mm] py-[14mm]">
+          <EditorContent editor={editor} className="min-h-[269mm]" />
         </div>
       </div>
 
       <style>{`
-        .resume-editor-content { font-size: 16px; line-height: 1.8; color: #27272a; }
+        .resume-a4-paper {
+          width: 210mm;
+          min-height: 297mm;
+          content-visibility: auto;
+          background-image: repeating-linear-gradient(
+            to bottom,
+            transparent 0,
+            transparent calc(297mm - 1px),
+            rgb(212 212 216 / 0.7) calc(297mm - 1px),
+            rgb(212 212 216 / 0.7) 297mm
+          );
+        }
+        .resume-a4-paper .ProseMirror {
+          min-height: 269mm;
+        }
+        .resume-editor-content { font-size: 14px; line-height: 1.75; color: #27272a; }
         .resume-editor-content p { margin: 0.5em 0; }
         .resume-editor-content ul, .resume-editor-content ol { padding-left: 1.4em; }
         .resume-editor-content ul { list-style: disc; }
@@ -271,6 +269,18 @@ export default function ResumeEditor({
         .resume-editor-content ul[data-type="taskList"] li { display: flex; gap: 0.5em; align-items: flex-start; }
         .resume-editor-content hr { border: 0; border-top: 1px solid #d4d4d8; margin: 1em 0; }
       `}</style>
+      <ConfirmDialog
+        open={linkOpen}
+        onClose={() => setLinkOpen(false)}
+        title="插入链接"
+        message="输入链接地址，将选中文本设为链接。"
+        inputLabel="链接地址"
+        inputValue={linkUrl}
+        onInputChange={setLinkUrl}
+        inputPlaceholder="https://…"
+        confirmText="插入"
+        onConfirm={() => { if (linkUrl.trim()) editor.chain().focus().setLink({ href: linkUrl.trim() }).run(); setLinkOpen(false); }}
+      />
     </div>
   );
 }

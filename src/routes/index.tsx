@@ -117,7 +117,7 @@ function LandingPage() {
 
         <div className="relative mt-9 flex flex-wrap gap-3">
           <Link
-            to="/console/resumes/new"
+            to="/console"
             className="btn-gradient inline-flex h-11 items-center gap-2 rounded-lg px-6 text-sm font-semibold no-underline"
           >
             开始修改简历

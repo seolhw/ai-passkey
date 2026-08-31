@@ -2,11 +2,11 @@ import { createFileRoute, redirect } from "@tanstack/react-router";
 import {
   Copy,
   ExternalLink,
+  Handshake,
   Mail,
   MailCheck,
   MessageSquareHeart,
   PenLine,
-  Handshake,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -95,7 +95,9 @@ function ContactPage() {
               type="button"
               onClick={copyEmail}
               className={`inline-flex h-10 items-center gap-1.5 rounded-lg border px-3.5 text-sm font-medium text-(--sea-ink) transition hover:bg-accent ${
-                copied ? "border-(--lagoon-deep) text-(--lagoon-deep)" : "border-input"
+                copied
+                  ? "border-(--lagoon-deep) text-(--lagoon-deep)"
+                  : "border-input"
               }`}
             >
               {copied ? (
@@ -133,6 +135,10 @@ function ContactPage() {
         </article>
       </div>
 
+      {/* 微信打赏 */}
+      <section className="feature-card mt-10 overflow-hidden">
+        <div className="grid items-center gap-6 sm:grid-cols-[minmax(0,1fr)_auto]"></div>
+      </section>
       {/* 联系主题 */}
       <section className="mt-10">
         <h2 className="mb-4 text-base font-semibold text-(--sea-ink)">
@@ -158,6 +164,21 @@ function ContactPage() {
       <p className="mt-8 text-xs text-(--sea-ink-soft)">
         通常会在 1-2 个工作日内回复。如果是急事，可以在邮件标题注明「急」。
       </p>
+
+      <div className="grid gap-4 md:grid-cols-2 mt-4">
+        <article className="feature-card p-6">
+          <div className="min-w-0">
+            <h2 className="mb-1 font-semibold text-center">微信打赏</h2>
+          </div>
+          <div className="shrink-0">
+            <img
+              src="/ds.jpg"
+              alt="微信打赏二维码"
+              className="mx-auto size-100 rounded-xl border border-(--line) bg-white object-contain shadow-sm"
+            />
+          </div>
+        </article>
+      </div>
     </main>
   );
 }

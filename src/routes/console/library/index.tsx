@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import DetailModal from "#/components/DetailModal";
 import { copyLibraryToResume, listLibraryItems } from "#/lib/library-api";
 import { getSessionUser } from "#/lib/session";
 
@@ -62,6 +63,7 @@ function LibraryPage() {
   const router = useRouter();
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [copyingId, setCopyingId] = useState<number | null>(null);
+  const [viewing, setViewing] = useState<LibraryItem | null>(null);
   // 筛选区折叠状态，默认收起
   const [filterOpen, setFilterOpen] = useState(false);
   // 通用多选筛选：selectedTags[k] = 选中的值；未记录的 k 表示该维度「全选」
@@ -115,9 +117,7 @@ function LibraryPage() {
     });
   };
 
-  const tagList = (item: LibraryItem) =>
-    (item.tags ?? []).map((t) => `${t.k}: ${t.v}`);
-
+  
   /** 筛选逻辑：每个维度内命中任一选中值（维度间 AND，缺失该维度的简历视为通过） */
   const filteredItems = items.filter((item) => {
     for (const [k] of tagGroups) {
@@ -228,36 +228,41 @@ function LibraryPage() {
                       : "aspect-[210/297] overflow-hidden"
                   }`}
                 >
-                  {/* 展开态顶部工具条：滚动时不依赖底部 hover 浮层 */}
-                  {isOpen && (
-                    <div className="sticky top-2 z-10 flex justify-end gap-2 px-3">
-                      <button
-                        type="button"
-                        onClick={() => setExpandedId(null)}
-                        className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800"
-                      >
-                        <EyeOff className="size-3.5" /> 收起
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => void handleCopy(item)}
-                        disabled={copyingId === item.id}
-                        className="inline-flex h-7 items-center gap-1 rounded-md bg-(--lagoon-deep) px-2.5 text-xs font-medium text-white transition hover:opacity-90 disabled:opacity-50"
-                      >
-                        {copyingId === item.id ? (
-                          <Loader2 className="size-3.5 animate-spin" />
-                        ) : (
-                          <Copy className="size-3.5" />
-                        )}
-                        复制
-                      </button>
-                    </div>
-                  )}
+                  {/* 右上角固定操作条：详情 / 展开全文 / 复制 */}
+                  <div className="sticky top-2 z-10 flex justify-end gap-2 px-2 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setViewing(item)}
+                      title="查看详情"
+                      className="inline-flex h-7 items-center gap-1 rounded-md bg-(--lagoon-deep) px-2.5 text-xs font-medium text-white backdrop-blur transition hover:opacity-90"
+                    >
+                      详情
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setExpandedId(isOpen ? null : item.id)}
+                      title={isOpen ? "收起" : "展开全文"}
+                      className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800"
+                    >
+                      {isOpen ? (<><EyeOff className="size-3.5" /> 收起</>) : (<><Eye className="size-3.5" /> 展开全文</>)}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => void handleCopy(item)}
+                      disabled={copyingId === item.id}
+                      title="复制到我的简历"
+                      className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800 disabled:opacity-60"
+                    >
+                      {copyingId === item.id ? (<Loader2 className="size-3.5 animate-spin" />) : (<Copy className="size-3.5" />)}
+                      复制
+                    </button>
+                  </div>
 
-                  <div className="py-8">
+                  <div className="py-10">
                     <div className="px-8">
                       <div
                         className="library-paper-content"
+                        style={{ fontSize: "14px" }}
                         // biome-ignore lint/security/noDangerouslySetInnerHtml: 渲染已消毒的简历 HTML 内容
                         dangerouslySetInnerHTML={{ __html: item.content }}
                       />
@@ -266,73 +271,31 @@ function LibraryPage() {
                   {!isOpen && (
                     <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent via-white/55 to-white" />
                   )}
-
-                  {/* 底部浮层：hover 滑入（仅折叠态） */}
-                  {!isOpen && (
-                    <div className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-full rounded-t-md border-t border-white/15 bg-zinc-900/95 p-4 opacity-0 shadow-[0_-10px_28px_rgba(0,0,0,0.3)] backdrop-blur-sm transition-all duration-300 ease-out group-hover:pointer-events-auto group-hover:translate-y-0 group-hover:opacity-80">
-                      <div className="flex items-center justify-between gap-2">
-                        <h2 className="truncate text-sm font-semibold text-white">
-                          {item.title}
-                        </h2>
-                        {item.featured && (
-                          <span className="inline-flex h-5 shrink-0 items-center rounded-full bg-(--lagoon-deep) px-2 text-[11px] font-medium text-white">
-                            精选
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-0.5 text-xs text-zinc-300">
-                        {item.industry || "通用"}
-                      </p>
-                      {tagList(item).length > 0 && (
-                        <div className="mt-2 flex flex-wrap gap-1.5">
-                          {tagList(item).map((tag) => (
-                            <span
-                              key={tag}
-                              className="rounded-full bg-white/10 px-2 py-0.5 text-[11px] text-zinc-200"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                      )}
-                      <div className="mt-3 flex gap-2">
-                        <button
-                          type="button"
-                          onClick={() => setExpandedId(isOpen ? null : item.id)}
-                          className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md border border-white/25 px-3 text-xs font-medium text-zinc-100 transition hover:bg-white/10"
-                        >
-                          {isOpen ? (
-                            <>
-                              <EyeOff className="size-3.5" /> 收起
-                            </>
-                          ) : (
-                            <>
-                              <Eye className="size-3.5" /> 展开全文
-                            </>
-                          )}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => void handleCopy(item)}
-                          disabled={copyingId === item.id}
-                          className="inline-flex h-8 flex-1 items-center justify-center gap-1.5 rounded-md bg-(--lagoon-deep) px-3 text-xs font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
-                        >
-                          {copyingId === item.id ? (
-                            <Loader2 className="size-3.5 animate-spin" />
-                          ) : (
-                            <Copy className="size-3.5" />
-                          )}
-                          复制到编辑器
-                        </button>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </section>
             );
           })}
         </div>
       )}
+      {/* 优质简历详情弹窗 */}
+      <DetailModal
+        open={viewing != null}
+        onClose={() => setViewing(null)}
+        title={viewing ? `简历 · ${viewing.title}` : "简历详情"}
+      >
+        {viewing && (
+          <div className="mx-auto w-full max-w-[780px]">
+            <div className="library-paper min-h-[297mm] overflow-hidden rounded-[2px] border border-zinc-200 bg-white shadow-sm">
+              <div className="p-8">
+                <div className="library-paper-content" style={{ fontSize: "14px" }}>
+                  <h1 className="mb-4 text-center text-[1.6em] font-bold tracking-widest">{viewing.title}</h1>
+                  <div dangerouslySetInnerHTML={{ __html: viewing.content }} />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </DetailModal>
     </main>
   );
 }

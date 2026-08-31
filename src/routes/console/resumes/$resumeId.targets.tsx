@@ -4,10 +4,15 @@ import {
   redirect,
   useRouter,
 } from "@tanstack/react-router";
-import { Check, Loader2, Save, Target } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Save,
+  Target,
+} from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { listJobs } from "#/lib/company-api";
-import { formatPublishedAt, formatSalary } from "#/lib/job";
 import {
   getResume,
   listResumeTargets,
@@ -38,6 +43,7 @@ function TargetsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<number>>(
     () => new Set(selected.map((j) => j.id)),
   );
+  const [openCompanies, setOpenCompanies] = useState<Set<string>>(new Set());
   const [saving, setSaving] = useState(false);
   const [search, setSearch] = useState("");
 
@@ -45,6 +51,7 @@ function TargetsPage() {
     setSelectedIds(new Set(selected.map((j) => j.id)));
   }, [selected]);
 
+  // 按公司分组
   const grouped = useMemo(() => {
     const map = new Map<string, typeof jobs>();
     jobs.forEach((job) => {
@@ -58,22 +65,20 @@ function TargetsPage() {
     );
   }, [jobs]);
 
+  // 搜索过滤（输入关键词时逐步收窄）
   const filtered = useMemo(() => {
     if (!search.trim()) return grouped;
     const q = search.trim().toLowerCase();
     return grouped
-      .map(
-        ([name, list]) =>
-          [
-            name,
-            list.filter(
-              (j) =>
-                j.title.toLowerCase().includes(q) ||
-                name.toLowerCase().includes(q) ||
-                j.jobCities?.some((c) => c.city.toLowerCase().includes(q)),
-            ),
-          ] as const,
-      )
+      .map(([name, list]) => [
+        name,
+        list.filter(
+          (j) =>
+            j.title.toLowerCase().includes(q) ||
+            name.toLowerCase().includes(q) ||
+            j.jobCities?.some((c) => c.city.toLowerCase().includes(q)),
+        ),
+      ] as const)
       .filter(([, list]) => list.length > 0);
   }, [grouped, search]);
 
@@ -84,8 +89,14 @@ function TargetsPage() {
     setSelectedIds(next);
   };
 
-  const toggleCompany = (name: string) => {
-    const list = grouped.find(([n]) => n === name)?.[1] ?? [];
+  const toggleCompanyOpen = (name: string) => {
+    const next = new Set(openCompanies);
+    if (next.has(name)) next.delete(name);
+    else next.add(name);
+    setOpenCompanies(next);
+  };
+
+  const toggleCompanyAll = (list: typeof jobs) => {
     const allSelected = list.every((j) => selectedIds.has(j.id));
     const next = new Set(selectedIds);
     list.forEach((j) => {
@@ -123,11 +134,12 @@ function TargetsPage() {
             选择目标公司与岗位
           </h1>
           <p className="mt-1 text-sm text-(--sea-ink-soft)">
-            修改时会把所选岗位的 JD 注入提示词，精准匹配简历
+            按公司筛选，多选岗位；修改时会把所选岗位的 JD 注入提示词
           </p>
         </div>
       </header>
 
+      {/* 顶部：搜索 + 已选 + 保存 */}
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <input
           value={search}
@@ -136,8 +148,28 @@ function TargetsPage() {
           placeholder="搜索公司 / 岗位 / 地点…"
         />
         <span className="text-sm text-(--sea-ink-soft)">
-          已选 {selectedIds.size} 个岗位
+          已选{" "}
+          <span className="font-medium text-(--lagoon-deep)">
+            {selectedIds.size}
+          </span>{" "}
+          个岗位
         </span>
+        <span className="text-xs text-(--sea-ink-soft)">（不选即为空）</span>
+        <button
+          type="button"
+          onClick={() => void handleSave()}
+          disabled={saving}
+          className="btn-gradient ml-auto inline-flex h-9 shrink-0 items-center gap-2 rounded-md px-5 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
+        >
+          {saving ? (
+            <Loader2 className="size-4 animate-spin" />
+          ) : (
+            <Save className="size-4" />
+          )}
+          {selectedIds.size === 0
+            ? "保存（空）"
+            : `保存并去修改（${selectedIds.size}）`}
+        </button>
       </div>
 
       {filtered.length === 0 ? (
@@ -146,99 +178,112 @@ function TargetsPage() {
           <p className="text-sm text-(--sea-ink-soft)">未找到匹配岗位</p>
         </section>
       ) : (
-        <div className="grid gap-4">
-          {filtered.map(([name, list]) => {
-            const allSelected = list.every((j) => selectedIds.has(j.id));
-            const someSelected = list.some((j) => selectedIds.has(j.id));
+        /* 筛选标签：按公司分组的可折叠标签组（默认折叠） */
+        <div className="island-shell rounded-2xl">
+          {filtered.map(([name, list], idx) => {
+            const open = openCompanies.has(name);
+            const sel = list.filter((j) => selectedIds.has(j.id)).length;
+            const allSelected = list.length > 0 && sel === list.length;
+            const someSelected = sel > 0 && !allSelected;
             return (
-              <section key={name} className="island-shell rounded-2xl p-4">
-                <div className="mb-3 flex items-center justify-between">
-                  <h2 className="text-base font-semibold text-(--sea-ink)">
+              <div
+                key={name}
+                className={`${idx > 0 ? "border-t border-(--line)" : ""}`}
+              >
+                {/* 组头：公司名 + 已选 + 全选/清除 + 折叠箭头 */}
+                <button
+                  type="button"
+                  onClick={() => toggleCompanyOpen(name)}
+                  className="flex w-full items-center gap-2 px-5 py-3 text-left transition hover:bg-(--link-bg-hover)"
+                >
+                  <span
+                    className={`inline-flex h-7 shrink-0 items-center rounded-full border px-3 text-sm font-medium transition ${
+                      allSelected
+                        ? "border-(--lagoon-deep) bg-(--lagoon-deep)/10 text-(--lagoon-deep)"
+                        : someSelected
+                          ? "border-(--lagoon-deep)/60 text-(--lagoon-deep)"
+                          : "border-input text-(--sea-ink)"
+                    }`}
+                  >
                     {name}
-                  </h2>
+                  </span>
+                  <span className="shrink-0 text-xs text-(--sea-ink-soft)">
+                    {sel > 0
+                      ? `已选 ${sel}/${list.length}`
+                      : `${list.length} 个岗位`}
+                  </span>
                   <button
                     type="button"
-                    onClick={() => toggleCompany(name)}
-                    className="inline-flex h-8 items-center gap-1.5 rounded-md border border-input px-2.5 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleCompanyAll(list);
+                    }}
+                    className="ml-auto inline-flex h-6 items-center rounded-full border px-2.5 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
                   >
-                    <span
-                      className={`flex size-4 items-center justify-center rounded border ${
-                        allSelected
-                          ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white"
-                          : someSelected
-                            ? "border-(--lagoon-deep)"
-                            : "border-input"
-                      }`}
-                    >
-                      {allSelected && <Check className="size-3" />}
-                    </span>
-                    {allSelected ? "取消全选" : "全选"}
+                    {allSelected ? "清除" : "全选"}
                   </button>
-                </div>
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {list.map((job) => {
-                    const isOn = selectedIds.has(job.id);
-                    return (
-                      <button
-                        type="button"
-                        key={job.id}
-                        onClick={() => toggle(job.id)}
-                        className={`flex items-start gap-3 rounded-xl border p-3 text-left transition ${
-                          isOn
-                            ? "border-(--lagoon-deep) bg-[rgba(124,58,237,0.08)]"
-                            : "border-(--line) bg-(--surface) hover:border-(--lagoon-deep)"
-                        }`}
-                      >
-                        <span
-                          className={`mt-0.5 flex size-5 shrink-0 items-center justify-center rounded border ${
-                            isOn
-                              ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white"
-                              : "border-input"
-                          }`}
-                        >
-                          {isOn && <Check className="size-3.5" />}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block truncate text-sm font-medium text-(--sea-ink)">
+                  <span className="shrink-0 text-(--sea-ink-soft)">
+                    {open ? (
+                      <ChevronUp className="size-4" />
+                    ) : (
+                      <ChevronDown className="size-4" />
+                    )}
+                  </span>
+                </button>
+
+                {/* 展开后的岗位标签（可多选） */}
+                {open && (
+                  <div className="border-t border-(--line) px-5 py-4">
+                    <div className="flex flex-wrap gap-2">
+                      {list.map((job) => {
+                        const isOn = selectedIds.has(job.id);
+                        return (
+                          <button
+                            type="button"
+                            key={job.id}
+                            onClick={() => toggle(job.id)}
+                            title={`${job.company?.name ?? name} · ${job.title}${
+                              job.jobCities?.length
+                                ? ` · ${job.jobCities
+                                    .map((c) => c.city)
+                                    .join("/")}`
+                                : ""
+                            }`}
+                            className={`inline-flex items-center gap-1.5 rounded-full border py-1 pl-2 pr-3 text-sm transition ${
+                              isOn
+                                ? "border-(--lagoon-deep) bg-(--lagoon-deep)/10 text-(--lagoon-deep)"
+                                : "border-input bg-(--surface-strong) text-(--sea-ink) hover:border-(--lagoon-deep)"
+                            }`}
+                          >
+                            <span
+                              className={`flex size-4 shrink-0 items-center justify-center rounded border text-white ${
+                                isOn
+                                  ? "border-(--lagoon-deep) bg-(--lagoon-deep)"
+                                  : "border-input"
+                              }`}
+                            >
+                              {isOn && <span className="text-[10px]">✓</span>}
+                            </span>
                             {job.title}
-                          </span>
-                          <span className="mt-0.5 block text-xs text-(--sea-ink-soft)">
-                            {[
-                              formatSalary(job),
-                              job.jobCities?.map((c) => c.city).join("/"),
-                              formatPublishedAt(job.publishedAt)
-                                ? `${formatPublishedAt(job.publishedAt)} 发布`
-                                : "",
-                            ]
-                              .filter(Boolean)
-                              .join(" · ") || "薪资面议"}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </section>
+                            <span className="text-xs text-(--sea-ink-soft)">
+                              {job.company?.name ?? name}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
             );
           })}
         </div>
       )}
 
-      <div className="sticky bottom-4 mt-6 flex justify-end">
-        <button
-          type="button"
-          onClick={() => void handleSave()}
-          disabled={saving || selectedIds.size === 0}
-          className="btn-gradient inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-6 text-sm font-medium shadow-lg disabled:pointer-events-none disabled:opacity-50"
-        >
-          {saving ? (
-            <Loader2 className="size-4 animate-spin" />
-          ) : (
-            <Save className="size-4" />
-          )}
-          {selectedIds.size === 0 ? "请先选择岗位" : "保存并开始修改"}
-        </button>
-      </div>
+      <p className="mt-4 text-xs text-(--sea-ink-soft)">
+        提示：可多选岗位，也可不选（默认不选）。不选时直接保存，AI
+        修改将不参考特定 JD。
+      </p>
     </main>
   );
 }

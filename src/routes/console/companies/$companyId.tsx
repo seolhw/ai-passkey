@@ -6,11 +6,11 @@ import {
   Eye,
   EyeOff,
   MapPin,
-  Minus,
-  Plus,
   Wallet,
 } from "lucide-react";
 import { useState } from "react";
+
+import DetailModal from "#/components/DetailModal";
 
 import LogoAvatar from "#/components/LogoAvatar";
 import { getCompanyJobs } from "#/lib/company-api";
@@ -35,8 +35,8 @@ export const Route = createFileRoute("/console/companies/$companyId")({
 function CompanyDetailPage() {
   const { company, jobs } = Route.useLoaderData();
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
-  /** 每张 JD 卡的放大档位：0=标准 / 1=大 / 2=特大 */
-  const [zoom, setZoom] = useState<Record<number, number>>({});
+  /** 当前查看详情的岗位（null=未打开弹窗） */
+  const [viewing, setViewing] = useState<(typeof jobs)[number] | null>(null);
 
   const toggle = (id: number) => {
     const next = new Set(expanded);
@@ -44,27 +44,8 @@ function CompanyDetailPage() {
     else next.add(id);
     setExpanded(next);
   };
-
-  const zoomUp = (id: number) => {
-    setZoom((prev) => {
-      const cur = prev[id] ?? 0;
-      return { ...prev, [id]: Math.min(2, cur + 1) };
-    });
-  };
-  const zoomDown = (id: number) => {
-    setZoom((prev) => {
-      const cur = prev[id] ?? 0;
-      if (cur === 0) {
-        const next = { ...prev };
-        delete next[id];
-        return next;
-      }
-      return { ...prev, [id]: cur - 1 };
-    });
-  };
-
-  /** 字号放大倍率（对应档位） */
-  const ZOOM_STEPS = [1, 1.3, 1.6];
+  const openDetail = (job: (typeof jobs)[number]) => setViewing(job);
+  const closeDetail = () => setViewing(null);
 
   return (
     <main className="page-wrap px-4 pb-16 pt-10">
@@ -132,12 +113,6 @@ function CompanyDetailPage() {
         <h2 className="text-base font-semibold text-(--sea-ink)">
           在招岗位（{jobs.length}）
         </h2>
-        <Link
-          to="/console/resumes"
-          className="text-sm font-medium text-(--lagoon-deep) no-underline hover:underline"
-        >
-          去选择目标岗位 →
-        </Link>
       </div>
 
       {jobs.length === 0 ? (
@@ -150,8 +125,6 @@ function CompanyDetailPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => {
             const isOpen = expanded.has(job.id);
-            const zoomLevel = zoom[job.id] ?? 0;
-            const zoomScale = ZOOM_STEPS[zoomLevel] ?? 1;
             return (
               <div
                 key={job.id}
@@ -161,21 +134,24 @@ function CompanyDetailPage() {
                     : "aspect-[210/297] overflow-hidden"
                 }`}
               >
-                {/* 顶部操作条：展开全文 / 收起 / 放大 */}
+                {/* 顶部操作条：详情 / 展开全文 */}
                 <div className="sticky top-2 z-10 flex justify-end gap-2 px-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => openDetail(job)}
+                    className="inline-flex h-7 items-center gap-1 rounded-md bg-(--lagoon-deep) px-2.5 text-xs font-medium text-white backdrop-blur transition hover:opacity-90"
+                  >
+                    详情
+                  </button>
                   <button
                     type="button"
                     onClick={() => toggle(job.id)}
                     className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800"
                   >
                     {isOpen ? (
-                      <>
-                        <EyeOff className="size-3.5" /> 收起
-                      </>
+                      <><EyeOff className="size-3.5" /> 收起</>
                     ) : (
-                      <>
-                        <Eye className="size-3.5" /> 展开全文
-                      </>
+                      <><Eye className="size-3.5" /> 展开全文</>
                     )}
                     <ChevronDown
                       className={`size-3.5 transition-transform ${
@@ -183,40 +159,10 @@ function CompanyDetailPage() {
                       }`}
                     />
                   </button>
-
-                  <div
-                    className={`inline-flex h-7 items-center overflow-hidden rounded-md bg-zinc-800/80 text-white backdrop-blur transition ${
-                      zoomLevel > 0 ? "ring-1 ring-lime-300/60" : ""
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => zoomDown(job.id)}
-                      aria-label="缩小字号"
-                      title="缩小字号"
-                      className="flex h-full items-center px-1.5 text-xs transition hover:bg-zinc-700 disabled:opacity-40"
-                      disabled={zoomLevel === 0}
-                    >
-                      <Minus className="size-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => zoomUp(job.id)}
-                      aria-label="放大字号"
-                      title="放大字号"
-                      className="flex h-full items-center gap-0.5 px-1.5 text-xs transition hover:bg-zinc-700"
-                    >
-                      <Plus className="size-3.5" />
-                      <span className="tabular-nums">{1 + zoomLevel}</span>
-                    </button>
-                  </div>
                 </div>
 
                 {/* 白纸内容 */}
-                <div
-                  className="library-paper-content library-paper-job px-8 py-6 transition-[font-size]"
-                  style={{ fontSize: `${11 * zoomScale}px` }}
-                >
+                <div className="library-paper-content library-paper-job px-8 py-6" style={{ fontSize: "14px" }}>
                   <h1>{job.title}</h1>
                   <div className="library-paper-job-meta">
                     {(job.salaryMin != null || job.salaryMax != null) && (
@@ -271,6 +217,36 @@ function CompanyDetailPage() {
           })}
         </div>
       )}
+      {/* 招聘详情弹窗 */}
+      <DetailModal
+        open={viewing != null}
+        onClose={closeDetail}
+        title={viewing ? `${company.name} · ${viewing.title}` : "岗位详情"}
+      >
+        {viewing && (
+          <div className="mx-auto w-full max-w-[780px]">
+            <div className="library-paper min-h-[297mm] overflow-hidden rounded-[2px] border border-zinc-200 bg-white shadow-sm">
+              <div className="p-8">
+              <div className="library-paper-content" style={{ fontSize: "14px" }}>
+                <h1>{viewing.title}</h1>
+                <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-zinc-500">
+                  {(viewing.salaryMin != null || viewing.salaryMax != null) && (<span className="inline-flex items-center gap-1"><Wallet className="size-3.5" /> <strong>{formatSalary(viewing)}</strong></span>)}
+                  {viewing.jobCities?.length ? (<span className="inline-flex items-center gap-1"><MapPin className="size-3.5" />{viewing.jobCities.map((cn) => cn.city).join(" / ")}</span>) : null}
+                  {viewing.jobType && <span>{JOB_TYPE_LABEL[viewing.jobType] ?? viewing.jobType}</span>}
+                  {viewing.experience && <span>{viewing.experience}</span>}
+                  {viewing.education && <span>{viewing.education}</span>}
+                </div>
+                <div className="mt-4 border-t border-zinc-200 pt-3">
+                  <h2>职位描述</h2>
+                  <p className="whitespace-pre-wrap">{viewing.jd || "暂无 JD 详情"}</p>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </DetailModal>
+
     </main>
   );
 }
