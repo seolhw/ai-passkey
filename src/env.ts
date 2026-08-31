@@ -10,6 +10,7 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: z.string().min(1).optional(),
     NODE_ENV: z.string().min(1).optional(),
     RESEND_API_KEY: z.string().min(1).optional(),
+    DEEPSEEK_API_KEY: z.string().min(1).optional(),
   },
 
   /**

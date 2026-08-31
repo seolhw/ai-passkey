@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { AI_COMPANIES } from "@/constants/models";
 import BrandLogo from "./BrandLogo";
+import GithubIcon from "./GithubIcon";
 
 const FOOTER_LINKS = [
   { to: "/console/resumes", label: "我的简历" },
@@ -22,6 +23,15 @@ export default function Footer() {
               <BrandLogo className="size-8" />
               跨界简历
             </p>
+            <a
+              href="https://github.com/seolhw/ai-passkey"
+              target="_blank"
+              rel="noreferrer"
+              className="mt-3 inline-flex items-center gap-1.5 text-xs text-(--sea-ink-soft) no-underline transition hover:text-(--sea-ink)"
+            >
+              <GithubIcon className="size-3.5" />
+              开源 · 欢迎共建
+            </a>
           </div>
 
           <nav className="flex flex-wrap gap-x-6 gap-y-2">

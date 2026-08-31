@@ -1,5 +1,5 @@
 import { createServerFn } from "@tanstack/react-start";
-
+import { env } from "#/env";
 import { auth } from "#/lib/auth";
 
 /** 服务端获取当前登录用户 session */
@@ -17,4 +17,9 @@ export const getSessionUser = createServerFn({ method: "GET" }).handler(
     const session = await getSession();
     return session?.user ?? null;
   },
+);
+
+/** GitHub 社交登录是否已配置（未配置时前端隐藏 GitHub 按钮） */
+export const isGithubEnabled = createServerFn({ method: "GET" }).handler(
+  async () => Boolean(env.GITHUB_CLIENT_ID),
 );

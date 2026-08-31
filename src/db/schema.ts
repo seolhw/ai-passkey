@@ -55,13 +55,17 @@ export const resumeVersions = sqliteTable(
   (t) => [index("resume_versions_resume_id_idx").on(t.resumeId)],
 );
 
-/** AI 公司 */
+/** AI 公司（国内） */
 export const companies = sqliteTable("companies", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
   intro: text(),
+  /** 官网 */
   website: text(),
-  logo: text(),
+  /** 官方招聘页 */
+  careerUrl: text("career_url"),
+  /** 大模型团队列表（JSON 数组） */
+  models: text({ mode: "json" }).$type<string[]>().notNull().default([]),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),
@@ -77,8 +81,20 @@ export const jobs = sqliteTable(
       .references(() => companies.id, { onDelete: "cascade" }),
     title: text().notNull(),
     jd: text().notNull(),
-    salary: text(),
-    location: text(),
+    /** 最低年薪（万元） */
+    salaryMin: integer("salary_min"),
+    /** 最高年薪（万元） */
+    salaryMax: integer("salary_max"),
+    /** 岗位类型：full_time 社招 / intern 实习 / campus 校招 */
+    jobType: text("job_type"),
+    /** 经验要求：应届 / 1-3年 / 3-5年 / 5-10年 / 10年以上 */
+    experience: text(),
+    /** 学历要求：大专 / 本科 / 硕士 / 博士 */
+    education: text(),
+    /** 工作模式：远程 / 混合 / 现场 */
+    workMode: text("work_mode"),
+    /** 在招状态：open / closed */
+    status: text().notNull().default("open"),
     sourceUrl: text("source_url"),
     source: text().notNull().default("manual"),
     createdAt: integer("created_at", { mode: "timestamp" }).default(
@@ -86,6 +102,38 @@ export const jobs = sqliteTable(
     ),
   },
   (t) => [index("jobs_company_id_idx").on(t.companyId)],
+);
+
+/** 岗位技能标签（多对多） */
+export const jobTags = sqliteTable(
+  "job_tags",
+  {
+    id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+    jobId: integer("job_id")
+      .notNull()
+      .references(() => jobs.id, { onDelete: "cascade" }),
+    tag: text().notNull(),
+  },
+  (t) => [
+    index("job_tags_job_id_idx").on(t.jobId),
+    index("job_tags_tag_idx").on(t.tag),
+  ],
+);
+
+/** 岗位城市（多对多） */
+export const jobCities = sqliteTable(
+  "job_cities",
+  {
+    id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
+    jobId: integer("job_id")
+      .notNull()
+      .references(() => jobs.id, { onDelete: "cascade" }),
+    city: text().notNull(),
+  },
+  (t) => [
+    index("job_cities_job_id_idx").on(t.jobId),
+    index("job_cities_city_idx").on(t.city),
+  ],
 );
 
 /** 简历选择的目标岗位（多对多） */
@@ -117,16 +165,6 @@ export const resumeLibrary = sqliteTable("resume_library", {
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),
-});
-
-/** JD 抓取源配置 */
-export const jdSources = sqliteTable("jd_sources", {
-  id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
-  name: text().notNull(),
-  adapterName: text("adapter_name").notNull(),
-  url: text().notNull(),
-  lastFetchedAt: integer("last_fetched_at", { mode: "timestamp" }),
-  status: text().notNull().default("idle"),
 });
 
 /** better-auth 用户表 */
@@ -210,14 +248,26 @@ export type Resume = typeof resumes.$inferSelect;
 export type ResumeVersion = typeof resumeVersions.$inferSelect;
 export type Company = typeof companies.$inferSelect;
 export type Job = typeof jobs.$inferSelect;
+export type JobTag = typeof jobTags.$inferSelect;
+export type JobCity = typeof jobCities.$inferSelect;
 
 export const companiesRelations = relations(companies, ({ many }) => ({
   jobs: many(jobs),
 }));
 
-export const jobsRelations = relations(jobs, ({ one }) => ({
+export const jobsRelations = relations(jobs, ({ one, many }) => ({
   company: one(companies, {
     fields: [jobs.companyId],
     references: [companies.id],
   }),
+  jobTags: many(jobTags),
+  jobCities: many(jobCities),
+}));
+
+export const jobTagsRelations = relations(jobTags, ({ one }) => ({
+  job: one(jobs, { fields: [jobTags.jobId], references: [jobs.id] }),
+}));
+
+export const jobCitiesRelations = relations(jobCities, ({ one }) => ({
+  job: one(jobs, { fields: [jobCities.jobId], references: [jobs.id] }),
 }));

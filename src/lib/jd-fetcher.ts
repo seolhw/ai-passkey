@@ -1,234 +1,38 @@
-import { eq } from "drizzle-orm";
+import { chat, toolDefinition } from "@tanstack/ai";
+import { convert } from "purifai";
+import { z } from "zod";
 
+import { LLM_LIST } from "#/constants/models";
 import { db } from "#/db/index";
-import { companies, jdSources, jobs } from "#/db/schema";
+import { companies, jobCities, jobs, jobTags } from "#/db/schema";
+import { deepseekAdapter, extractJson } from "#/lib/llm";
 
-/** 招聘系统公开 API 的类型 */
-type AtsType = "greenhouse" | "lever" | "ashby" | "generic" | "boss";
-
-/** 一个抓取源的配置 */
+/** 一个抓取源的配置（国内 AI 公司统一走 AI 抓取） */
 export type JdSourceConfig = {
   name: string;
-  ats: AtsType;
-  /** greenhouse board / lever / ashby 公司名 */
-  board?: string;
-  /** 通用抓取时的 URL */
-  url?: string;
-  /** boss 直聘搜索 URL（需要 cookie） */
-  cookie?: string;
+  /** AI 抓取时使用的官方招聘页面 URL */
+  url: string;
+  /** 官网 */
+  website?: string;
+  /** 大模型团队列表 */
+  models?: string[];
 };
 
-/** 单个岗位结果 */
-type FetchedJob = {
-  title: string;
-  jd: string;
-  salary?: string;
-  location?: string;
-  sourceUrl?: string;
-};
+/** 国内 AI 公司：由 AI 抓取官网招聘页并分析整理 */
+const DEFAULT_SOURCES: JdSourceConfig[] = LLM_LIST.map((m) => ({
+  name: m.company,
+  url: m.careerUrl,
+  website: m.website,
+  models: m.models,
+}));
 
-const DEFAULT_SOURCES: JdSourceConfig[] = [
-  { name: "Anthropic", ats: "greenhouse", board: "anthropic" },
-  { name: "Notion", ats: "greenhouse", board: "notion" },
-  { name: "GitHub", ats: "greenhouse", board: "github" },
-  { name: "Datadog", ats: "greenhouse", board: "datadog" },
-  { name: "Stripe", ats: "lever", board: "stripe" },
-  { name: "Shopify", ats: "lever", board: "shopify" },
-  { name: "OpenAI", ats: "ashby", board: "openai" },
-  { name: "Figma", ats: "ashby", board: "figma" },
-  {
-    name: "字节跳动",
-    ats: "generic",
-    url: "https://jobs.bytedance.com/campus/position",
-  },
-  {
-    name: "Boss 直聘 AI 岗位",
-    ats: "boss",
-    url: "https://www.zhipin.com/web/geek/job?query=AI",
-    cookie: process.env.BOSS_COOKIE,
-  },
-];
-
-/** 抓取单个源，返回岗位列表 */
-export async function fetchSource(
-  config: JdSourceConfig,
-): Promise<FetchedJob[]> {
-  switch (config.ats) {
-    case "greenhouse":
-      return await fetchGreenhouse(config.board ?? "");
-    case "lever":
-      return await fetchLever(config.board ?? "");
-    case "ashby":
-      return await fetchAshby(config.board ?? "");
-    case "generic":
-      return await fetchGeneric(config.url ?? "");
-    case "boss":
-      return await fetchBoss(config.url ?? "", config.cookie);
-    default:
-      return [];
-  }
-}
-
-async function fetchGreenhouse(board: string) {
-  const res = await fetch(
-    `https://boards-api.greenhouse.io/v1/boards/${board}/jobs`,
-    { headers: { Accept: "application/json" } },
-  );
-  if (!res.ok) throw new Error(`Greenhouse ${board} 抓取失败: ${res.status}`);
-  const data = (await res.json()) as {
-    jobs: {
-      id: number;
-      title: string;
-      location: { name?: string } | null;
-      absolute_url: string;
-      content: string;
-    }[];
-  };
-  return data.jobs.map((j) => ({
-    title: j.title,
-    jd: stripHtml(j.content),
-    location: j.location?.name ?? "",
-    sourceUrl: j.absolute_url,
-  }));
-}
-
-async function fetchLever(board: string) {
-  const res = await fetch(
-    `https://api.lever.co/v0/postings/${board}?mode=json`,
-    {
-      headers: { Accept: "application/json" },
-    },
-  );
-  if (!res.ok) throw new Error(`Lever ${board} 抓取失败: ${res.status}`);
-  const data = (await res.json()) as {
-    text: string;
-    categories: { location?: string; commitment?: string };
-    hostedUrl: string;
-    descriptionPlain: string;
-    salaryRange?: { min?: number; max?: number; currency?: string };
-  }[];
-  return data.map((j) => ({
-    title: j.text,
-    jd: j.descriptionPlain || j.text,
-    location: [j.categories.location, j.categories.commitment]
-      .filter(Boolean)
-      .join(" · "),
-    sourceUrl: j.hostedUrl,
-    salary: salaryLabel(j.salaryRange),
-  }));
-}
-
-async function fetchAshby(board: string) {
-  const res = await fetch(
-    `https://api.ashbyhq.com/posting-api/job-board/${board}`,
-    {
-      headers: { Accept: "application/json" },
-    },
-  );
-  if (!res.ok) throw new Error(`Ashby ${board} 抓取失败: ${res.status}`);
-  const data = (await res.json()) as {
-    jobs: {
-      title: string;
-      location: string;
-      jobUrl: string;
-      descriptionHtml: string;
-      compensation?: { compensationTierSummary?: string };
-    }[];
-  };
-  return data.jobs.map((j) => ({
-    title: j.title,
-    jd: stripHtml(j.descriptionHtml || ""),
-    location: j.location ?? "",
-    sourceUrl: j.jobUrl,
-    salary: j.compensation?.compensationTierSummary,
-  }));
-}
-
-/** 通用 HTML 抓取：提取页面文本作为候选（粗略，通常需人工确认） */
-async function fetchGeneric(url: string) {
-  const res = await fetch(url, {
-    headers: {
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
-    },
-  });
-  if (!res.ok) throw new Error(`通用抓取失败: ${res.status}`);
-  const html = await res.text();
-  const text = stripHtml(html).slice(0, 4000);
-  return [{ title: "通用页面抓取结果", jd: text, sourceUrl: url }];
-}
-
-/** Boss 直聘：依赖用户提供 Cookie（ZLWEB），解析列表页岗位卡片，供人工挑选 */
-async function fetchBoss(url: string, cookie?: string) {
-  if (!cookie) {
-    throw new Error(
-      "Boss 直聘需要登录 Cookie，请在 .env.local 设置 BOSS_COOKIE（浏览器登录后复制）",
-    );
-  }
-  const res = await fetch(url, {
-    headers: {
-      Cookie: cookie,
-      "User-Agent":
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
-      Referer: "https://www.zhipin.com/",
-    },
-  });
-  if (!res.ok) throw new Error(`Boss 直聘抓取失败: ${res.status}`);
-  const html = await res.text();
-
-  // 按岗位卡片切块解析（列表页卡片结构：job-card-box）
-  const jobs: FetchedJob[] = [];
-  const cards = html.split('class="job-card-box"').slice(1);
-  for (const card of cards) {
-    const title = matchText(card, "job-name");
-    if (!title) continue;
-    const href = card.match(/href="([^"]*\/job_detail\/[^"]*)"/)?.[1];
-    jobs.push({
-      title,
-      jd: "Boss 直聘岗位详情需登录查看，请点击来源链接确认后使用",
-      salary: matchText(card, "salary") || undefined,
-      location: matchText(card, "job-area") || undefined,
-      sourceUrl: href ? `https://www.zhipin.com${href.split("?")[0]}` : url,
-    });
-  }
-  if (jobs.length > 0) return jobs;
-
-  // 页面结构变化时回退为整页文本，供人工核对
-  const text = stripHtml(html).slice(0, 4000);
-  return [{ title: "Boss 直聘结果（需人工核对）", jd: text, sourceUrl: url }];
-}
-
-/** 提取 HTML 片段中指定 class 元素的文本（不含子标签） */
-function matchText(block: string, className: string) {
-  const re = new RegExp(`class="[^"]*${className}[^"]*"[^>]*>([^<]+)`);
-  return block.match(re)?.[1]?.trim() || "";
-}
-
+/** 页面 HTML → 可读纯文本（purifai 解析，输出上限 8000 字符，超限截断） */
 function stripHtml(html: string) {
-  return html
-    .replace(/<script[\s\S]*?<\/script>/gi, " ")
-    .replace(/<style[\s\S]*?<\/style>/gi, " ")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'")
-    .replace(/\s+/g, " ")
-    .trim();
-}
-
-function salaryLabel(range?: {
-  min?: number;
-  max?: number;
-  currency?: string;
-}) {
-  if (!range?.min && !range?.max) return undefined;
-  const c = range.currency ?? "USD";
-  const min = range.min ? `$${Math.round(range.min / 1000)}k` : "";
-  const max = range.max ? `$${Math.round(range.max / 1000)}k` : "";
-  return `${c} ${min}-${max}`.trim();
+  return convert(html, {
+    layout: "readable",
+    limits: { output: 8000 },
+    overflow: "truncate",
+  }).text;
 }
 
 /** 执行全量抓取：按源入库（去重），更新抓取状态 */
@@ -243,7 +47,7 @@ export async function runFetchAll() {
   for (const config of DEFAULT_SOURCES) {
     try {
       const fetched = await fetchSource(config);
-      const company = await getOrCreateCompany(config.name);
+      const company = await getOrCreateCompany(config);
       let count = 0;
       for (const job of fetched) {
         const exists = await db.query.jobs.findFirst({
@@ -251,74 +55,161 @@ export async function runFetchAll() {
             and(eq(t.companyId, company.id), eq(t.title, job.title)),
         });
         if (!exists) {
-          await db.insert(jobs).values({
-            companyId: company.id,
-            title: job.title.slice(0, 200),
-            jd: job.jd,
-            salary: job.salary,
-            location: job.location,
-            sourceUrl: job.sourceUrl,
-            source: config.ats,
-          });
+          const [inserted] = await db
+            .insert(jobs)
+            .values({
+              companyId: company.id,
+              title: job.title.slice(0, 200),
+              jd: job.jd,
+              salaryMin: job.salaryMin,
+              salaryMax: job.salaryMax,
+              jobType: job.jobType,
+              experience: job.experience,
+              education: job.education,
+              sourceUrl: job.sourceUrl,
+              source: "fetch",
+            })
+            .returning();
+          if (job.tags.length) {
+            await db
+              .insert(jobTags)
+              .values(job.tags.map((tag) => ({ jobId: inserted.id, tag })));
+          }
+          if (job.cities.length) {
+            await db
+              .insert(jobCities)
+              .values(
+                job.cities.map((city) => ({ jobId: inserted.id, city })),
+              );
+          }
           count++;
         }
       }
       results.push({ source: config.name, ok: true, count });
-      await upsertSourceStatus(config, true, count, undefined);
     } catch (e) {
       const msg = e instanceof Error ? e.message : "未知错误";
       results.push({ source: config.name, ok: false, count: 0, error: msg });
-      await upsertSourceStatus(config, false, 0, msg);
     }
   }
   return results;
 }
 
-async function getOrCreateCompany(name: string) {
+async function getOrCreateCompany({ name, website, models }: JdSourceConfig) {
   let company = await db.query.companies.findFirst({
     where: (t, { eq }) => eq(t.name, name),
   });
   if (!company) {
-    const [created] = await db.insert(companies).values({ name }).returning();
+    const [created] = await db
+      .insert(companies)
+      .values({ name, website, models })
+      .returning();
     company = created;
   }
   return company;
 }
 
-async function upsertSourceStatus(
-  config: JdSourceConfig,
-  ok: boolean,
-  count: number,
-  error: string | undefined,
-) {
-  const existing = await db.query.jdSources.findFirst({
-    where: (t, { eq }) => eq(t.name, config.name),
+// ============================================================
+// AI 官网抓取：由 AI 抓取官网招聘页并分析整理在招岗位
+// ============================================================
+
+const AI_FETCH_SYSTEM_PROMPT = `你是一位招聘信息采集助手，负责从指定 AI 公司的官方招聘渠道整理真实的在招岗位。
+
+工作流程：
+1. 先用 fetchUrl 工具访问给定的官方招聘页面。
+2. 如果页面内容为空或未直接列出岗位，从页面内容中找出岗位列表页 / 详情页链接，用 fetchUrl 继续抓取。
+3. 从抓取到的内容中提取在招岗位，优先 AI / 算法 / 工程 / 产品 类岗位。
+4. 每个岗位整理：岗位名称、JD（职责 + 要求，300 字以内）、薪资（换算成年薪万元区间，页面未标注则省略，严禁编造）、工作地点（拆成城市数组）、岗位类型（full_time 社招 / intern 实习 / campus 校招）、经验要求、学历要求、技能标签（最多 10 个）、岗位详情页 URL。
+
+要求：
+- 只返回页面真实存在的岗位，严禁编造。
+- 最多返回 30 个岗位。
+- 最后一步只输出一个 JSON 对象（不要代码块、不要附加任何文字），结构为：
+{
+  "jobs": [
+    { "title": "岗位名称", "jd": "JD 摘要", "salaryMin": 30, "salaryMax": 70, "jobType": "full_time", "experience": "3-5年", "education": "硕士", "tags": ["PyTorch", "RAG"], "cities": ["北京", "上海"], "sourceUrl": "岗位详情页 URL" }
+  ]
+}。`;
+
+/** AI 调用的页面抓取工具：返回去除 HTML 标签后的纯文本 */
+const fetchUrlTool = toolDefinition({
+  name: "fetchUrl",
+  description:
+    "抓取指定 URL 的网页内容，返回去除 HTML 标签后的纯文本（最多 8000 字符）。用于访问公司官方招聘页面及其子页面。",
+  inputSchema: z.object({
+    url: z.string().describe("要抓取的页面完整 URL"),
+  }),
+  outputSchema: z.object({
+    text: z.string().describe("页面纯文本内容（前 8000 字符）"),
+  }),
+}).server(async ({ url }) => {
+  const res = await fetch(url, {
+    headers: {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0 Safari/537.36",
+    },
   });
-  const status = ok ? `success (${count})` : `failed: ${error ?? ""}`;
-  if (existing) {
-    await db
-      .update(jdSources)
-      .set({ status, lastFetchedAt: new Date() })
-      .where(eq(jdSources.id, existing.id));
-  } else {
-    await db.insert(jdSources).values({
-      name: config.name,
-      adapterName: config.ats,
-      url: config.url ?? config.board ?? "",
-      status,
-      lastFetchedAt: new Date(),
+  if (!res.ok) throw new Error(`页面抓取失败: ${res.status}`);
+  return { text: stripHtml(await res.text()) };
+});
+
+const aiFetchSchema = z.object({
+  jobs: z
+    .array(
+      z.object({
+        title: z.string(),
+        jd: z.string(),
+        salaryMin: z.number().optional(),
+        salaryMax: z.number().optional(),
+        jobType: z.enum(["full_time", "intern", "campus"]).optional(),
+        experience: z.string().optional(),
+        education: z.string().optional(),
+        tags: z.array(z.string()).max(10).default([]),
+        cities: z.array(z.string()).max(5).default([]),
+        sourceUrl: z.string().optional(),
+      }),
+    )
+    .max(15),
+});
+
+async function fetchWithAi({
+  company,
+  careerUrl,
+}: {
+  company: string;
+  careerUrl: string;
+}) {
+  const controller = new AbortController();
+  const timer = setTimeout(() => controller.abort(), 120_000);
+  try {
+    const text = await chat({
+      adapter: deepseekAdapter(),
+      systemPrompts: [AI_FETCH_SYSTEM_PROMPT],
+      messages: [
+        {
+          role: "user",
+          content: `公司：${company}\n官方招聘页面：${careerUrl}`,
+        },
+      ],
+      tools: [fetchUrlTool],
+      stream: false,
+      agentLoopStrategy: (state) => state.iterationCount < 8,
+      abortController: controller,
+      modelOptions: {
+        response_format: { type: "json_object" },
+      },
     });
+    const parsed = extractJson(text);
+    const result = aiFetchSchema.safeParse(parsed);
+    if (!result.success) {
+      throw new Error("AI 返回内容格式不正确，未解析到岗位");
+    }
+    return result.data.jobs;
+  } finally {
+    clearTimeout(timer);
   }
 }
 
-/** 源状态列表（供管理界面） */
-export async function listFetchStatus() {
-  const rows = await db.query.jdSources.findMany();
-  const map = new Map(rows.map((r) => [r.name, r]));
-  return DEFAULT_SOURCES.map((c) => ({
-    name: c.name,
-    ats: c.ats,
-    status: map.get(c.name)?.status ?? "idle",
-    lastFetchedAt: map.get(c.name)?.lastFetchedAt ?? null,
-  }));
+/** 按源抓取岗位（当前仅国内 AI 公司） */
+async function fetchSource(config: JdSourceConfig) {
+  return fetchWithAi({ company: config.name, careerUrl: config.url });
 }

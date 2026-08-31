@@ -1,120 +1,14 @@
-/** 种子数据：主流 AI 公司及代表性岗位 JD */
-export const seed = [
-  {
-    name: "OpenAI",
-    intro: "致力于确保通用人工智能惠及全人类的研究与部署公司。",
-    website: "https://openai.com",
-    jobs: [
-      {
-        title: "AI 研究员（研究科学家）",
-        salary: "25万-50万美元/年",
-        location: "旧金山（支持远程）",
-        jd: "负责推进机器学习前沿研究，包括大模型训练、强化学习、多模态理解。要求：CS/数学/物理博士优先；扎实的深度学习功底；精通 PyTorch/JAX；有顶会论文或大型模型训练经验者优先。",
-      },
-      {
-        title: "机器学习工程师",
-        salary: "20万-40万美元/年",
-        location: "旧金山 / 远程",
-        jd: "构建大规模分布式训练与推理系统。要求：精通 Python、分布式系统；熟悉 GPU 集群调度；了解 Transformer 架构与推理优化（vLLM/TensorRT）；3 年以上相关经验。",
-      },
-    ],
-  },
-  {
-    name: "Anthropic",
-    intro: "AI 安全与研究的领先公司，Claude 系列模型开发者。",
-    website: "https://www.anthropic.com",
-    jobs: [
-      {
-        title: "提示工程专家",
-        salary: "18万-35万美元/年",
-        location: "旧金山 / 远程",
-        jd: "设计并评估 Claude 模型的高级提示策略。要求：出色的写作与逻辑能力；理解 RLHF 与模型对齐；有实际大模型应用落地经验；具备评估数据构建能力。",
-      },
-      {
-        title: "模型对齐研究员",
-        salary: "22万-45万美元/年",
-        location: "旧金山",
-        jd: "研究模型安全、诚实与有益性对齐方法。要求：机器学习博士或同等研究能力；熟悉 RLHF/DPO；有 AI 安全方向研究经验者优先。",
-      },
-    ],
-  },
-  {
-    name: "字节跳动",
-    intro: "抖音、TikTok 母公司，火山引擎提供大模型与 AI 云服务。",
-    website: "https://www.bytedance.com",
-    jobs: [
-      {
-        title: "大模型算法工程师（豆包）",
-        salary: "40万-100万人民币/年",
-        location: "北京 / 上海",
-        jd: "负责豆包大模型训练、微调与评测。要求：计算机相关硕士及以上；熟悉 Transformer、训练框架（Megatron/DeepSpeed）；有 LLM 训练或推理优化经验；精通 Python/C++。",
-      },
-      {
-        title: "AI 产品经理",
-        salary: "30万-70万人民币/年",
-        location: "北京",
-        jd: "负责 AI 产品需求分析、原型设计与落地。要求：有 AI 产品或增长产品经验；理解大模型能力边界；数据分析能力强；能与算法团队高效协作。",
-      },
-    ],
-  },
-  {
-    name: "阿里云",
-    intro: "阿里旗下云计算与 AI 服务商，通义大模型开发者。",
-    website: "https://www.aliyun.com",
-    jobs: [
-      {
-        title: "大模型应用工程师",
-        salary: "35万-80万人民币/年",
-        location: "杭州 / 北京",
-        jd: "基于通义千问构建企业级 AI 应用。要求：熟悉 LLM 应用开发（RAG、Agent、Function Calling）；精通 Python 与主流 Web 框架；有云上部署经验；了解向量数据库。",
-      },
-      {
-        title: "算法工程师（NLP 方向）",
-        salary: "35万-90万人民币/年",
-        location: "杭州",
-        jd: "负责通义千问核心 NLP 算法研发。要求：NLP/机器学习硕士以上；熟悉预训练与微调；有顶会论文或工业落地经验；编程能力扎实。",
-      },
-    ],
-  },
-  {
-    name: "百度",
-    intro: "文心一言大模型与自动驾驶等 AI 技术领导者。",
-    website: "https://www.baidu.com",
-    jobs: [
-      {
-        title: "文心大模型算法工程师",
-        salary: "35万-85万人民币/年",
-        location: "北京",
-        jd: "参与文心大模型训练与对齐。要求：深度学习基础扎实；熟悉大模型训练框架；有分布式训练经验；熟悉强化学习与 RLHF 者优先。",
-      },
-      {
-        title: "AI 平台研发工程师",
-        salary: "30万-70万人民币/年",
-        location: "北京",
-        jd: "建设大模型训练与推理平台。要求：精通 Go/Python；熟悉 K8s 与云原生；了解 GPU 资源调度；有 ML 平台开发经验者优先。",
-      },
-    ],
-  },
-  {
-    name: "智谱 AI",
-    intro: "GLM 大模型开发者，国内领先的大模型创业公司。",
-    website: "https://www.zhipuai.cn",
-    jobs: [
-      {
-        title: "大模型训练工程师",
-        salary: "40万-100万人民币/年",
-        location: "北京",
-        jd: "负责 GLM 系列模型训练与优化。要求：熟悉 Megatron/DeepSpeed；精通 PyTorch；理解数据并行/张量并行；有大规模训练经验。",
-      },
-      {
-        title: "AI 解决方案架构师",
-        salary: "30万-70万人民币/年",
-        location: "北京 / 上海",
-        jd: "面向政企客户设计 AI 落地方案。要求：熟悉大模型应用技术栈；有售前或解决方案经验；能写高质量技术方案；沟通表达能力强。",
-      },
-    ],
-  },
-];
+/** 种子数据：主流国内 AI 公司（公司信息以 LLM_LIST 为单一来源；岗位由抓取逻辑获取，不写种子） */
+import { LLM_LIST } from "../constants/models";
+
+/** 由 LLM_LIST 派生的公司种子数据（覆盖全部 19 家国内公司） */
+export const seed = LLM_LIST.map((item) => ({
+  name: item.company,
+  intro: item.intro,
+  website: item.website,
+  careerUrl: item.careerUrl,
+  models: item.models,
+}));
 
 /** 简历大厅种子数据 */
 export const librarySeed = [

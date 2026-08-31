@@ -17,23 +17,10 @@ export const Route = createFileRoute("/console/companies/")({
   },
 });
 
-type FetchStatus = {
-  name: string;
-  ats: string;
-  status: string;
-  lastFetchedAt: string | null;
-};
-
 function CompaniesPage() {
   const { companies } = Route.useLoaderData();
-  const [statuses, setStatuses] = useState<FetchStatus[] | null>(null);
   const [fetching, setFetching] = useState(false);
   const [fetchMsg, setFetchMsg] = useState("");
-
-  const loadStatus = async () => {
-    const res = await fetch("/api/fetch-jobs");
-    if (res.ok) setStatuses((await res.json()) as FetchStatus[]);
-  };
 
   const handleFetchAll = async () => {
     setFetching(true);
@@ -55,7 +42,6 @@ function CompaniesPage() {
       setFetchMsg("抓取失败，请稍后重试");
     }
     setFetching(false);
-    await loadStatus();
     window.location.reload();
   };
 
@@ -127,8 +113,7 @@ function CompaniesPage() {
               JD 自动抓取
             </h2>
             <p className="mt-0.5 text-sm text-(--sea-ink-soft)">
-              从各家公司官网（Greenhouse / Lever / Ashby）同步岗位，Boss
-              直聘需在 .env.local 配置 BOSS_COOKIE
+              从各家公司官网同步岗位，由 AI 抓取官网并分析整理
             </p>
           </div>
           <button
@@ -150,32 +135,6 @@ function CompaniesPage() {
           <p className="mb-3 rounded-md bg-(--chip-bg) px-3 py-2 text-sm text-(--sea-ink)">
             {fetchMsg}
           </p>
-        )}
-
-        {statuses && (
-          <div className="grid gap-2 sm:grid-cols-2">
-            {statuses.map((s) => (
-              <div
-                key={s.name}
-                className="flex items-center justify-between gap-2 rounded-lg border border-(--line) px-3 py-2 text-sm"
-              >
-                <span className="min-w-0 truncate font-medium text-(--sea-ink)">
-                  {s.name}
-                </span>
-                <span
-                  className={`shrink-0 text-xs ${
-                    s.status === "idle"
-                      ? "text-(--sea-ink-soft)"
-                      : s.status.startsWith("success")
-                        ? "text-(--lagoon-deep)"
-                        : "text-red-500"
-                  }`}
-                >
-                  {s.status === "idle" ? "未抓取" : s.status}
-                </span>
-              </div>
-            ))}
-          </div>
         )}
       </section>
     </main>

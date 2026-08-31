@@ -22,8 +22,13 @@ function NewJobPage() {
   const router = useRouter();
   const [companyName, setCompanyName] = useState("");
   const [title, setTitle] = useState("");
-  const [salary, setSalary] = useState("");
-  const [location, setLocation] = useState("");
+  const [salaryMin, setSalaryMin] = useState("");
+  const [salaryMax, setSalaryMax] = useState("");
+  const [jobType, setJobType] = useState("full_time");
+  const [experience, setExperience] = useState("");
+  const [education, setEducation] = useState("");
+  const [tags, setTags] = useState("");
+  const [cities, setCities] = useState("");
   const [jd, setJd] = useState("");
   const [sourceUrl, setSourceUrl] = useState("");
   const [saving, setSaving] = useState(false);
@@ -41,8 +46,17 @@ function NewJobPage() {
         companyName: companyName.trim(),
         title: title.trim(),
         jd: jd.trim(),
-        salary: salary.trim() || undefined,
-        location: location.trim() || undefined,
+        salaryMin: salaryMin ? Number(salaryMin) : undefined,
+        salaryMax: salaryMax ? Number(salaryMax) : undefined,
+        jobType: jobType || undefined,
+        experience: experience || undefined,
+        education: education || undefined,
+        tags: tags
+          ? tags.split(",").map((t) => t.trim()).filter(Boolean)
+          : undefined,
+        cities: cities
+          ? cities.split(",").map((c) => c.trim()).filter(Boolean)
+          : undefined,
         sourceUrl: sourceUrl.trim() || undefined,
       },
     });
@@ -102,21 +116,82 @@ function NewJobPage() {
 
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
-            薪资
+            最低年薪（万元）
             <input
-              value={salary}
-              onChange={(e) => setSalary(e.target.value)}
+              type="number"
+              value={salaryMin}
+              onChange={(e) => setSalaryMin(e.target.value)}
               className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-              placeholder="如：30-50K·16薪"
+              placeholder="如：30"
             />
           </label>
           <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
-            地点
+            最高年薪（万元）
             <input
-              value={location}
-              onChange={(e) => setLocation(e.target.value)}
+              type="number"
+              value={salaryMax}
+              onChange={(e) => setSalaryMax(e.target.value)}
               className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-              placeholder="如：北京 / 远程"
+              placeholder="如：70"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+            岗位类型
+            <select
+              value={jobType}
+              onChange={(e) => setJobType(e.target.value)}
+              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+            >
+              <option value="full_time">社招</option>
+              <option value="intern">实习</option>
+              <option value="campus">校招</option>
+            </select>
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+            经验要求
+            <select
+              value={experience}
+              onChange={(e) => setExperience(e.target.value)}
+              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+            >
+              <option value="">不限</option>
+              <option>应届</option>
+              <option>1-3年</option>
+              <option>3-5年</option>
+              <option>5-10年</option>
+              <option>10年以上</option>
+            </select>
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+            学历要求
+            <select
+              value={education}
+              onChange={(e) => setEducation(e.target.value)}
+              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+            >
+              <option value="">不限</option>
+              <option>大专</option>
+              <option>本科</option>
+              <option>硕士</option>
+              <option>博士</option>
+            </select>
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+            技能标签
+            <input
+              value={tags}
+              onChange={(e) => setTags(e.target.value)}
+              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+              placeholder="逗号分隔，如：PyTorch, RAG"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+            工作城市
+            <input
+              value={cities}
+              onChange={(e) => setCities(e.target.value)}
+              className="h-9 rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+              placeholder="逗号分隔，如：北京, 上海"
             />
           </label>
         </div>

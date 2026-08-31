@@ -2,7 +2,7 @@ import { createServerFn } from "@tanstack/react-start";
 import { asc, desc, eq } from "drizzle-orm";
 
 import { db } from "#/db/index";
-import { companies, jobs } from "#/db/schema";
+import { companies, jobCities, jobs, jobTags } from "#/db/schema";
 import { getSessionUser } from "#/lib/session";
 
 /** 公司列表（含岗位数） */
@@ -36,6 +36,7 @@ export const getCompanyJobs = createServerFn({ method: "GET" })
     const jobRows = await db.query.jobs.findMany({
       where: eq(jobs.companyId, data.companyId),
       orderBy: [desc(jobs.createdAt)],
+      with: { jobCities: true, jobTags: true },
     });
     return { company, jobs: jobRows };
   });
@@ -44,7 +45,7 @@ export const getCompanyJobs = createServerFn({ method: "GET" })
 export const listJobs = createServerFn({ method: "GET" }).handler(async () => {
   const jobRows = await db.query.jobs.findMany({
     orderBy: [desc(jobs.createdAt)],
-    with: { company: true },
+    with: { company: true, jobCities: true, jobTags: true },
   });
   return jobRows;
 });
@@ -56,14 +57,21 @@ export const createJob = createServerFn({ method: "POST" })
       companyName: string;
       title: string;
       jd: string;
-      salary?: string;
-      location?: string;
+      salaryMin?: number;
+      salaryMax?: number;
+      jobType?: string;
+      experience?: string;
+      education?: string;
+      tags?: string[];
+      cities?: string[];
       sourceUrl?: string;
     }) => data,
   )
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    // 手动添加岗位 JD 属于私有资产，邮箱未验证时禁止
+    if (!user.emailVerified) return null;
 
     // 查找或创建公司
     let company = await db.query.companies.findFirst({
@@ -83,11 +91,26 @@ export const createJob = createServerFn({ method: "POST" })
         companyId: company.id,
         title: data.title.trim(),
         jd: data.jd.trim(),
-        salary: data.salary,
-        location: data.location,
+        salaryMin: data.salaryMin,
+        salaryMax: data.salaryMax,
+        jobType: data.jobType,
+        experience: data.experience,
+        education: data.education,
         sourceUrl: data.sourceUrl,
         source: "manual",
       })
       .returning();
+    if (data.tags?.length) {
+      await db
+        .insert(jobTags)
+        .values(data.tags.map((tag) => ({ jobId: job.id, tag: tag.trim() })));
+    }
+    if (data.cities?.length) {
+      await db
+        .insert(jobCities)
+        .values(
+          data.cities.map((city) => ({ jobId: job.id, city: city.trim() })),
+        );
+    }
     return job;
   });

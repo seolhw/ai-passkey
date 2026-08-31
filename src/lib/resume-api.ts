@@ -26,6 +26,8 @@ export const createResume = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    // 涉及简历等私有资产，邮箱未验证时禁止创建
+    if (!user.emailVerified) return null;
 
     const title = data.title.trim() || "未命名简历";
     const [resume] = await db
@@ -76,6 +78,7 @@ export const saveResume = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    if (!user.emailVerified) return null;
 
     const existing = await db.query.resumes.findFirst({
       where: and(eq(resumes.id, data.id), eq(resumes.userId, user.id)),
@@ -133,6 +136,7 @@ export const rollbackVersion = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    if (!user.emailVerified) return null;
 
     const resume = await db.query.resumes.findFirst({
       where: and(eq(resumes.id, data.resumeId), eq(resumes.userId, user.id)),
@@ -162,6 +166,7 @@ export const deleteResume = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    if (!user.emailVerified) return null;
 
     const resume = await db.query.resumes.findFirst({
       where: and(eq(resumes.id, data.id), eq(resumes.userId, user.id)),
@@ -203,6 +208,7 @@ export const setResumeTargets = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    if (!user.emailVerified) return null;
 
     const resume = await db.query.resumes.findFirst({
       where: and(eq(resumes.id, data.resumeId), eq(resumes.userId, user.id)),

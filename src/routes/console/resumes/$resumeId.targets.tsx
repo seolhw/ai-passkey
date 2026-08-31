@@ -7,6 +7,7 @@ import {
 import { Check, Loader2, Save, Target } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { listJobs } from "#/lib/company-api";
+import { formatSalary } from "#/lib/job";
 import {
   getResume,
   listResumeTargets,
@@ -69,7 +70,7 @@ function TargetsPage() {
               (j) =>
                 j.title.toLowerCase().includes(q) ||
                 name.toLowerCase().includes(q) ||
-                (j.location ?? "").toLowerCase().includes(q),
+                j.jobCities?.some((c) => c.city.toLowerCase().includes(q)),
             ),
           ] as const,
       )
@@ -202,7 +203,10 @@ function TargetsPage() {
                             {job.title}
                           </span>
                           <span className="mt-0.5 block text-xs text-(--sea-ink-soft)">
-                            {[job.salary, job.location]
+                            {[
+                              formatSalary(job),
+                              job.jobCities?.map((c) => c.city).join("/"),
+                            ]
                               .filter(Boolean)
                               .join(" · ") || "薪资面议"}
                           </span>

@@ -3,6 +3,7 @@ import { ChevronDown, ExternalLink, MapPin, Wallet } from "lucide-react";
 import { useState } from "react";
 
 import { getCompanyJobs } from "#/lib/company-api";
+import { formatSalary, JOB_TYPE_LABEL } from "#/lib/job";
 import { getSessionUser } from "#/lib/session";
 
 export const Route = createFileRoute("/console/companies/$companyId")({
@@ -102,14 +103,30 @@ function CompanyDetailPage() {
                       {job.title}
                     </h3>
                     <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-(--sea-ink-soft)">
-                      {job.salary && (
+                      {(job.salaryMin != null || job.salaryMax != null) && (
                         <span className="inline-flex items-center gap-1">
-                          <Wallet className="size-3.5" /> {job.salary}
+                          <Wallet className="size-3.5" /> {formatSalary(job)}
                         </span>
                       )}
-                      {job.location && (
+                      {job.jobCities?.length ? (
                         <span className="inline-flex items-center gap-1">
-                          <MapPin className="size-3.5" /> {job.location}
+                          <MapPin className="size-3.5" />
+                          {job.jobCities.map((c) => c.city).join(" / ")}
+                        </span>
+                      ) : null}
+                      {job.jobType && (
+                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
+                          {JOB_TYPE_LABEL[job.jobType] ?? job.jobType}
+                        </span>
+                      )}
+                      {job.experience && (
+                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
+                          {job.experience}
+                        </span>
+                      )}
+                      {job.education && (
+                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
+                          {job.education}
                         </span>
                       )}
                       <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">

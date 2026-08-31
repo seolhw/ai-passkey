@@ -3,10 +3,7 @@
 // Runtime types generated with workerd@1.20260826.1 2025-09-02 nodejs_compat
 interface __BaseEnv_Env {
 	DB: D1Database;
-	ANTHROPIC_API_KEY: string;
-	OPENAI_API_KEY: string;
-	GEMINI_API_KEY: string;
-	BOSS_COOKIE: string;
+	DEEPSEEK_API_KEY: string;
 	BETTER_AUTH_URL: string;
 	BETTER_AUTH_SECRET: string;
 }
@@ -21,7 +18,7 @@ type StringifyValues<EnvType extends Record<string, unknown>> = {
 	[Binding in keyof EnvType]: EnvType[Binding] extends string ? EnvType[Binding] : string;
 };
 declare namespace NodeJS {
-	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "ANTHROPIC_API_KEY" | "OPENAI_API_KEY" | "GEMINI_API_KEY" | "BOSS_COOKIE" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET">> {}
+	interface ProcessEnv extends StringifyValues<Pick<Cloudflare.Env, "DEEPSEEK_API_KEY" | "BETTER_AUTH_URL" | "BETTER_AUTH_SECRET">> {}
 }
 
 // Begin runtime types

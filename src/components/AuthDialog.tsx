@@ -3,12 +3,14 @@ import { useSelector } from "@tanstack/react-store";
 import { Dialog } from "radix-ui";
 import { useEffect, useState } from "react";
 import { authClient } from "#/lib/auth-client";
+import { isGithubEnabled } from "#/lib/session";
 import {
   authDialogOpen,
   closeAuthDialog,
   openAuthDialog,
 } from "#/stores/auth-dialog";
 import BrandLogo from "./BrandLogo";
+import GithubIcon from "./GithubIcon";
 
 export default function AuthDialog() {
   const open = useSelector(authDialogOpen, (s) => s);
@@ -20,6 +22,8 @@ export default function AuthDialog() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [socialLoading, setSocialLoading] = useState(false);
+  const [githubEnabled, setGithubEnabled] = useState(false);
 
   // 未登录访问受保护页被重定向到 `/?auth=login` 时自动打开弹窗
   useEffect(() => {
@@ -29,6 +33,8 @@ export default function AuthDialog() {
       url.searchParams.delete("auth");
       window.history.replaceState(null, "", url.toString());
     }
+    // 检测 GitHub 社交登录是否配置，未配置时隐藏按钮
+    void isGithubEnabled().then(setGithubEnabled);
   }, [location.searchStr]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -57,6 +63,20 @@ export default function AuthDialog() {
     }
     closeAuthDialog();
     void router.navigate({ to: "/console/resumes" });
+  };
+
+  const handleGitHub = async () => {
+    setError("");
+    setSocialLoading(true);
+    // 首次授权会自动创建账号并登录；成功后浏览器跳转到 GitHub 授权页
+    const { error: socialError } = await authClient.signIn.social({
+      provider: "github",
+      callbackURL: "/console/resumes",
+    });
+    if (socialError) {
+      setSocialLoading(false);
+      setError(socialError.message || "GitHub 登录失败，请重试");
+    }
   };
 
   return (
@@ -167,6 +187,30 @@ export default function AuthDialog() {
               {isSignUp ? "去登录" : "立即注册"}
             </button>
           </p>
+
+          {githubEnabled && (
+            <>
+              <div className="relative my-5 flex items-center gap-3">
+                <span className="h-px flex-1 bg-(--line)" />
+                <span className="text-xs text-(--sea-ink-soft)">或</span>
+                <span className="h-px flex-1 bg-(--line)" />
+              </div>
+
+              <button
+                type="button"
+                onClick={() => void handleGitHub()}
+                disabled={socialLoading}
+                className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md border border-(--line) bg-(--surface-strong) text-sm font-medium text-(--sea-ink) transition hover:bg-(--link-bg-hover) disabled:pointer-events-none disabled:opacity-50"
+              >
+                <GithubIcon className="size-4" />
+                {socialLoading
+                  ? "正在跳转 GitHub…"
+                  : isSignUp
+                    ? "使用 GitHub 注册"
+                    : "使用 GitHub 登录"}
+              </button>
+            </>
+          )}
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>

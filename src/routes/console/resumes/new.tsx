@@ -2,6 +2,7 @@ import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { ClipboardPaste, Loader2, Upload } from "lucide-react";
 import { useState } from "react";
 
+import { authClient } from "#/lib/auth-client";
 import { createResume } from "#/lib/resume-api";
 import { parseFileToPlainText, textToHtml } from "#/lib/resume-utils";
 import { getSessionUser } from "#/lib/session";
@@ -16,6 +17,7 @@ export const Route = createFileRoute("/console/resumes/new")({
 
 function NewResumePage() {
   const navigate = useNavigate();
+  const { data: session } = authClient.useSession();
   const [mode, setMode] = useState<"upload" | "paste">("upload");
   const [title, setTitle] = useState("");
   const [plainText, setPlainText] = useState("");
@@ -40,6 +42,10 @@ function NewResumePage() {
   };
 
   const handleCreate = async () => {
+    if (session?.user && !session.user.emailVerified) {
+      setError("请先完成邮箱验证，验证后即可创建简历（见控制台顶部提示）");
+      return;
+    }
     if (!plainText.trim()) {
       setError("请先上传文件或粘贴简历内容");
       return;

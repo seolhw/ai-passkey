@@ -9,9 +9,11 @@ import {
   FileText,
   Library,
   LogOut,
+  MailWarning,
   MessagesSquare,
   Settings,
 } from "lucide-react";
+import { useState } from "react";
 import { authClient } from "#/lib/auth-client";
 import { getSessionUser } from "#/lib/session";
 import BrandLogo from "../../components/BrandLogo";
@@ -97,8 +99,44 @@ function ConsoleLayout() {
       </aside>
 
       <main className="flex-1 md:ml-60">
+        {session?.user && !session.user.emailVerified && (
+          <VerifyEmailBanner email={session.user.email} />
+        )}
         <Outlet />
       </main>
+    </div>
+  );
+}
+
+/** 邮箱未验证时的提示横幅：验证后才允许创建简历等私有资产操作 */
+function VerifyEmailBanner({ email }: { email: string }) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+
+  const handleSend = async () => {
+    setSending(true);
+    const { error } = await authClient.sendVerificationEmail({
+      email,
+      callbackURL: "/console",
+    });
+    setSending(false);
+    if (!error) setSent(true);
+  };
+
+  return (
+    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-amber-200/60 bg-amber-50 px-6 py-3 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
+      <MailWarning className="size-4 shrink-0" />
+      <span className="min-w-0 flex-1">
+        邮箱尚未验证，验证后即可创建简历，保障你的简历数据安全。
+      </span>
+      <button
+        type="button"
+        onClick={() => void handleSend()}
+        disabled={sending || sent}
+        className="shrink-0 rounded-md bg-amber-800/10 px-3 py-1.5 text-xs font-medium text-amber-800 transition hover:bg-amber-800/20 disabled:pointer-events-none disabled:opacity-60 dark:bg-amber-200/10 dark:text-amber-200 dark:hover:bg-amber-200/20"
+      >
+        {sending ? "发送中…" : sent ? "已发送，请查收" : "发送验证邮件"}
+      </button>
     </div>
   );
 }

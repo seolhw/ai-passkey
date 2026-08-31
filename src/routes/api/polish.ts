@@ -1,9 +1,8 @@
 import { chat } from "@tanstack/ai";
-import { anthropicText } from "@tanstack/ai-anthropic";
-import { geminiText } from "@tanstack/ai-gemini";
-import { openaiText } from "@tanstack/ai-openai";
 import { createFileRoute } from "@tanstack/react-router";
 import { z } from "zod";
+import { formatSalary } from "#/lib/job";
+import { deepseekAdapter, extractJson } from "#/lib/llm";
 import { getResume, listResumeTargets } from "#/lib/resume-api";
 import { htmlToText } from "#/lib/resume-utils";
 import { getSessionUser } from "#/lib/session";
@@ -69,7 +68,7 @@ export const Route = createFileRoute("/api/polish")({
         const jdText = targets
           .map(
             (job, i) =>
-              `【岗位${i + 1}】${job.company?.name ?? ""} - ${job.title}\n薪资：${job.salary ?? "面议"}\n${job.jd}`,
+              `【岗位${i + 1}】${job.company?.name ?? ""} - ${job.title}\n薪资：${formatSalary(job)}\n${job.jd}`,
           )
           .join("\n\n");
 
@@ -80,12 +79,22 @@ export const Route = createFileRoute("/api/polish")({
 2. original 字段必须逐字取自简历原文，便于系统做文本替换；replacement 是替换后的完整内容。
 3. 不要凭空编造经历、技能或数据。
 4. 结合目标 JD 中的关键词与能力要求，指出简历缺少或薄弱的点。
-5. 用简体中文输出。`;
+5. 用简体中文输出。
+6. 最终只输出一个 JSON 对象，结构为：
+{
+  "summary": "整体修改思路的简要概括",
+  "suggestions": [
+    { "section": "所属板块，如 个人简介/工作经历/技能", "original": "简历原文片段（逐字一致）", "replacement": "建议改写后的内容", "reason": "修改理由，结合目标 JD 说明", "difficulty": "easy|medium|hard" }
+  ],
+  "weaknesses": [
+    { "area": "薄弱知识点/能力领域", "detail": "为什么重要、当前差距在哪", "advice": "面试前如何重点准备" }
+  ]
+}
+不要输出代码块或其他任何文字。`;
 
         try {
-          const provider = pickProvider();
-          const result = await chat({
-            adapter: provider.adapter,
+          const text = await chat({
+            adapter: deepseekAdapter(),
             messages: [
               {
                 role: "user",
@@ -93,11 +102,21 @@ export const Route = createFileRoute("/api/polish")({
               },
             ],
             systemPrompts: [SYSTEM_PROMPT],
-            outputSchema: PolishSchema,
+            stream: false,
           });
 
+          const parsed = extractJson(text);
+          const result = PolishSchema.safeParse(parsed);
+          if (!result.success) {
+            throw new Error("AI 返回的 JSON 格式不正确，请重试");
+          }
+
           return new Response(
-            JSON.stringify({ ...result, provider, model: provider.model }),
+            JSON.stringify({
+              ...result.data,
+              provider: "deepseek",
+              model: "deepseek-chat",
+            }),
             {
               status: 200,
               headers: { "Content-Type": "application/json" },
@@ -116,33 +135,3 @@ export const Route = createFileRoute("/api/polish")({
     },
   },
 });
-
-function pickProvider() {
-  const providers = [
-    {
-      name: "anthropic",
-      model: "claude-haiku-4-5",
-      active: Boolean(process.env.ANTHROPIC_API_KEY),
-      adapter: anthropicText("claude-haiku-4-5"),
-    },
-    {
-      name: "openai",
-      model: "gpt-4o",
-      active: Boolean(process.env.OPENAI_API_KEY),
-      adapter: openaiText("gpt-4o"),
-    },
-    {
-      name: "gemini",
-      model: "gemini-2.5-flash",
-      active: Boolean(process.env.GEMINI_API_KEY),
-      adapter: geminiText("gemini-2.5-flash"),
-    },
-  ];
-  const chosen = providers.find((p) => p.active);
-  if (!chosen) {
-    throw new Error(
-      "未配置任何 LLM API Key，请设置 ANTHROPIC_API_KEY / OPENAI_API_KEY / GEMINI_API_KEY",
-    );
-  }
-  return chosen;
-}

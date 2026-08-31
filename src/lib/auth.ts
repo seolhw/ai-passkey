@@ -40,6 +40,7 @@ export const auth = betterAuth({
     github: {
       clientId: env.GITHUB_CLIENT_ID || "",
       clientSecret: env.GITHUB_CLIENT_SECRET || "",
+      disabled: !env.GITHUB_CLIENT_ID,
     },
   },
   secret: env.BETTER_AUTH_SECRET,

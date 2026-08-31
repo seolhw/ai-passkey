@@ -22,6 +22,34 @@
       "when": 1788090218687,
       "tag": "0002_unique_whirlwind",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1788129153687,
+      "tag": "0003_high_elektra",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1788129287349,
+      "tag": "0004_amazing_mother_askani",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1793852000000,
+      "tag": "0005_company_restructure",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1788133789954,
+      "tag": "0006_jobs_structured",
+      "breakpoints": true
     }
   ]
 }

@@ -23,8 +23,8 @@
 2. 配置环境变量（复制到 `.dev.vars`，已被 git 忽略）：
 
    ```env
-   # LLM API Key（简历润色 / AI 顾问使用）
-   ANTHROPIC_API_KEY=
+   # LLM API Key（简历润色 / AI 顾问 / JD 抓取使用）
+   DEEPSEEK_API_KEY=
 
    # Better Auth 配置
    BETTER_AUTH_URL=http://localhost:3000
@@ -72,7 +72,7 @@ pnpm db:d1:seed
 
 在 Cloudflare Dashboard（或通过 `wrangler secret put`）设置以下 Secret：
 
-- `ANTHROPIC_API_KEY`
+- `DEEPSEEK_API_KEY`
 - `BETTER_AUTH_URL`（生产域名）
 - `BETTER_AUTH_SECRET`
 

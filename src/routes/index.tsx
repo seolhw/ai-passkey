@@ -6,12 +6,14 @@ import {
   FileUp,
   Layers,
   MessagesSquare,
+  ScanSearch,
   Sparkles,
   Target,
   Wand2,
   Zap,
 } from "lucide-react";
 import { AI_COMPANIES } from "@/constants/models";
+import GithubIcon from "../components/GithubIcon";
 
 export const Route = createFileRoute("/")({ component: LandingPage });
 
@@ -34,6 +36,11 @@ const STEPS = [
 ];
 
 const FEATURES = [
+  {
+    icon: ScanSearch,
+    title: "简历智能匹配岗位",
+    desc: "AI 解析你的技能与经历，从岗位库中智能推荐最合适的目标岗位，每一份简历都投其所好。",
+  },
   {
     icon: Sparkles,
     title: "JD 精准修改",
@@ -66,7 +73,18 @@ function LandingPage() {
     <main className="page-wrap px-4 pb-20">
       {/* Hero */}
       <section className="relative px-1 pb-20 pt-16 sm:pt-24 lg:pt-28 lg:pb-24">
-        <p className="island-kicker relative mb-5">跨界简历 · AI 求职工作台</p>
+        <div className="relative mb-5 flex items-center gap-3">
+          <span className="island-kicker">跨界简历 · AI 求职工作台</span>
+          <a
+            href="https://github.com/seolhw/ai-passkey"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--surface-strong) px-3 py-1 text-xs font-medium text-(--sea-ink-soft) no-underline transition hover:border-(--lagoon-deep) hover:text-(--sea-ink)"
+          >
+            <GithubIcon className="size-3.5" />
+            开源
+          </a>
+        </div>
         <h1 className="display-title relative  text-4xl font-bold leading-[1.1] tracking-tight text-(--sea-ink) sm:text-6xl  lg:text-7xl lg:leading-[1.05]">
           上传简历，选择岗位，
           <span className="btn-gradient-text">按目标岗位逐条修改简历</span>

@@ -32,6 +32,8 @@ export const copyLibraryToResume = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const user = await getSessionUser();
     if (!user) return null;
+    // 复制会创建私有简历，邮箱未验证时禁止
+    if (!user.emailVerified) return null;
 
     const item = await db.query.resumeLibrary.findFirst({
       where: (t, { eq }) => eq(t.id, data.id),

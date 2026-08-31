@@ -4,6 +4,7 @@ import {
   createRootRouteWithContext,
   HeadContent,
   Link,
+  Outlet,
   Scripts,
   useRouterState,
 } from "@tanstack/react-router";
@@ -43,13 +44,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
     ],
   }),
   notFoundComponent: NotFoundPage,
+  component: AppShell,
   shellComponent: RootDocument,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname });
-  const isConsole = pathname.startsWith("/console");
-
   return (
     <html lang="zh-CN" suppressHydrationWarning>
       <head>
@@ -60,10 +59,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="wrap-anywhere flex min-h-dvh flex-col font-sans antialiased selection:bg-[rgba(124,58,237,0.2)]">
-        {!isConsole && <Header />}
-        <div className="flex-1">{children}</div>
-        {!isConsole && <Footer />}
-        <AuthDialog />
+        {children}
         <TanStackDevtools
           config={{
             position: "bottom-right",
@@ -79,6 +75,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <Scripts />
       </body>
     </html>
+  );
+}
+
+function AppShell() {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const isConsole = pathname.startsWith("/console");
+
+  return (
+    <>
+      {!isConsole && <Header />}
+      <div className="flex-1">
+        <Outlet />
+      </div>
+      {!isConsole && <Footer />}
+      <AuthDialog />
+    </>
   );
 }
 
