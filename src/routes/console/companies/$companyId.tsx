@@ -3,6 +3,8 @@ import {
   Calendar,
   ChevronDown,
   ExternalLink,
+  Eye,
+  EyeOff,
   MapPin,
   Wallet,
 } from "lucide-react";
@@ -120,82 +122,94 @@ function CompanyDetailPage() {
           </p>
         </section>
       ) : (
-        <div className="grid gap-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => {
             const isOpen = expanded.has(job.id);
             return (
-              <section
+              <div
                 key={job.id}
-                className="island-shell rounded-2xl p-4 transition"
+                className={`library-paper relative w-full rounded-[3px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] transition-shadow hover:shadow-[0_2px_6px_rgba(0,0,0,0.1),0_22px_44px_-14px_rgba(15,23,42,0.35)] dark:border-zinc-600 ${
+                  isOpen
+                    ? "max-h-[75vh] overflow-y-auto overflow-x-hidden"
+                    : "aspect-[210/297] overflow-hidden"
+                }`}
               >
-                <button
-                  type="button"
-                  onClick={() => toggle(job.id)}
-                  className="flex w-full items-center justify-between gap-3 text-left"
-                >
-                  <div className="min-w-0">
-                    <h3 className="truncate text-sm font-semibold text-(--sea-ink)">
-                      {job.title}
-                    </h3>
-                    <div className="mt-1.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-(--sea-ink-soft)">
-                      {(job.salaryMin != null || job.salaryMax != null) && (
-                        <span className="inline-flex items-center gap-1">
-                          <Wallet className="size-3.5" /> {formatSalary(job)}
-                        </span>
-                      )}
-                      {formatPublishedAt(job.publishedAt) && (
-                        <span className="inline-flex items-center gap-1">
-                          <Calendar className="size-3.5" />
-                          {formatPublishedAt(job.publishedAt)} 发布
-                        </span>
-                      )}
-                      {job.jobCities?.length ? (
-                        <span className="inline-flex items-center gap-1">
-                          <MapPin className="size-3.5" />
-                          {job.jobCities.map((c) => c.city).join(" / ")}
-                        </span>
-                      ) : null}
-                      {job.jobType && (
-                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
-                          {JOB_TYPE_LABEL[job.jobType] ?? job.jobType}
-                        </span>
-                      )}
-                      {job.experience && (
-                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
-                          {job.experience}
-                        </span>
-                      )}
-                      {job.education && (
-                        <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
-                          {job.education}
-                        </span>
-                      )}
-                    </div>
+                {/* 顶部操作条：展开全文 / 收起 */}
+                <div className="sticky top-2 z-10 flex justify-end gap-2 px-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => toggle(job.id)}
+                    className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800"
+                  >
+                    {isOpen ? (
+                      <>
+                        <EyeOff className="size-3.5" /> 收起
+                      </>
+                    ) : (
+                      <>
+                        <Eye className="size-3.5" /> 展开全文
+                      </>
+                    )}
+                    <ChevronDown
+                      className={`size-3.5 transition-transform ${
+                        isOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                {/* 白纸内容 */}
+                <div className="library-paper-content library-paper-job px-8 py-6">
+                  <h1>{job.title}</h1>
+                  <div className="library-paper-job-meta">
+                    {(job.salaryMin != null || job.salaryMax != null) && (
+                      <span className="inline-flex items-center gap-1">
+                        <Wallet className="size-3.5" />{" "}
+                        <strong>{formatSalary(job)}</strong>
+                      </span>
+                    )}
+                    {job.jobCities?.length ? (
+                      <span className="inline-flex items-center gap-1">
+                        <MapPin className="size-3.5" />
+                        {job.jobCities.map((c) => c.city).join(" / ")}
+                      </span>
+                    ) : null}
+                    {job.jobType && (
+                      <span>{JOB_TYPE_LABEL[job.jobType] ?? job.jobType}</span>
+                    )}
+                    {job.experience && <span>{job.experience}</span>}
+                    {job.education && <span>{job.education}</span>}
+                    {formatPublishedAt(job.publishedAt) && (
+                      <span className="inline-flex items-center gap-1">
+                        <Calendar className="size-3.5" />
+                        {formatPublishedAt(job.publishedAt)} 发布
+                      </span>
+                    )}
                   </div>
-                  <ChevronDown
-                    className={`size-5 shrink-0 text-(--sea-ink-soft) transition-transform ${
-                      isOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
-                {isOpen && (
-                  <div className="mt-4 border-t border-(--line) pt-4">
-                    <p className="whitespace-pre-wrap text-sm leading-relaxed text-(--sea-ink)">
+
+                  <div className="library-paper-job-jd">
+                    {isOpen && <h2>职位描述</h2>}
+                    <p className="whitespace-pre-wrap">
                       {job.jd || "暂无 JD 详情"}
                     </p>
-                    {job.sourceUrl && (
+                    {isOpen && job.sourceUrl && (
                       <a
                         href={job.sourceUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="mt-4 inline-flex items-center gap-1 text-sm text-(--lagoon-deep) no-underline hover:underline"
+                        className="inline-flex items-center gap-1 text-sm"
                       >
                         查看原始招聘页 <ExternalLink className="size-3.5" />
                       </a>
                     )}
                   </div>
+                </div>
+
+                {/* 底部渐变提示（仅折叠态） */}
+                {!isOpen && (
+                  <div className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent via-white/55 to-white" />
                 )}
-              </section>
+              </div>
             );
           })}
         </div>

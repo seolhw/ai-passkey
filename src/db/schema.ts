@@ -173,8 +173,11 @@ export const resumeLibrary = sqliteTable("resume_library", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   title: text().notNull(),
   industry: text(),
-  /** 标签（JSON 数组，如 [{"k":"学历","v":"硕士"},{"k":"经验","v":"3-5年"}]） */
-  tags: text({ mode: "json" }).$type<ResumeTag[]>().notNull().default([]),
+  /**
+   * 标签（JSON 数组，如 [{"k":"学历","v":"硕士"},{"k":"经验","v":"3-5年"},{"k":"技能","v":"RAG"}]）
+   * 保持 nullable（与现库列一致，仅增加 JSON 类型映射，避免列约束变更导致迁移失败）
+   */
+  tags: text({ mode: "json" }).$type<ResumeTag[]>(),
   content: text().notNull(),
   featured: integer({ mode: "boolean" }).notNull().default(false),
   createdAt: integer("created_at", { mode: "timestamp" }).default(

@@ -400,6 +400,75 @@ button:not(:disabled),
   cursor: pointer;
 }
 
+/* ============================================================
+   A4 白纸卡片排版（简历大厅 + 招聘在招岗位 共用，保持效果统一）
+   白纸黑字，不随主题变化；多用于把内容呈现成可打印的纸张质感
+   ============================================================ */
+.library-paper-content {
+  font-size: 11px;
+  line-height: 1.6;
+  color: #27272a;
+}
+.library-paper-content h1 {
+  text-align: center;
+  font-size: 1.8em;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  margin: 0 0 0.25em;
+}
+.library-paper-content h1 + p {
+  text-align: center;
+}
+.library-paper-content h2 {
+  font-size: 1.2em;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin: 0.9em 0 0.3em;
+  padding-bottom: 0.15em;
+  border-bottom: 1px solid #d4d4d8;
+}
+.library-paper-content h3 {
+  font-size: 1.06em;
+  font-weight: 700;
+  margin: 0.55em 0 0.2em;
+}
+.library-paper-content p {
+  margin: 0.3em 0;
+}
+.library-paper-content ul,
+.library-paper-content ol {
+  margin: 0.25em 0;
+  padding-left: 1.4em;
+}
+.library-paper-content ul {
+  list-style: disc;
+}
+.library-paper-content ol {
+  list-style: decimal;
+}
+.library-paper-content li {
+  margin: 0.15em 0;
+}
+.library-paper-content a {
+  color: #0f766e;
+  text-decoration: underline;
+}
+
+/** 在招岗位 A4 卡：在 .library-paper-content 基础上增强岗位元信息排版 */
+.library-paper-job-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4em 1.2em;
+  color: #52525b;
+  font-size: 0.9em;
+}
+.library-paper-job-meta + .library-paper-job-jd {
+  margin-top: 0.75em;
+}
+.library-paper-job-jd {
+  margin-top: 0.5em;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise-in {
     animation: none;
