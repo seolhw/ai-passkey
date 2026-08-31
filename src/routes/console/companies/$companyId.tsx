@@ -170,9 +170,6 @@ function CompanyDetailPage() {
                           {job.education}
                         </span>
                       )}
-                      <span className="inline-flex h-4.5 items-center rounded-full bg-(--chip-bg) px-2 text-[11px]">
-                        {job.source}
-                      </span>
                     </div>
                   </div>
                   <ChevronDown
