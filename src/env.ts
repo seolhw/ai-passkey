@@ -11,6 +11,8 @@ export const env = createEnv({
     NODE_ENV: z.string().min(1).optional(),
     RESEND_API_KEY: z.string().min(1).optional(),
     DEEPSEEK_API_KEY: z.string().min(1).optional(),
+    /** JD 录入接口的开发者密钥（未配置时录入接口返回 503） */
+    JD_INGEST_KEY: z.string().min(1).optional(),
     CLOUDFLARE_ACCOUNT_ID: z.string().min(1).optional(),
     CLOUDFLARE_API_TOKEN: z.string().min(1).optional(),
   },

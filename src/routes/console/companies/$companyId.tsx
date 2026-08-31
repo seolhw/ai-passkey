@@ -1,9 +1,15 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { ChevronDown, ExternalLink, MapPin, Wallet } from "lucide-react";
+import {
+  Calendar,
+  ChevronDown,
+  ExternalLink,
+  MapPin,
+  Wallet,
+} from "lucide-react";
 import { useState } from "react";
 
 import { getCompanyJobs } from "#/lib/company-api";
-import { formatSalary, JOB_TYPE_LABEL } from "#/lib/job";
+import { formatPublishedAt, formatSalary, JOB_TYPE_LABEL } from "#/lib/job";
 import { getSessionUser } from "#/lib/session";
 
 export const Route = createFileRoute("/console/companies/$companyId")({
@@ -106,6 +112,12 @@ function CompanyDetailPage() {
                       {(job.salaryMin != null || job.salaryMax != null) && (
                         <span className="inline-flex items-center gap-1">
                           <Wallet className="size-3.5" /> {formatSalary(job)}
+                        </span>
+                      )}
+                      {formatPublishedAt(job.publishedAt) && (
+                        <span className="inline-flex items-center gap-1">
+                          <Calendar className="size-3.5" />
+                          {formatPublishedAt(job.publishedAt)} 发布
                         </span>
                       )}
                       {job.jobCities?.length ? (

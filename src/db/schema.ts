@@ -95,6 +95,8 @@ export const jobs = sqliteTable(
     workMode: text("work_mode"),
     /** 在招状态：open / closed */
     status: text().notNull().default("open"),
+    /** 岗位发布日期（源站发布时间，unix 秒） */
+    publishedAt: integer("published_at", { mode: "timestamp" }),
     sourceUrl: text("source_url"),
     source: text().notNull().default("manual"),
     createdAt: integer("created_at", { mode: "timestamp" }).default(

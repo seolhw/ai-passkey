@@ -19,6 +19,7 @@ import { Route as ConsoleIndexRouteImport } from './routes/console/index'
 import { Route as ConsoleAdvisorRouteImport } from './routes/console/advisor'
 import { Route as ConsoleSettingsRouteImport } from './routes/console/settings'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
+import { Route as ApiJdIngestRouteImport } from './routes/api/jd/ingest'
 import { Route as ConsoleCompaniesIndexRouteImport } from './routes/console/companies/index'
 import { Route as ConsoleCompaniesCompanyIdRouteImport } from './routes/console/companies/$companyId'
 import { Route as ConsoleCompaniesNewRouteImport } from './routes/console/companies/new'
@@ -77,6 +78,11 @@ const ConsoleSettingsRoute = ConsoleSettingsRouteImport.update({
 const ApiAuthSplatRoute = ApiAuthSplatRouteImport.update({
   id: '/api/auth/$',
   path: '/api/auth/$',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiJdIngestRoute = ApiJdIngestRouteImport.update({
+  id: '/api/jd/ingest',
+  path: '/api/jd/ingest',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsoleCompaniesIndexRoute = ConsoleCompaniesIndexRouteImport.update({
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/console/settings': typeof ConsoleSettingsRoute
   '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/jd/ingest': typeof ApiJdIngestRoute
   '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
   '/console/companies/new': typeof ConsoleCompaniesNewRoute
   '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
@@ -159,6 +166,7 @@ export interface FileRoutesByTo {
   '/console/settings': typeof ConsoleSettingsRoute
   '/console': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/jd/ingest': typeof ApiJdIngestRoute
   '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
   '/console/companies/new': typeof ConsoleCompaniesNewRoute
   '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
@@ -181,6 +189,7 @@ export interface FileRoutesById {
   '/console/settings': typeof ConsoleSettingsRoute
   '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
+  '/api/jd/ingest': typeof ApiJdIngestRoute
   '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
   '/console/companies/new': typeof ConsoleCompaniesNewRoute
   '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
@@ -204,6 +213,7 @@ export interface FileRouteTypes {
     | '/console/settings'
     | '/console/'
     | '/api/auth/$'
+    | '/api/jd/ingest'
     | '/console/companies/$companyId'
     | '/console/companies/new'
     | '/console/resumes/$resumeId'
@@ -224,6 +234,7 @@ export interface FileRouteTypes {
     | '/console/settings'
     | '/console'
     | '/api/auth/$'
+    | '/api/jd/ingest'
     | '/console/companies/$companyId'
     | '/console/companies/new'
     | '/console/resumes/$resumeId'
@@ -245,6 +256,7 @@ export interface FileRouteTypes {
     | '/console/settings'
     | '/console/'
     | '/api/auth/$'
+    | '/api/jd/ingest'
     | '/console/companies/$companyId'
     | '/console/companies/new'
     | '/console/resumes/$resumeId'
@@ -264,6 +276,7 @@ export interface RootRouteChildren {
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiPolishRoute: typeof ApiPolishRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
+  ApiJdIngestRoute: typeof ApiJdIngestRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -336,6 +349,13 @@ declare module '@tanstack/react-router' {
       path: '/api/auth/$'
       fullPath: '/api/auth/$'
       preLoaderRoute: typeof ApiAuthSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/jd/ingest': {
+      id: '/api/jd/ingest'
+      path: '/api/jd/ingest'
+      fullPath: '/api/jd/ingest'
+      preLoaderRoute: typeof ApiJdIngestRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/console/companies/': {
@@ -458,6 +478,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiPolishRoute: ApiPolishRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
+  ApiJdIngestRoute: ApiJdIngestRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

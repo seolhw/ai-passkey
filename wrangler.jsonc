@@ -17,8 +17,4 @@
       "migrations_dir": "drizzle"
     }
   ],
-  // 每天 08:00（UTC）定时抓取一次 AI 公司 JD
-  "triggers": {
-    "crons": ["0 8 * * *"]
-  }
 }

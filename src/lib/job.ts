@@ -16,3 +16,15 @@ export function formatSalary(job: Pick<Job, "salaryMin" | "salaryMax">) {
   const hi = max ?? min;
   return lo === hi ? `${lo} 万/年` : `${lo}-${hi} 万/年`;
 }
+
+/** 渲染发布日期文本：如「2026-08-10」；未填写时返回空串 */
+export function formatPublishedAt(value: unknown) {
+  if (value == null || value === "") return "";
+  const t = new Date(value as string | number | Date);
+  if (Number.isNaN(t.getTime())) return "";
+  return t.toLocaleDateString("zh-CN", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+}

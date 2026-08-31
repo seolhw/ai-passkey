@@ -7,7 +7,7 @@ import {
 import { Check, Loader2, Save, Target } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { listJobs } from "#/lib/company-api";
-import { formatSalary } from "#/lib/job";
+import { formatPublishedAt, formatSalary } from "#/lib/job";
 import {
   getResume,
   listResumeTargets,
@@ -206,6 +206,9 @@ function TargetsPage() {
                             {[
                               formatSalary(job),
                               job.jobCities?.map((c) => c.city).join("/"),
+                              formatPublishedAt(job.publishedAt)
+                                ? `${formatPublishedAt(job.publishedAt)} 发布`
+                                : "",
                             ]
                               .filter(Boolean)
                               .join(" · ") || "薪资面议"}
