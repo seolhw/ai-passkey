@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AtSign, Check, Loader2, LogOut, Save } from "lucide-react";
+import { AtSign, BadgeCheck, Check, Loader2, LogOut, MailWarning, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { authClient } from "#/lib/auth-client";
 import { getSessionUser } from "#/lib/session";
@@ -116,6 +116,15 @@ function SettingsPage() {
         </div>
       </section>
 
+      <section className="island-shell mb-6 rounded-2xl p-5">
+        <h2 className="mb-4 text-base font-semibold text-(--sea-ink)">
+          邮箱验证
+        </h2>
+        {user && (
+          <EmailVerifyCard email={user.email} verified={user.emailVerified} />
+        )}
+      </section>
+
       <section className="island-shell rounded-2xl p-5">
         <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
           账号操作
@@ -137,5 +146,98 @@ function SettingsPage() {
         </button>
       </section>
     </main>
+  );
+}
+
+/** 邮箱验证卡片：未验证时支持发送验证码并验证，验证成功后自动刷新 session */
+function EmailVerifyCard({
+  email,
+  verified,
+}: {
+  email: string;
+  verified: boolean;
+}) {
+  const [sending, setSending] = useState(false);
+  const [sent, setSent] = useState(false);
+  const [code, setCode] = useState("");
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSend = async () => {
+    setSending(true);
+    setError("");
+    const { error: sendError } = await authClient.emailOtp.sendVerificationOtp({
+      email,
+      type: "email-verification",
+    });
+    setSending(false);
+    if (sendError) {
+      setError(sendError.message || "验证码发送失败，请重试");
+      return;
+    }
+    setSent(true);
+  };
+
+  const handleVerify = async () => {
+    setVerifying(true);
+    setError("");
+    const { error: verifyError } = await authClient.emailOtp.verifyEmail({
+      email,
+      otp: code,
+    });
+    setVerifying(false);
+    if (verifyError) setError(verifyError.message || "验证码错误，请重试");
+    // 验证成功：better-auth 会自动刷新 session，此卡片随之更新为已验证
+  };
+
+  if (verified) {
+    return (
+      <div className="flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700 dark:border-green-900 dark:bg-green-950/40 dark:text-green-300">
+        <BadgeCheck className="size-4 shrink-0" />
+        邮箱已验证，可以正常创建简历。
+      </div>
+    );
+  }
+
+  return (
+    <div className="grid gap-3">
+      <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
+        <MailWarning className="size-4 shrink-0" />
+        邮箱尚未验证，验证后才能创建简历，保障你的简历数据安全。
+      </div>
+      {!sent ? (
+        <button
+          type="button"
+          onClick={() => void handleSend()}
+          disabled={sending}
+          className="inline-flex h-9 w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-amber-800/10 px-4 text-xs font-medium text-amber-800 transition hover:bg-amber-800/20 disabled:pointer-events-none disabled:opacity-60 dark:bg-amber-200/10 dark:text-amber-200 dark:hover:bg-amber-200/20"
+        >
+          {sending ? "发送中…" : "发送验证码"}
+        </button>
+      ) : (
+        <div className="flex flex-wrap items-center gap-2">
+          <input
+            value={code}
+            onChange={(e) => setCode(e.target.value.replace(/\D/g, ""))}
+            placeholder="输入验证码"
+            maxLength={6}
+            className="h-9 w-32 rounded-md border border-(--line) bg-transparent px-3 text-center text-sm tracking-widest outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+          />
+          <button
+            type="button"
+            onClick={() => void handleVerify()}
+            disabled={verifying || code.length < 6}
+            className="inline-flex h-9 shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-4 text-xs font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+          >
+            {verifying ? "验证中…" : "验证"}
+          </button>
+        </div>
+      )}
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
+          {error}
+        </div>
+      )}
+    </div>
   );
 }
