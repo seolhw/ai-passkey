@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { Dialog } from "radix-ui";
 import { useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { Streamdown } from "streamdown";
 
 import ConfirmDialog from "#/components/ConfirmDialog";
@@ -650,23 +651,26 @@ function ResumeDetailPage() {
         </aside>
       </div>
 
-      {/* 打印区域（仅打印时可见，A4 版式） */}
-      <div id="print-area" className="print-area">
-        <div className="print-a4">
-          <div
-            className="print-a4-body"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: 打印区域需渲染编辑器原始 HTML
-            dangerouslySetInnerHTML={{ __html: html }}
-          />
-        </div>
-      </div>
+      {/* 打印区域：Portal 到 body，打印时独立于应用内容 */}
+      {createPortal(
+        <div id="print-area" className="print-area">
+          <div className="print-a4">
+            <div
+              className="print-a4-body"
+              // biome-ignore lint/security/noDangerouslySetInnerHtml: 打印区域需渲染编辑器原始 HTML
+              dangerouslySetInnerHTML={{ __html: html }}
+            />
+          </div>
+        </div>,
+        document.body,
+      )}
 
       <style>{`
         #print-area { display: none; }
         @media print {
-          body * { visibility: hidden; }
-          #print-area, #print-area * { visibility: visible; }
-          #print-area { display: block; position: fixed; inset: 0; width: 100%; height: auto; background: #fff; }
+          /* 只显示 body 直接子里的打印区，其余全部隐藏（不占布局，无空白尾页） */
+          body > *:not(#print-area) { display: none !important; }
+          #print-area { display: block !important; position: static; background: #fff; }
           .print-a4 { width: 190mm; margin: 0 auto; padding: 8mm 0; background: #fff; box-sizing: border-box; }
           .print-a4-body { font-size: 14px; line-height: 1.7; color: #1a1a1a; }
           .print-a4-body p { margin: 0.4em 0; }
