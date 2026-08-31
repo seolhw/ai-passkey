@@ -23,7 +23,7 @@
 2. 配置环境变量（复制到 `.dev.vars`，已被 git 忽略）：
 
    ```env
-   # LLM API Key（简历修改 / AI 顾问 / JD 抓取使用）
+   # LLM API Key（简历修改 / 求职顾问 / JD 抓取使用）
    DEEPSEEK_API_KEY=
 
    # Better Auth 配置

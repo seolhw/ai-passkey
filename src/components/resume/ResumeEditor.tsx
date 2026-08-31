@@ -1,4 +1,5 @@
 import Highlight from "@tiptap/extension-highlight";
+import { Markdown } from "@tiptap/markdown";
 import Placeholder from "@tiptap/extension-placeholder";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
@@ -40,8 +41,9 @@ export default function ResumeEditor({
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
-        heading: { levels: [1, 2, 3] },
+        heading: { levels: [1, 2, 3, 4] },
       }),
+      Markdown, // 支持 Markdown 语法输入（如 # 标题 / **加粗** / - 列表）
       Highlight,
       Placeholder.configure({ placeholder }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
@@ -49,11 +51,11 @@ export default function ResumeEditor({
       TaskItem.configure({ nested: true }),
     ],
     content,
+    contentType: "html", // 现有内容为 HTML，用 HTML 解析；同时保留 Markdown 输入规则
     immediatelyRender: false,
     editorProps: {
       attributes: {
-        class:
-          "resume-editor-content prose prose-sm sm:prose max-w-none min-h-160 px-5 py-4 outline-none focus:outline-none",
+        class: "resume-editor-content outline-none focus:outline-none",
       },
     },
     onUpdate: ({ editor: e }) => {
@@ -85,12 +87,13 @@ export default function ResumeEditor({
   );
 
   return (
-    <div className="resume-editor overflow-hidden rounded-2xl border border-(--line) bg-white dark:bg-(--surface-strong)">
-      <div className="flex flex-wrap items-center gap-1 border-b border-(--line) px-3 py-2">
+    <div className="mx-auto w-full max-w-[860px]">
+      {/* 工具栏 */}
+      <div className="mb-3 flex flex-wrap items-center gap-1 rounded-xl border border-(--line) bg-(--surface-strong) p-1.5 shadow-sm">
         {btn(
           editor.isActive("bold"),
           () => editor.chain().focus().toggleBold().run(),
-          "加粗",
+          "加粗（Ctrl+B）",
           <Bold className="size-4" />,
         )}
         {btn(
@@ -121,43 +124,43 @@ export default function ResumeEditor({
         {btn(
           editor.isActive("heading", { level: 1 }),
           () => editor.chain().focus().toggleHeading({ level: 1 }).run(),
-          "一级标题",
+          "一级标题（Markdown：# 空格）",
           <Heading1 className="size-4" />,
         )}
         {btn(
           editor.isActive("heading", { level: 2 }),
           () => editor.chain().focus().toggleHeading({ level: 2 }).run(),
-          "二级标题",
+          "二级标题（Markdown：## 空格）",
           <Heading2 className="size-4" />,
         )}
         {btn(
           editor.isActive("bulletList"),
           () => editor.chain().focus().toggleBulletList().run(),
-          "无序列表",
+          "无序列表（Markdown：- 空格）",
           <List className="size-4" />,
         )}
         {btn(
           editor.isActive("orderedList"),
           () => editor.chain().focus().toggleOrderedList().run(),
-          "有序列表",
+          "有序列表（Markdown：1. 空格）",
           <ListOrdered className="size-4" />,
         )}
         {btn(
           editor.isActive("taskList"),
           () => editor.chain().focus().toggleTaskList().run(),
-          "任务列表",
+          "任务列表（Markdown：- [ ] 空格）",
           <ListChecks className="size-4" />,
         )}
         {btn(
           editor.isActive("blockquote"),
           () => editor.chain().focus().toggleBlockquote().run(),
-          "引用",
+          "引用（Markdown：> 空格）",
           <Quote className="size-4" />,
         )}
         {btn(
           editor.isActive("codeBlock"),
           () => editor.chain().focus().toggleCodeBlock().run(),
-          "代码块",
+          "代码块（Markdown：``` ）",
           <Code className="size-4" />,
         )}
         <span className="mx-1 h-5 w-px bg-(--line)" />
@@ -182,7 +185,7 @@ export default function ResumeEditor({
         {btn(
           editor.isActive("horizontalRule"),
           () => editor.chain().focus().setHorizontalRule().run(),
-          "分割线",
+          "分割线（Markdown：--- ）",
           <Minus className="size-4" />,
         )}
         <span className="mx-1 h-5 w-px bg-(--line)" />
@@ -215,30 +218,58 @@ export default function ResumeEditor({
           <Redo2 className="size-4" />,
         )}
       </div>
-      <EditorContent editor={editor} />
+
+      {/* Markdown 支持提示条 */}
+      <div className="mb-3 flex flex-wrap items-center gap-x-2 gap-y-1.5 rounded-xl border border-(--line) bg-(--surface-strong) px-4 py-2.5 text-xs text-(--sea-ink-soft)">
+        <span className="inline-flex items-center gap-1.5 font-semibold text-(--lagoon-deep)">
+          <span className="rounded-md bg-(--lagoon-deep)/10 px-1.5 py-0.5">MD</span>
+          支持 Markdown 语法
+        </span>
+        {["# 标题", "## 二级", "**加粗**", "*斜体*", "- 列表", "1. 有序", "> 引用", "`代码`", "--- 分割线"].map(
+          (t) => (
+            <code
+              key={t}
+              className="rounded border border-(--line) bg-(--surface) px-1.5 py-0.5 tabular-nums"
+            >
+              {t}
+            </code>
+          ),
+        )}
+        <span className="text-(--sea-ink-soft)">输入后按空格 / 回车自动排版</span>
+      </div>
+
+      {/* A4 白纸编辑区 */}
+      <div className="library-paper overflow-hidden rounded-[3px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] dark:border-zinc-600">
+        <div className="px-12 py-10">
+          <EditorContent editor={editor} className="min-h-[680px]" />
+        </div>
+      </div>
+
       <style>{`
+        .resume-editor-content { font-size: 16px; line-height: 1.8; color: #27272a; }
         .resume-editor-content p { margin: 0.5em 0; }
-        .resume-editor-content ul, .resume-editor-content ol { padding-left: 1.5em; }
+        .resume-editor-content ul, .resume-editor-content ol { padding-left: 1.4em; }
         .resume-editor-content ul { list-style: disc; }
         .resume-editor-content ol { list-style: decimal; }
-        .resume-editor-content h1 { font-size: 1.6em; font-weight: 700; margin: 0.8em 0 0.4em; }
-        .resume-editor-content h2 { font-size: 1.3em; font-weight: 600; margin: 0.7em 0 0.4em; }
-        .resume-editor-content h3 { font-size: 1.1em; font-weight: 600; margin: 0.6em 0 0.3em; }
+        .resume-editor-content h1 { font-size: 1.8em; font-weight: 700; margin: 1em 0 0.5em; }
+        .resume-editor-content h2 { font-size: 1.45em; font-weight: 700; margin: 0.9em 0 0.4em; }
+        .resume-editor-content h3 { font-size: 1.25em; font-weight: 700; margin: 0.7em 0 0.3em; }
+        .resume-editor-content h4 { font-size: 1.1em; font-weight: 700; margin: 0.6em 0 0.3em; }
         .resume-editor-content a { color: var(--lagoon-deep); text-decoration: underline; }
-        .resume-editor-content blockquote { border-left: 3px solid var(--lagoon); padding-left: 1em; color: var(--sea-ink-soft); }
-        .resume-editor-content code { border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 1px 5px; }
-        .resume-editor-content pre { background: #18181b; color: #f4f4f5; border-radius: 10px; padding: 1em; overflow-x: auto; }
-        .resume-editor-content pre code { background: transparent; border: 0; color: inherit; }
+        .resume-editor-content blockquote { border-left: 3px solid var(--lagoon); padding-left: 1em; color: var(--sea-ink-soft); margin: 0.6em 0; }
+        .resume-editor-content code { border: 1px solid var(--line); background: #f4f4f5; border-radius: 4px; padding: 1px 5px; color: #18181b; font-size: 0.9em; }
+        .resume-editor-content pre { background: #18181b; color: #f4f4f5; border-radius: 8px; padding: 0.9em; overflow-x: auto; margin: 0.6em 0; }
+        .resume-editor-content pre code { background: transparent; border: 0; color: inherit; padding: 0; font-size: 0.95em; }
         .resume-editor-content .is-empty::before {
           content: attr(data-placeholder);
-          color: var(--sea-ink-soft);
-          opacity: 0.6;
+          color: #a1a1aa;
           float: left;
           height: 0;
           pointer-events: none;
         }
         .resume-editor-content ul[data-type="taskList"] { list-style: none; padding-left: 0; }
         .resume-editor-content ul[data-type="taskList"] li { display: flex; gap: 0.5em; align-items: flex-start; }
+        .resume-editor-content hr { border: 0; border-top: 1px solid #d4d4d8; margin: 1em 0; }
       `}</style>
     </div>
   );

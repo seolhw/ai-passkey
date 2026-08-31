@@ -394,6 +394,34 @@ a {
   }
 }
 
+
+/* 求职顾问：AI 正在思考的加载点 */
+.thinking-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--lagoon-deep);
+  opacity: 0.3;
+  animation: thinking-bounce 1.2s ease-in-out infinite;
+}
+.thinking-dot:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.thinking-dot:nth-child(3) {
+  animation-delay: 0.3s;
+}
+@keyframes thinking-bounce {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.3;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
 /* 按钮统一小手光标 */
 button:not(:disabled),
 [role="button"]:not(:disabled) {

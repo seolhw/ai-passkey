@@ -6,11 +6,14 @@ import {
   Eye,
   EyeOff,
   MapPin,
+  Maximize2,
   Minus,
   Plus,
   Wallet,
+  X,
 } from "lucide-react";
 import { useState } from "react";
+import { Dialog } from "radix-ui";
 
 import LogoAvatar from "#/components/LogoAvatar";
 import { getCompanyJobs } from "#/lib/company-api";
@@ -32,11 +35,18 @@ export const Route = createFileRoute("/console/companies/$companyId")({
   },
 });
 
+/** A4 纸内容字号放大倍率（按档位） */
+const ZOOM_STEPS = [1, 1.3, 1.6];
+
 function CompanyDetailPage() {
   const { company, jobs } = Route.useLoaderData();
   const [expanded, setExpanded] = useState<Set<number>>(new Set());
-  /** 每张 JD 卡的放大档位：0=标准 / 1=大 / 2=特大 */
-  const [zoom, setZoom] = useState<Record<number, number>>({});
+  /** 放大弹窗当前展示的岗位（null=未打开） */
+  const [viewingJob, setViewingJob] = useState<(typeof jobs)[number] | null>(
+    null,
+  );
+  /** 弹窗内字号档位：0=标准 / 1=大 / 2=特大 */
+  const [modalZoom, setModalZoom] = useState(0);
 
   const toggle = (id: number) => {
     const next = new Set(expanded);
@@ -45,26 +55,18 @@ function CompanyDetailPage() {
     setExpanded(next);
   };
 
-  const zoomUp = (id: number) => {
-    setZoom((prev) => {
-      const cur = prev[id] ?? 0;
-      return { ...prev, [id]: Math.min(2, cur + 1) };
-    });
+  const openZoom = (job: (typeof jobs)[number]) => {
+    setViewingJob(job);
+    setModalZoom(0);
   };
-  const zoomDown = (id: number) => {
-    setZoom((prev) => {
-      const cur = prev[id] ?? 0;
-      if (cur === 0) {
-        const next = { ...prev };
-        delete next[id];
-        return next;
-      }
-      return { ...prev, [id]: cur - 1 };
-    });
-  };
+  const closeZoom = () => setViewingJob(null);
 
-  /** 字号放大倍率（对应档位） */
-  const ZOOM_STEPS = [1, 1.3, 1.6];
+  const zoomUp = () =>
+    setModalZoom((z) => Math.min(ZOOM_STEPS.length - 1, z + 1));
+  const zoomDown = () => setModalZoom((z) => Math.max(0, z - 1));
+
+  const modalJob = viewingJob;
+  const modalZoomScale = ZOOM_STEPS[modalZoom] ?? 1;
 
   return (
     <main className="page-wrap px-4 pb-16 pt-10">
@@ -150,8 +152,6 @@ function CompanyDetailPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {jobs.map((job) => {
             const isOpen = expanded.has(job.id);
-            const zoomLevel = zoom[job.id] ?? 0;
-            const zoomScale = ZOOM_STEPS[zoomLevel] ?? 1;
             return (
               <div
                 key={job.id}
@@ -161,8 +161,16 @@ function CompanyDetailPage() {
                     : "aspect-[210/297] overflow-hidden"
                 }`}
               >
-                {/* 顶部操作条：展开全文 / 收起 / 放大 */}
+                {/* 顶部操作条：放大 / 展开全文 / 收起 */}
                 <div className="sticky top-2 z-10 flex justify-end gap-2 px-2 pt-2">
+                  <button
+                    type="button"
+                    onClick={() => openZoom(job)}
+                    title="放大查看完整 JD"
+                    className="inline-flex h-7 items-center gap-1 rounded-md bg-zinc-800/80 px-2.5 text-xs font-medium text-white backdrop-blur transition hover:bg-zinc-800"
+                  >
+                    <Maximize2 className="size-3.5" /> 放大
+                  </button>
                   <button
                     type="button"
                     onClick={() => toggle(job.id)}
@@ -183,40 +191,10 @@ function CompanyDetailPage() {
                       }`}
                     />
                   </button>
-
-                  <div
-                    className={`inline-flex h-7 items-center overflow-hidden rounded-md bg-zinc-800/80 text-white backdrop-blur transition ${
-                      zoomLevel > 0 ? "ring-1 ring-lime-300/60" : ""
-                    }`}
-                  >
-                    <button
-                      type="button"
-                      onClick={() => zoomDown(job.id)}
-                      aria-label="缩小字号"
-                      title="缩小字号"
-                      className="flex h-full items-center px-1.5 text-xs transition hover:bg-zinc-700 disabled:opacity-40"
-                      disabled={zoomLevel === 0}
-                    >
-                      <Minus className="size-3.5" />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => zoomUp(job.id)}
-                      aria-label="放大字号"
-                      title="放大字号"
-                      className="flex h-full items-center gap-0.5 px-1.5 text-xs transition hover:bg-zinc-700"
-                    >
-                      <Plus className="size-3.5" />
-                      <span className="tabular-nums">{1 + zoomLevel}</span>
-                    </button>
-                  </div>
                 </div>
 
                 {/* 白纸内容 */}
-                <div
-                  className="library-paper-content library-paper-job px-8 py-6 transition-[font-size]"
-                  style={{ fontSize: `${11 * zoomScale}px` }}
-                >
+                <div className="library-paper-content library-paper-job px-8 py-6">
                   <h1>{job.title}</h1>
                   <div className="library-paper-job-meta">
                     {(job.salaryMin != null || job.salaryMax != null) && (
@@ -271,6 +249,124 @@ function CompanyDetailPage() {
           })}
         </div>
       )}
+
+      {/* 放大弹窗：A4 纸展示 JD，内置字号放大/缩小 */}
+      <Dialog.Root open={modalJob != null} onOpenChange={(v) => !v && closeZoom()}>
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 z-[70] bg-black/50 backdrop-blur-sm" />
+          <Dialog.Content className="fixed left-1/2 top-1/2 z-[71] flex max-h-[92vh] w-[min(92vw,860px)] -translate-x-1/2 -translate-y-1/2 flex-col overflow-hidden rounded-xl border border-(--line) bg-(--surface) shadow-2xl">
+            {/* 弹窗顶栏：字号控制 + 关闭 */}
+            <div className="flex items-center justify-between gap-3 border-b border-(--line) bg-(--surface-strong) px-4 py-2.5">
+              <Dialog.Title className="truncate text-base font-semibold text-(--sea-ink)">
+                {modalJob?.title ?? "岗位详情"}
+              </Dialog.Title>
+              <div className="flex items-center gap-2">
+                <div
+                  className={`inline-flex h-8 items-center overflow-hidden rounded-md border border-(--line) bg-(--surface) transition ${
+                    modalZoom > 0 ? "ring-1 ring-lime-400/70" : ""
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={zoomDown}
+                    aria-label="缩小字号"
+                    title="缩小字号"
+                    disabled={modalZoom === 0}
+                    className="flex h-full items-center px-2 text-(--sea-ink) transition hover:bg-accent disabled:opacity-40"
+                  >
+                    <Minus className="size-4" />
+                  </button>
+                  <span className="px-1 text-xs tabular-nums text-(--sea-ink-soft)">
+                    {1 + modalZoom}/{ZOOM_STEPS.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={zoomUp}
+                    aria-label="放大字号"
+                    title="放大字号"
+                    disabled={modalZoom === ZOOM_STEPS.length - 1}
+                    className="flex h-full items-center px-2 text-(--sea-ink) transition hover:bg-accent disabled:opacity-40"
+                  >
+                    <Plus className="size-4" />
+                  </button>
+                </div>
+                <Dialog.Close
+                  asChild
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-(--line) bg-(--surface) text-(--sea-ink) transition hover:bg-accent"
+                >
+                  <button type="button" aria-label="关闭" title="关闭">
+                    <X className="size-4" />
+                  </button>
+                </Dialog.Close>
+              </div>
+            </div>
+
+            {/* A4 纸内容区（可滚动） */}
+            <div className="min-h-0 flex-1 overflow-y-auto bg-(--sea-ink)/5 p-4 sm:p-6">
+              <Dialog.Description asChild>
+                <div className="sr-only">岗位 JD 放大阅读</div>
+              </Dialog.Description>
+              <div
+                className="library-paper mx-auto w-full max-w-[780px] rounded-[3px] border border-zinc-200 bg-white px-10 py-8 shadow-[0_1px_3px_rgba(0,0,0,0.08),0_16px_40px_-16px_rgba(15,23,42,0.35)] transition-[font-size] dark:border-zinc-600"
+                style={{ fontSize: `${11 * modalZoomScale}px` }}
+              >
+                <div className="library-paper-content">
+                  <h1>{modalJob?.title ?? ""}</h1>
+                  {modalJob && (
+                    <>
+                      <div className="mt-4 flex flex-wrap gap-x-5 gap-y-1.5 text-xs text-zinc-500">
+                        {(modalJob.salaryMin != null ||
+                          modalJob.salaryMax != null) && (
+                          <span className="inline-flex items-center gap-1">
+                            <Wallet className="size-3.5" />{" "}
+                            <strong>{formatSalary(modalJob)}</strong>
+                          </span>
+                        )}
+                        {modalJob.jobCities?.length ? (
+                          <span className="inline-flex items-center gap-1">
+                            <MapPin className="size-3.5" />
+                            {modalJob.jobCities.map((c) => c.city).join(" / ")}
+                          </span>
+                        ) : null}
+                        {modalJob.jobType && (
+                          <span>
+                            {JOB_TYPE_LABEL[modalJob.jobType] ??
+                              modalJob.jobType}
+                          </span>
+                        )}
+                        {modalJob.experience && <span>{modalJob.experience}</span>}
+                        {modalJob.education && <span>{modalJob.education}</span>}
+                        {formatPublishedAt(modalJob.publishedAt) && (
+                          <span className="inline-flex items-center gap-1">
+                            <Calendar className="size-3.5" />
+                            {formatPublishedAt(modalJob.publishedAt)} 发布
+                          </span>
+                        )}
+                      </div>
+                      <div className="mt-5 border-t border-zinc-200 pt-4">
+                        <h2>职位描述</h2>
+                        <p className="whitespace-pre-wrap">
+                          {modalJob.jd || "暂无 JD 详情"}
+                        </p>
+                        {modalJob.sourceUrl && (
+                          <a
+                            href={modalJob.sourceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="mt-3 inline-flex items-center gap-1 text-sm"
+                          >
+                            查看原始招聘页 <ExternalLink className="size-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
     </main>
   );
 }

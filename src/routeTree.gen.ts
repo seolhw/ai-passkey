@@ -16,8 +16,10 @@ import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
 import { Route as ApiPolishRouteImport } from './routes/api/polish'
+import { Route as ApiResumeChatRouteImport } from './routes/api/resume-chat'
 import { Route as ConsoleIndexRouteImport } from './routes/console/index'
 import { Route as ConsoleAdvisorRouteImport } from './routes/console/advisor'
+import { Route as ConsoleContactRouteImport } from './routes/console/contact'
 import { Route as ConsoleSettingsRouteImport } from './routes/console/settings'
 import { Route as ApiAuthSplatRouteImport } from './routes/api/auth/$'
 import { Route as ApiJdIngestRouteImport } from './routes/api/jd/ingest'
@@ -28,6 +30,7 @@ import { Route as ConsoleLibraryIndexRouteImport } from './routes/console/librar
 import { Route as ConsoleResumesIndexRouteImport } from './routes/console/resumes/index'
 import { Route as ConsoleResumesResumeIdRouteImport } from './routes/console/resumes/$resumeId'
 import { Route as ConsoleResumesNewRouteImport } from './routes/console/resumes/new'
+import { Route as ConsoleResumesResumeIdIndexRouteImport } from './routes/console/resumes/$resumeId.index'
 import { Route as ConsoleResumesResumeIdPolishRouteImport } from './routes/console/resumes/$resumeId.polish'
 import { Route as ConsoleResumesResumeIdTargetsRouteImport } from './routes/console/resumes/$resumeId.targets'
 
@@ -66,6 +69,11 @@ const ApiPolishRoute = ApiPolishRouteImport.update({
   path: '/api/polish',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiResumeChatRoute = ApiResumeChatRouteImport.update({
+  id: '/api/resume-chat',
+  path: '/api/resume-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -74,6 +82,11 @@ const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
 const ConsoleAdvisorRoute = ConsoleAdvisorRouteImport.update({
   id: '/advisor',
   path: '/advisor',
+  getParentRoute: () => ConsoleRouteRoute,
+} as any)
+const ConsoleContactRoute = ConsoleContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
   getParentRoute: () => ConsoleRouteRoute,
 } as any)
 const ConsoleSettingsRoute = ConsoleSettingsRouteImport.update({
@@ -127,6 +140,12 @@ const ConsoleResumesNewRoute = ConsoleResumesNewRouteImport.update({
   path: '/resumes/new',
   getParentRoute: () => ConsoleRouteRoute,
 } as any)
+const ConsoleResumesResumeIdIndexRoute =
+  ConsoleResumesResumeIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ConsoleResumesResumeIdRoute,
+  } as any)
 const ConsoleResumesResumeIdPolishRoute =
   ConsoleResumesResumeIdPolishRouteImport.update({
     id: '/polish',
@@ -148,7 +167,9 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
+  '/api/resume-chat': typeof ApiResumeChatRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
   '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -162,6 +183,7 @@ export interface FileRoutesByFullPath {
   '/console/resumes/': typeof ConsoleResumesIndexRoute
   '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
   '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
+  '/console/resumes/$resumeId/': typeof ConsoleResumesResumeIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -170,20 +192,22 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
+  '/api/resume-chat': typeof ApiResumeChatRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
   '/console': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
   '/api/jd/ingest': typeof ApiJdIngestRoute
   '/console/companies/$companyId': typeof ConsoleCompaniesCompanyIdRoute
   '/console/companies/new': typeof ConsoleCompaniesNewRoute
-  '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdRouteWithChildren
   '/console/resumes/new': typeof ConsoleResumesNewRoute
   '/console/companies': typeof ConsoleCompaniesIndexRoute
   '/console/library': typeof ConsoleLibraryIndexRoute
   '/console/resumes': typeof ConsoleResumesIndexRoute
   '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
   '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
+  '/console/resumes/$resumeId': typeof ConsoleResumesResumeIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -194,7 +218,9 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
+  '/api/resume-chat': typeof ApiResumeChatRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
+  '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
   '/console/': typeof ConsoleIndexRoute
   '/api/auth/$': typeof ApiAuthSplatRoute
@@ -208,6 +234,7 @@ export interface FileRoutesById {
   '/console/resumes/': typeof ConsoleResumesIndexRoute
   '/console/resumes/$resumeId/polish': typeof ConsoleResumesResumeIdPolishRoute
   '/console/resumes/$resumeId/targets': typeof ConsoleResumesResumeIdTargetsRoute
+  '/console/resumes/$resumeId/': typeof ConsoleResumesResumeIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -219,7 +246,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
+    | '/api/resume-chat'
     | '/console/advisor'
+    | '/console/contact'
     | '/console/settings'
     | '/console/'
     | '/api/auth/$'
@@ -233,6 +262,7 @@ export interface FileRouteTypes {
     | '/console/resumes/'
     | '/console/resumes/$resumeId/polish'
     | '/console/resumes/$resumeId/targets'
+    | '/console/resumes/$resumeId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -241,20 +271,22 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
+    | '/api/resume-chat'
     | '/console/advisor'
+    | '/console/contact'
     | '/console/settings'
     | '/console'
     | '/api/auth/$'
     | '/api/jd/ingest'
     | '/console/companies/$companyId'
     | '/console/companies/new'
-    | '/console/resumes/$resumeId'
     | '/console/resumes/new'
     | '/console/companies'
     | '/console/library'
     | '/console/resumes'
     | '/console/resumes/$resumeId/polish'
     | '/console/resumes/$resumeId/targets'
+    | '/console/resumes/$resumeId'
   id:
     | '__root__'
     | '/'
@@ -264,7 +296,9 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
+    | '/api/resume-chat'
     | '/console/advisor'
+    | '/console/contact'
     | '/console/settings'
     | '/console/'
     | '/api/auth/$'
@@ -278,6 +312,7 @@ export interface FileRouteTypes {
     | '/console/resumes/'
     | '/console/resumes/$resumeId/polish'
     | '/console/resumes/$resumeId/targets'
+    | '/console/resumes/$resumeId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -288,6 +323,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiPolishRoute: typeof ApiPolishRoute
+  ApiResumeChatRoute: typeof ApiResumeChatRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiJdIngestRoute: typeof ApiJdIngestRoute
 }
@@ -343,6 +379,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPolishRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/resume-chat': {
+      id: '/api/resume-chat'
+      path: '/api/resume-chat'
+      fullPath: '/api/resume-chat'
+      preLoaderRoute: typeof ApiResumeChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/console/': {
       id: '/console/'
       path: '/'
@@ -355,6 +398,13 @@ declare module '@tanstack/react-router' {
       path: '/advisor'
       fullPath: '/console/advisor'
       preLoaderRoute: typeof ConsoleAdvisorRouteImport
+      parentRoute: typeof ConsoleRouteRoute
+    }
+    '/console/contact': {
+      id: '/console/contact'
+      path: '/contact'
+      fullPath: '/console/contact'
+      preLoaderRoute: typeof ConsoleContactRouteImport
       parentRoute: typeof ConsoleRouteRoute
     }
     '/console/settings': {
@@ -427,6 +477,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ConsoleResumesNewRouteImport
       parentRoute: typeof ConsoleRouteRoute
     }
+    '/console/resumes/$resumeId/': {
+      id: '/console/resumes/$resumeId/'
+      path: '/'
+      fullPath: '/console/resumes/$resumeId/'
+      preLoaderRoute: typeof ConsoleResumesResumeIdIndexRouteImport
+      parentRoute: typeof ConsoleResumesResumeIdRoute
+    }
     '/console/resumes/$resumeId/polish': {
       id: '/console/resumes/$resumeId/polish'
       path: '/polish'
@@ -447,12 +504,14 @@ declare module '@tanstack/react-router' {
 interface ConsoleResumesResumeIdRouteChildren {
   ConsoleResumesResumeIdPolishRoute: typeof ConsoleResumesResumeIdPolishRoute
   ConsoleResumesResumeIdTargetsRoute: typeof ConsoleResumesResumeIdTargetsRoute
+  ConsoleResumesResumeIdIndexRoute: typeof ConsoleResumesResumeIdIndexRoute
 }
 
 const ConsoleResumesResumeIdRouteChildren: ConsoleResumesResumeIdRouteChildren =
   {
     ConsoleResumesResumeIdPolishRoute: ConsoleResumesResumeIdPolishRoute,
     ConsoleResumesResumeIdTargetsRoute: ConsoleResumesResumeIdTargetsRoute,
+    ConsoleResumesResumeIdIndexRoute: ConsoleResumesResumeIdIndexRoute,
   }
 
 const ConsoleResumesResumeIdRouteWithChildren =
@@ -462,6 +521,7 @@ const ConsoleResumesResumeIdRouteWithChildren =
 
 interface ConsoleRouteRouteChildren {
   ConsoleAdvisorRoute: typeof ConsoleAdvisorRoute
+  ConsoleContactRoute: typeof ConsoleContactRoute
   ConsoleSettingsRoute: typeof ConsoleSettingsRoute
   ConsoleIndexRoute: typeof ConsoleIndexRoute
   ConsoleCompaniesCompanyIdRoute: typeof ConsoleCompaniesCompanyIdRoute
@@ -475,6 +535,7 @@ interface ConsoleRouteRouteChildren {
 
 const ConsoleRouteRouteChildren: ConsoleRouteRouteChildren = {
   ConsoleAdvisorRoute: ConsoleAdvisorRoute,
+  ConsoleContactRoute: ConsoleContactRoute,
   ConsoleSettingsRoute: ConsoleSettingsRoute,
   ConsoleIndexRoute: ConsoleIndexRoute,
   ConsoleCompaniesCompanyIdRoute: ConsoleCompaniesCompanyIdRoute,
@@ -498,6 +559,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiPolishRoute: ApiPolishRoute,
+  ApiResumeChatRoute: ApiResumeChatRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiJdIngestRoute: ApiJdIngestRoute,
 }

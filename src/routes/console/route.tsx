@@ -7,6 +7,7 @@ import {
 import {
   Briefcase,
   FileText,
+  Handshake,
   Library,
   LogOut,
   MailWarning,
@@ -29,8 +30,9 @@ const MENU = [
   { to: "/console/resumes", label: "我的简历", icon: FileText },
   { to: "/console/companies", label: "招聘简章", icon: Briefcase },
   { to: "/console/library", label: "简历大厅", icon: Library },
-  { to: "/console/advisor", label: "AI 顾问", icon: MessagesSquare },
+  { to: "/console/advisor", label: "求职顾问", icon: MessagesSquare },
   { to: "/console/settings", label: "个人设置", icon: Settings },
+  { to: "/console/contact", label: "联系开发者", icon: Handshake },
 ] as const;
 
 function ConsoleLayout() {

@@ -7,7 +7,7 @@ const FOOTER_LINKS = [
   { to: "/console/resumes", label: "我的简历" },
   { to: "/console/companies", label: "招聘简章" },
   { to: "/console/library", label: "简历大厅" },
-  { to: "/console/advisor", label: "AI 顾问" },
+  { to: "/console/advisor", label: "求职顾问" },
   { to: "/about", label: "关于" },
 ] as const;
 
