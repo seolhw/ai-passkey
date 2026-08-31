@@ -1,6 +1,7 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
 import { ArrowRight, Briefcase } from "lucide-react";
 
+import LogoAvatar from "#/components/LogoAvatar";
 import { listCompanies } from "#/lib/company-api";
 import { getSessionUser } from "#/lib/session";
 
@@ -56,11 +57,16 @@ function CompaniesPage() {
               params={{ companyId: String(company.id) }}
               className="island-shell group rounded-2xl p-5 no-underline transition hover:-translate-y-0.5 hover:shadow-lg"
             >
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-base font-semibold text-(--sea-ink)">
+              <div className="mb-3 flex items-center gap-2.5">
+                <LogoAvatar
+                  icon={company.logo ?? undefined}
+                  name={company.name}
+                  className="size-9"
+                />
+                <h2 className="min-w-0 flex-1 truncate text-base font-semibold text-(--sea-ink)">
                   {company.name}
                 </h2>
-                <span className="inline-flex h-6 items-center rounded-full bg-(--chip-bg) px-2.5 text-xs font-medium text-(--lagoon-deep)">
+                <span className="inline-flex h-6 shrink-0 items-center rounded-full bg-(--chip-bg) px-2.5 text-xs font-medium text-(--lagoon-deep)">
                   {company.jobCount} 个岗位
                 </span>
               </div>

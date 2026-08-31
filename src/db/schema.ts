@@ -7,6 +7,8 @@ import {
   uniqueIndex,
 } from "drizzle-orm/sqlite-core";
 
+import type { ModelInfo } from "#/constants/models";
+
 export const todos = sqliteTable("todos", {
   id: integer({ mode: "number" }).primaryKey({
     autoIncrement: true,
@@ -59,13 +61,17 @@ export const resumeVersions = sqliteTable(
 export const companies = sqliteTable("companies", {
   id: integer({ mode: "number" }).primaryKey({ autoIncrement: true }),
   name: text().notNull(),
+  /** 公司 logo */
+  logo: text(),
+  /** 排序权重（越小越靠前，手动添加默认 1000 排最后） */
+  sort: integer().notNull().default(1000),
   intro: text(),
   /** 官网 */
   website: text(),
   /** 官方招聘页 */
   careerUrl: text("career_url"),
   /** 大模型团队列表（JSON 数组） */
-  models: text({ mode: "json" }).$type<string[]>().notNull().default([]),
+  models: text({ mode: "json" }).$type<ModelInfo[]>().notNull().default([]),
   createdAt: integer("created_at", { mode: "timestamp" }).default(
     sql`(unixepoch())`,
   ),

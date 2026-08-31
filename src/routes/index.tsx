@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { AI_COMPANIES } from "@/constants/models";
 import GithubIcon from "../components/GithubIcon";
+import LogoAvatar from "../components/LogoAvatar";
 
 export const Route = createFileRoute("/")({ component: LandingPage });
 
@@ -54,7 +55,9 @@ const FEATURES = [
   {
     icon: Briefcase,
     title: "AI 公司岗位库",
-    desc: `汇聚 ${AI_COMPANIES.slice(0, 3).join("、")} 等十多家顶尖 AI 公司在招岗位与完整 JD。`,
+    desc: `汇聚 ${AI_COMPANIES.slice(0, 3)
+      .map((c) => c.name)
+      .join("、")} 等十多家顶尖 AI 公司在招岗位与完整 JD。`,
   },
   {
     icon: MessagesSquare,
@@ -91,10 +94,18 @@ function LandingPage() {
         </h1>
         <p className="relative mt-6  text-base leading-relaxed text-(--sea-ink-soft) sm:text-lg">
           {"面向国内 "}
-          {AI_COMPANIES.map((name, index) => (
-            <span key={name}>
+          {AI_COMPANIES.map((company, index) => (
+            <span
+              key={company.name}
+              className="inline-flex items-center gap-1.5"
+            >
+              <LogoAvatar
+                icon={company.logo}
+                name={company.name}
+                className="size-6"
+              />
               <span className="btn-gradient-text font-semibold text-[1.3rem]">
-                {name}
+                {company.name}
               </span>
               {index < AI_COMPANIES.length - 1 ? "、" : ""}
             </span>

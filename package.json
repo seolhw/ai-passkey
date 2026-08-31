@@ -32,6 +32,7 @@
     "@better-auth/drizzle-adapter": "^1.7.2",
     "@better-auth/i18n": "^1.7.2",
     "@faker-js/faker": "^10.3.0",
+    "@lobehub/icons": "^5.16.0",
     "@modelcontextprotocol/sdk": "^1.27.1",
     "@t3-oss/env-core": "^0.13.10",
     "@tailwindcss/vite": "^4.3.3",

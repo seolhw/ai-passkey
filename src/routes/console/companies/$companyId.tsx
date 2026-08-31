@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
+import LogoAvatar from "#/components/LogoAvatar";
 import { getCompanyJobs } from "#/lib/company-api";
 import { formatPublishedAt, formatSalary, JOB_TYPE_LABEL } from "#/lib/job";
 import { getSessionUser } from "#/lib/session";
@@ -47,7 +48,12 @@ function CompanyDetailPage() {
         >
           返回公司列表
         </Link>
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex items-center gap-3">
+          <LogoAvatar
+            icon={company.logo ?? undefined}
+            name={company.name}
+            className="size-12"
+          />
           <div>
             <p className="island-kicker mb-1">招聘简章</p>
             <h1 className="display-title text-2xl font-bold text-(--sea-ink)">
@@ -71,6 +77,29 @@ function CompanyDetailPage() {
           </p>
         )}
       </header>
+
+      {company.models.length > 0 && (
+        <section className="mb-8">
+          <h2 className="mb-3 text-base font-semibold text-(--sea-ink)">
+            模型团队
+          </h2>
+          <div className="flex flex-wrap gap-2">
+            {company.models.map((model) => (
+              <span
+                key={model.name}
+                className="inline-flex items-center gap-1.5 rounded-full border border-(--line) bg-(--surface-strong) py-1 pl-1 pr-3 text-sm text-(--sea-ink)"
+              >
+                <LogoAvatar
+                  icon={model.logo}
+                  name={model.name}
+                  className="size-6"
+                />
+                {model.name}
+              </span>
+            ))}
+          </div>
+        </section>
+      )}
 
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-base font-semibold text-(--sea-ink)">

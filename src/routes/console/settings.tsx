@@ -1,5 +1,5 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
-import { AtSign, BadgeCheck, Check, Loader2, LogOut, MailWarning, Save } from "lucide-react";
+import { AtSign, BadgeCheck, Check, KeyRound, Loader2, LogOut, MailWarning, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { authClient } from "#/lib/auth-client";
 import { getSessionUser } from "#/lib/session";
@@ -125,6 +125,13 @@ function SettingsPage() {
         )}
       </section>
 
+      <section className="island-shell mb-6 rounded-2xl p-5">
+        <h2 className="mb-4 text-base font-semibold text-(--sea-ink)">
+          修改密码
+        </h2>
+        <ChangePasswordCard />
+      </section>
+
       <section className="island-shell rounded-2xl p-5">
         <h2 className="mb-2 text-base font-semibold text-(--sea-ink)">
           账号操作
@@ -238,6 +245,101 @@ function EmailVerifyCard({
           {error}
         </div>
       )}
+    </div>
+  );
+}
+
+/** 修改密码卡片：校验当前密码后设置新密码 */
+function ChangePasswordCard() {
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = async () => {
+    if (newPassword !== confirm) {
+      setError("两次输入的新密码不一致");
+      return;
+    }
+    setError("");
+    setSubmitting(true);
+    const { error: changeError } = await authClient.changePassword({
+      currentPassword,
+      newPassword,
+    });
+    setSubmitting(false);
+    if (changeError) {
+      setError(changeError.message || "修改失败，请检查当前密码是否正确");
+      return;
+    }
+    setSaved(true);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirm("");
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div className="grid gap-4">
+      <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+        当前密码
+        <input
+          type="password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+          placeholder="输入当前密码"
+          required
+        />
+      </label>
+      <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+        新密码
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+          placeholder="至少 8 位"
+          minLength={8}
+          required
+        />
+      </label>
+      <label className="grid gap-1.5 text-sm font-medium text-(--sea-ink)">
+        确认新密码
+        <input
+          type="password"
+          value={confirm}
+          onChange={(e) => setConfirm(e.target.value)}
+          className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm font-normal shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+          placeholder="再次输入新密码"
+          minLength={8}
+          required
+        />
+      </label>
+
+      {error && (
+        <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-600 dark:border-red-900 dark:bg-red-950/40">
+          {error}
+        </div>
+      )}
+
+      <button
+        type="button"
+        onClick={() => void handleChange()}
+        disabled={submitting}
+        className="inline-flex h-10 w-fit shrink-0 items-center justify-center gap-2 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-all hover:bg-primary/90 disabled:pointer-events-none disabled:opacity-50"
+      >
+        {submitting ? (
+          <Loader2 className="size-4 animate-spin" />
+        ) : saved ? (
+          <Check className="size-4" />
+        ) : (
+          <KeyRound className="size-4" />
+        )}
+        {submitting ? "修改中…" : saved ? "已更新" : "确认修改"}
+      </button>
     </div>
   );
 }

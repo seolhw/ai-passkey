@@ -49,8 +49,11 @@ export default function Footer() {
 
         <div className="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-t border-(--line) pt-6 text-xs text-(--sea-ink-soft)">
           <p className="m-0">
-            跨界简历 · 面向 {AI_COMPANIES.slice(0, 3).join("、")} 等国内 AI
-            公司求职者的简历工作台
+            跨界简历 · 面向{" "}
+            {AI_COMPANIES.slice(0, 3)
+              .map((c) => c.name)
+              .join("、")}{" "}
+            等国内 AI 公司求职者的简历工作台
           </p>
           <p className="m-0 flex items-center gap-3">
             <span>&copy; {year} 北京明日创界科技有限公司</span>

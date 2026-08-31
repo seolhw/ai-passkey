@@ -24,6 +24,8 @@ export default function AuthDialog() {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState(false);
   const [githubEnabled, setGithubEnabled] = useState(false);
+  const [isForget, setIsForget] = useState(false);
+  const [forgetSent, setForgetSent] = useState(false);
 
   // 未登录访问受保护页被重定向到 `/?auth=login` 时自动打开弹窗
   useEffect(() => {
@@ -41,6 +43,21 @@ export default function AuthDialog() {
     e.preventDefault();
     setError("");
     setLoading(true);
+
+    if (isForget) {
+      const { error: forgetError } = await authClient.requestPasswordReset({
+        email,
+        redirectTo: "/reset-password",
+      });
+      if (forgetError) {
+        setError(forgetError.message || "发送失败，请重试");
+        setLoading(false);
+        return;
+      }
+      setForgetSent(true);
+      setLoading(false);
+      return;
+    }
 
     if (isSignUp) {
       const result = await authClient.signUp.email({
@@ -92,12 +109,14 @@ export default function AuthDialog() {
           <div className="mb-6 flex flex-col items-center text-center">
             <BrandLogo className="size-10" />
             <Dialog.Title className="display-title mt-4 text-lg font-bold text-(--sea-ink)">
-              {isSignUp ? "创建账号" : "欢迎回来"}
+              {isSignUp ? "创建账号" : isForget ? "重置密码" : "欢迎回来"}
             </Dialog.Title>
             <Dialog.Description className="mt-1.5 text-sm text-(--sea-ink-soft)">
               {isSignUp
                 ? "注册后即可上传简历，开启 AI 通关之旅"
-                : "登录以管理你的简历"}
+                : isForget
+                  ? "输入注册邮箱，我们将发送重置密码的邮件"
+                  : "登录以管理你的简历"}
             </Dialog.Description>
           </div>
 
@@ -122,42 +141,65 @@ export default function AuthDialog() {
               </div>
             )}
 
-            <div className="grid gap-2">
-              <label
-                htmlFor="auth-email"
-                className="text-sm font-medium leading-none"
-              >
-                邮箱
-              </label>
-              <input
-                id="auth-email"
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                placeholder="you@example.com"
-                required
-              />
-            </div>
+            {forgetSent ? (
+              <div className="rounded-lg border border-emerald-600/30 bg-emerald-600/10 px-3 py-2 text-sm text-emerald-700 dark:text-emerald-400">
+                重置邮件已发送，请查收邮箱并按邮件提示操作。
+              </div>
+            ) : (
+              <div className="grid gap-2">
+                <label
+                  htmlFor="auth-email"
+                  className="text-sm font-medium leading-none"
+                >
+                  邮箱
+                </label>
+                <input
+                  id="auth-email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+                  placeholder="you@example.com"
+                  required
+                />
+              </div>
+            )}
 
-            <div className="grid gap-2">
-              <label
-                htmlFor="auth-password"
-                className="text-sm font-medium leading-none"
-              >
-                密码
-              </label>
-              <input
-                id="auth-password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
-                required
-                minLength={8}
-                placeholder="至少 8 位"
-              />
-            </div>
+            {!isForget && (
+              <div className="grid gap-2">
+                <div className="flex items-center justify-between">
+                  <label
+                    htmlFor="auth-password"
+                    className="text-sm font-medium leading-none"
+                  >
+                    密码
+                  </label>
+                  {!isSignUp && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsForget(true);
+                        setError("");
+                        setPassword("");
+                      }}
+                      className="text-xs font-medium text-(--lagoon-deep) transition-colors hover:text-(--ai-violet-strong) hover:underline"
+                    >
+                      忘记密码？
+                    </button>
+                  )}
+                </div>
+                <input
+                  id="auth-password"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
+                  required
+                  minLength={8}
+                  placeholder="至少 8 位"
+                />
+              </div>
+            )}
 
             {error && (
               <div className="rounded-lg border border-destructive/30 bg-destructive/10 px-3 py-2 text-sm text-destructive">
@@ -170,21 +212,33 @@ export default function AuthDialog() {
               disabled={loading}
               className="btn-gradient inline-flex h-10 shrink-0 items-center justify-center gap-2 rounded-md px-4 text-sm font-medium disabled:pointer-events-none disabled:opacity-50"
             >
-              {loading ? "请稍候…" : isSignUp ? "创建账号" : "登录"}
+              {loading
+                ? "请稍候…"
+                : isSignUp
+                  ? "创建账号"
+                  : isForget
+                    ? forgetSent
+                      ? "重新发送"
+                      : "发送重置邮件"
+                    : "登录"}
             </button>
           </form>
 
           <p className="mt-5 text-center text-sm text-(--sea-ink-soft)">
-            {isSignUp ? "已有账号？" : "没有账号？"}
+            {isSignUp ? "已有账号？" : isForget ? "已想起密码？" : "没有账号？"}
             <button
               type="button"
               onClick={() => {
-                setIsSignUp(!isSignUp);
+                if (isForget) {
+                  setIsForget(false);
+                } else {
+                  setIsSignUp(!isSignUp);
+                }
                 setError("");
               }}
               className="ml-1 font-semibold text-(--lagoon-deep) transition-colors hover:text-(--ai-violet-strong) hover:underline"
             >
-              {isSignUp ? "去登录" : "立即注册"}
+              {isSignUp || isForget ? "去登录" : "立即注册"}
             </button>
           </p>
 

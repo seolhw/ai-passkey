@@ -5,11 +5,11 @@ import { db } from "#/db/index";
 import { companies, jobCities, jobs, jobTags } from "#/db/schema";
 import { getSessionUser } from "#/lib/session";
 
-/** 公司列表（含岗位数） */
+/** 公司列表（含岗位数，按 sort 权重升序，新势力在前） */
 export const listCompanies = createServerFn({ method: "GET" }).handler(
   async () => {
     const companyRows = await db.query.companies.findMany({
-      orderBy: [asc(companies.name)],
+      orderBy: [asc(companies.sort), asc(companies.name)],
     });
     const jobCounts = await db.query.jobs.findMany({
       columns: { companyId: true },

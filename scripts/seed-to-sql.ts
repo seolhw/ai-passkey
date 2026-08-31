@@ -15,7 +15,7 @@ const lines: string[] = ['-- 种子数据（由 scripts/seed-to-sql.ts 自动生
 seed.forEach((c, i) => {
   const companyId = i + 1
   lines.push(
-    `INSERT OR IGNORE INTO companies (id, name, intro, website, career_url, models, created_at) VALUES (${companyId}, ${sqlStr(c.name)}, ${sqlStr(c.intro)}, ${sqlStr(c.website)}, ${sqlStr(c.careerUrl)}, ${sqlStr(JSON.stringify(c.models))}, unixepoch());`,
+    `INSERT OR IGNORE INTO companies (id, name, logo, sort, intro, website, career_url, models, created_at) VALUES (${companyId}, ${sqlStr(c.name)}, ${sqlStr(c.logo)}, ${c.sort}, ${sqlStr(c.intro)}, ${sqlStr(c.website)}, ${sqlStr(c.careerUrl)}, ${sqlStr(JSON.stringify(c.models))}, unixepoch());`,
   )
 })
 

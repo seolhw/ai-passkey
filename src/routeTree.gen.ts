@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as ConsoleRouteRouteImport } from './routes/console/route'
 import { Route as McpRouteImport } from './routes/mcp'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
 import { Route as ApiPolishRouteImport } from './routes/api/polish'
 import { Route as ConsoleIndexRouteImport } from './routes/console/index'
@@ -48,6 +49,11 @@ const ConsoleRouteRoute = ConsoleRouteRouteImport.update({
 const McpRoute = McpRouteImport.update({
   id: '/mcp',
   path: '/mcp',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiAdvisorRoute = ApiAdvisorRouteImport.update({
@@ -139,6 +145,7 @@ export interface FileRoutesByFullPath {
   '/console': typeof ConsoleRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
@@ -160,6 +167,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
@@ -183,6 +191,7 @@ export interface FileRoutesById {
   '/console': typeof ConsoleRouteRouteWithChildren
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/about'
     | '/mcp'
+    | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
     | '/console/advisor'
@@ -228,6 +238,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/mcp'
+    | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
     | '/console/advisor'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/console'
     | '/about'
     | '/mcp'
+    | '/reset-password'
     | '/api/advisor'
     | '/api/polish'
     | '/console/advisor'
@@ -273,6 +285,7 @@ export interface RootRouteChildren {
   ConsoleRouteRoute: typeof ConsoleRouteRouteWithChildren
   AboutRoute: typeof AboutRoute
   McpRoute: typeof McpRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiPolishRoute: typeof ApiPolishRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
@@ -307,6 +320,13 @@ declare module '@tanstack/react-router' {
       path: '/mcp'
       fullPath: '/mcp'
       preLoaderRoute: typeof McpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/advisor': {
@@ -475,6 +495,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConsoleRouteRoute: ConsoleRouteRouteWithChildren,
   AboutRoute: AboutRoute,
   McpRoute: McpRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiPolishRoute: ApiPolishRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,

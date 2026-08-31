@@ -43,7 +43,7 @@ function AdvisorPage() {
   };
 
   return (
-    <main className="mx-auto flex min-h-[calc(100vh-6rem)] w-full max-w-3xl flex-col px-4 pb-6 pt-8">
+    <main className="mx-auto flex h-full w-full max-w-3xl flex-col px-4 pb-6 pt-8">
       <header className="mb-6 text-center">
         <p className="island-kicker mb-1">AI 顾问</p>
         <h1 className="display-title text-2xl font-bold text-(--sea-ink)">

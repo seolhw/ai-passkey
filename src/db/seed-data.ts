@@ -4,6 +4,8 @@ import { LLM_LIST } from "../constants/models";
 /** 由 LLM_LIST 派生的公司种子数据（覆盖全部 19 家国内公司） */
 export const seed = LLM_LIST.map((item) => ({
   name: item.company,
+  logo: item.logo,
+  sort: item.sort,
   intro: item.intro,
   website: item.website,
   careerUrl: item.careerUrl,
