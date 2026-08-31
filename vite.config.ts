@@ -16,7 +16,9 @@ const config = defineConfig({
     devtools(),
     // 本地 dev 与生产均跑在 Cloudflare workerd 上，使用同一套 D1 绑定，
     // 本地 D1 数据由 wrangler 模拟（.wrangler/state/v3/d1/）。
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
+    cloudflare({
+      viteEnvironment: { name: "ssr" },
+    }),
     tailwindcss(),
     tanstackStart(),
     viteReact(),
