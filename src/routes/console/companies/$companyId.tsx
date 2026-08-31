@@ -81,7 +81,7 @@ function CompanyDetailPage() {
       {jobs.length === 0 ? (
         <section className="island-shell rounded-2xl px-6 py-14 text-center">
           <p className="text-sm text-(--sea-ink-soft)">
-            暂无岗位，试试一键抓取 JD
+            暂无岗位，后台将自动抓取
           </p>
         </section>
       ) : (

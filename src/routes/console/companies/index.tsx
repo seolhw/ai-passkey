@@ -1,6 +1,5 @@
 import { createFileRoute, Link, redirect } from "@tanstack/react-router";
-import { ArrowRight, Briefcase, Loader2, RefreshCw } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Briefcase } from "lucide-react";
 
 import { listCompanies } from "#/lib/company-api";
 import { getSessionUser } from "#/lib/session";
@@ -19,31 +18,6 @@ export const Route = createFileRoute("/console/companies/")({
 
 function CompaniesPage() {
   const { companies } = Route.useLoaderData();
-  const [fetching, setFetching] = useState(false);
-  const [fetchMsg, setFetchMsg] = useState("");
-
-  const handleFetchAll = async () => {
-    setFetching(true);
-    setFetchMsg("");
-    const res = await fetch("/api/fetch-jobs", { method: "POST" });
-    if (res.ok) {
-      const results = (await res.json()) as {
-        source: string;
-        ok: boolean;
-        count: number;
-        error?: string;
-      }[];
-      const okCount = results.filter((r) => r.ok).length;
-      const added = results.reduce((s, r) => s + r.count, 0);
-      setFetchMsg(
-        `完成：${okCount}/${results.length} 个源成功，新增 ${added} 个岗位`,
-      );
-    } else {
-      setFetchMsg("抓取失败，请稍后重试");
-    }
-    setFetching(false);
-    window.location.reload();
-  };
 
   return (
     <main className="page-wrap px-4 pb-16 pt-10">
@@ -70,8 +44,7 @@ function CompaniesPage() {
         <section className="island-shell rounded-2xl px-6 py-14 text-center">
           <Briefcase className="mx-auto mb-3 size-10 text-(--sea-ink-soft)" />
           <p className="text-sm text-(--sea-ink-soft)">
-            还没有公司数据，点击下方「一键抓取
-            JD」从各家公司官网拉取，或手动添加
+            还没有公司数据，后台将自动抓取各家公司官网岗位，或手动添加
           </p>
         </section>
       ) : (
@@ -105,38 +78,6 @@ function CompaniesPage() {
           ))}
         </div>
       )}
-
-      <section className="island-shell mt-10 rounded-2xl p-5">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <h2 className="text-base font-semibold text-(--sea-ink)">
-              JD 自动抓取
-            </h2>
-            <p className="mt-0.5 text-sm text-(--sea-ink-soft)">
-              从各家公司官网同步岗位，由 AI 抓取官网并分析整理
-            </p>
-          </div>
-          <button
-            type="button"
-            onClick={() => void handleFetchAll()}
-            disabled={fetching}
-            className="inline-flex h-9 items-center gap-2 rounded-md bg-(--lagoon-deep) px-4 text-sm font-medium text-white transition hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
-          >
-            {fetching ? (
-              <Loader2 className="size-4 animate-spin" />
-            ) : (
-              <RefreshCw className="size-4" />
-            )}
-            一键抓取 JD
-          </button>
-        </div>
-
-        {fetchMsg && (
-          <p className="mb-3 rounded-md bg-(--chip-bg) px-3 py-2 text-sm text-(--sea-ink)">
-            {fetchMsg}
-          </p>
-        )}
-      </section>
     </main>
   );
 }

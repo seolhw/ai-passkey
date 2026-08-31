@@ -14,7 +14,6 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as ConsoleRouteRouteImport } from './routes/console/route'
 import { Route as McpRouteImport } from './routes/mcp'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
-import { Route as ApiFetchJobsRouteImport } from './routes/api/fetch-jobs'
 import { Route as ApiPolishRouteImport } from './routes/api/polish'
 import { Route as ConsoleIndexRouteImport } from './routes/console/index'
 import { Route as ConsoleAdvisorRouteImport } from './routes/console/advisor'
@@ -53,11 +52,6 @@ const McpRoute = McpRouteImport.update({
 const ApiAdvisorRoute = ApiAdvisorRouteImport.update({
   id: '/api/advisor',
   path: '/api/advisor',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const ApiFetchJobsRoute = ApiFetchJobsRouteImport.update({
-  id: '/api/fetch-jobs',
-  path: '/api/fetch-jobs',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPolishRoute = ApiPolishRouteImport.update({
@@ -140,7 +134,6 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
-  '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -161,7 +154,6 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
-  '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -184,7 +176,6 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/mcp': typeof McpRoute
   '/api/advisor': typeof ApiAdvisorRoute
-  '/api/fetch-jobs': typeof ApiFetchJobsRoute
   '/api/polish': typeof ApiPolishRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -208,7 +199,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/mcp'
     | '/api/advisor'
-    | '/api/fetch-jobs'
     | '/api/polish'
     | '/console/advisor'
     | '/console/settings'
@@ -229,7 +219,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/mcp'
     | '/api/advisor'
-    | '/api/fetch-jobs'
     | '/api/polish'
     | '/console/advisor'
     | '/console/settings'
@@ -251,7 +240,6 @@ export interface FileRouteTypes {
     | '/about'
     | '/mcp'
     | '/api/advisor'
-    | '/api/fetch-jobs'
     | '/api/polish'
     | '/console/advisor'
     | '/console/settings'
@@ -274,7 +262,6 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   McpRoute: typeof McpRoute
   ApiAdvisorRoute: typeof ApiAdvisorRoute
-  ApiFetchJobsRoute: typeof ApiFetchJobsRoute
   ApiPolishRoute: typeof ApiPolishRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
 }
@@ -314,13 +301,6 @@ declare module '@tanstack/react-router' {
       path: '/api/advisor'
       fullPath: '/api/advisor'
       preLoaderRoute: typeof ApiAdvisorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/api/fetch-jobs': {
-      id: '/api/fetch-jobs'
-      path: '/api/fetch-jobs'
-      fullPath: '/api/fetch-jobs'
-      preLoaderRoute: typeof ApiFetchJobsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/polish': {
@@ -476,7 +456,6 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   McpRoute: McpRoute,
   ApiAdvisorRoute: ApiAdvisorRoute,
-  ApiFetchJobsRoute: ApiFetchJobsRoute,
   ApiPolishRoute: ApiPolishRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
 }
