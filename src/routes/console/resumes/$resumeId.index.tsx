@@ -121,6 +121,12 @@ function ResumeDetailPage() {
 
   const plainText = useMemo(() => htmlToText(html), [html]);
 
+  // 是否有未保存的改动（对比最近一次已持久化的内容）
+  const dirty =
+    html !== resume.content ||
+    title !== resume.title ||
+    template !== (resume.template ?? DEFAULT_RESUME_TEMPLATE);
+
   // 目标岗位：按公司分组
   const targetGroups = useMemo(() => {
     const map = new Map<string, typeof jobs>();
@@ -426,7 +432,8 @@ function ResumeDetailPage() {
         {/* 右侧栏 */}
         <aside className="space-y-4">
           {/* 顶部操作：保存新版本 + 下载 */}
-          <div className="relative flex items-center gap-2">
+          <div>
+            <div className="relative flex items-center gap-2">
             <Link
               to="/console/resumes"
               className="inline-flex h-9 items-center rounded-md border border-input px-3 text-sm font-medium text-(--sea-ink-soft) transition hover:bg-accent"
@@ -479,6 +486,16 @@ function ResumeDetailPage() {
                   PDF（打印另存）
                 </button>
               </div>
+            )}
+            </div>
+            {dirty && (
+              <p className="mt-2 flex items-center gap-1.5 rounded-md bg-amber-500/10 px-2.5 py-1.5 text-xs text-amber-600 dark:text-amber-400">
+                <span className="relative flex size-2 shrink-0">
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-amber-400 opacity-75" />
+                  <span className="relative inline-flex size-2 rounded-full bg-amber-500" />
+                </span>
+                你还有未保存的修改，点「保存新版本」即可存档
+              </p>
             )}
           </div>
 
@@ -878,7 +895,7 @@ function ResumeDetailPage() {
           .print-a4 { width: 190mm; margin: 0 auto; padding: 8mm 0; background: #fff; box-sizing: border-box; }
           .print-a4-body { font-size: 14px; line-height: 1.7; color: #1a1a1a; }
           .print-a4-body p { margin: 0.4em 0; }
-          .print-a4-body h1 { font-size: 20px; font-weight: 700; text-align: center; }
+          .print-a4-body h1 { font-size: 20px; font-weight: 700; text-align: left; }
           .print-a4-body h2 { font-size: 15px; font-weight: 700; margin: 0.8em 0 0.3em; border-bottom: 1px solid #d0d0d0; padding-bottom: 2px; }
           .print-a4-body h3 { font-size: 14px; font-weight: 700; margin: 0.6em 0 0.2em; }
           .print-a4-body ul, .print-a4-body ol { padding-left: 1.4em; margin: 0.3em 0; }

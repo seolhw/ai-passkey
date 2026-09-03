@@ -438,14 +438,14 @@ button:not(:disabled),
   color: #27272a;
 }
 .library-paper-content h1 {
-  text-align: center;
+  text-align: left;
   font-size: 1.8em;
   font-weight: 700;
   letter-spacing: 0.1em;
   margin: 0 0 0.25em;
 }
 .library-paper-content h1 + p {
-  text-align: center;
+  text-align: left;
 }
 .library-paper-content h2 {
   font-size: 1.2em;
@@ -522,11 +522,22 @@ button:not(:disabled),
 }
 
 /* ============ 简历样式模板 ============ */
+/* 简历 A4 纸内所有内容一律左对齐（覆盖内容自带的行内居中样式，保证整份简历由左到右排布） */
+.resume-editor-content,
+.print-a4-body,
+.library-paper-content {
+  text-align: left;
+}
+.resume-editor-content *,
+.print-a4-body *,
+.library-paper-content * {
+  text-align: left !important;
+}
 /* 排版灵感来自 IT 知名人物的真实简历：乔布斯 1973 手稿、盖茨 1974 打字机、沃兹 1976 俏皮打字机、极客终端风。
    模板 = 整套排版：姓名（h1）字号与位置、头部联系行（h1+p）、板块标题（h2）样式、块间分隔线、正文/列表/强调色。
    模板类挂在编辑器 A4 纸与打印区的外层容器上，同时作用于 .resume-editor-content 与 .print-a4-body。内容本身不会被改动。 */
 
-/* ---- 经典商务（默认）：姓名居中 + 联系行，黑色分隔线 ---- */
+/* ---- 经典商务（默认）：姓名居左 + 联系行，黑色分隔线 ---- */
 .resume-template-classic .resume-editor-content,
 .resume-template-classic .print-a4-body {
   font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
@@ -535,13 +546,13 @@ button:not(:disabled),
 .resume-template-classic .print-a4-body h1 {
   font-size: 1.8em;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   color: #111827;
   margin: 0.1em 0 0.3em;
 }
 .resume-template-classic .resume-editor-content h1 + p,
 .resume-template-classic .print-a4-body h1 + p {
-  text-align: center;
+  text-align: left;
   font-size: 0.92em;
   color: #52525b;
   margin: 0 0 0.7em;
@@ -629,14 +640,14 @@ button:not(:disabled),
 .resume-template-gates .print-a4-body h1 {
   font-size: 1.6em;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   color: #111827;
   letter-spacing: 0.1em;
   margin: 0.1em 0 0.2em;
 }
 .resume-template-gates .resume-editor-content h1 + p,
 .resume-template-gates .print-a4-body h1 + p {
-  text-align: center;
+  text-align: left;
   font-size: 0.85em;
   color: #4b5563;
   letter-spacing: 0.03em;
@@ -725,7 +736,7 @@ button:not(:disabled),
 .resume-template-terminal .print-a4-body h1 {
   font-size: 1.5em;
   font-weight: 700;
-  text-align: center;
+  text-align: left;
   color: #4ade80;
   background: #0f172a;
   padding: 0.45em 0.6em;
@@ -736,7 +747,7 @@ button:not(:disabled),
 }
 .resume-template-terminal .resume-editor-content h1 + p,
 .resume-template-terminal .print-a4-body h1 + p {
-  text-align: center;
+  text-align: left;
   font-size: 0.85em;
   color: #64748b;
   margin: 0 0 0.5em;
