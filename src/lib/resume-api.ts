@@ -73,6 +73,7 @@ export const saveResume = createServerFn({ method: "POST" })
       content: string;
       plainText: string;
       note?: string;
+      template?: string;
     }) => data,
   )
   .handler(async ({ data }) => {
@@ -91,6 +92,7 @@ export const saveResume = createServerFn({ method: "POST" })
         title: data.title.trim() || existing.title,
         content: data.content,
         plainText: data.plainText,
+        template: data.template ?? existing.template,
         updatedAt: new Date(),
       })
       .where(eq(resumes.id, data.id));

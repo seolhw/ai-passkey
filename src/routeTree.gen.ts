@@ -17,6 +17,8 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ApiAdvisorRouteImport } from './routes/api/advisor'
 import { Route as ApiPolishRouteImport } from './routes/api/polish'
 import { Route as ApiResumeChatRouteImport } from './routes/api/resume-chat'
+import { Route as ApiResumeOptimizeRouteImport } from './routes/api/resume-optimize'
+import { Route as ApiResumeStyleRouteImport } from './routes/api/resume-style'
 import { Route as ConsoleIndexRouteImport } from './routes/console/index'
 import { Route as ConsoleAdvisorRouteImport } from './routes/console/advisor'
 import { Route as ConsoleContactRouteImport } from './routes/console/contact'
@@ -72,6 +74,16 @@ const ApiPolishRoute = ApiPolishRouteImport.update({
 const ApiResumeChatRoute = ApiResumeChatRouteImport.update({
   id: '/api/resume-chat',
   path: '/api/resume-chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiResumeOptimizeRoute = ApiResumeOptimizeRouteImport.update({
+  id: '/api/resume-optimize',
+  path: '/api/resume-optimize',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiResumeStyleRoute = ApiResumeStyleRouteImport.update({
+  id: '/api/resume-style',
+  path: '/api/resume-style',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConsoleIndexRoute = ConsoleIndexRouteImport.update({
@@ -168,6 +180,8 @@ export interface FileRoutesByFullPath {
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/api/resume-chat': typeof ApiResumeChatRoute
+  '/api/resume-optimize': typeof ApiResumeOptimizeRoute
+  '/api/resume-style': typeof ApiResumeStyleRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -193,6 +207,8 @@ export interface FileRoutesByTo {
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/api/resume-chat': typeof ApiResumeChatRoute
+  '/api/resume-optimize': typeof ApiResumeOptimizeRoute
+  '/api/resume-style': typeof ApiResumeStyleRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -219,6 +235,8 @@ export interface FileRoutesById {
   '/api/advisor': typeof ApiAdvisorRoute
   '/api/polish': typeof ApiPolishRoute
   '/api/resume-chat': typeof ApiResumeChatRoute
+  '/api/resume-optimize': typeof ApiResumeOptimizeRoute
+  '/api/resume-style': typeof ApiResumeStyleRoute
   '/console/advisor': typeof ConsoleAdvisorRoute
   '/console/contact': typeof ConsoleContactRoute
   '/console/settings': typeof ConsoleSettingsRoute
@@ -247,6 +265,8 @@ export interface FileRouteTypes {
     | '/api/advisor'
     | '/api/polish'
     | '/api/resume-chat'
+    | '/api/resume-optimize'
+    | '/api/resume-style'
     | '/console/advisor'
     | '/console/contact'
     | '/console/settings'
@@ -272,6 +292,8 @@ export interface FileRouteTypes {
     | '/api/advisor'
     | '/api/polish'
     | '/api/resume-chat'
+    | '/api/resume-optimize'
+    | '/api/resume-style'
     | '/console/advisor'
     | '/console/contact'
     | '/console/settings'
@@ -297,6 +319,8 @@ export interface FileRouteTypes {
     | '/api/advisor'
     | '/api/polish'
     | '/api/resume-chat'
+    | '/api/resume-optimize'
+    | '/api/resume-style'
     | '/console/advisor'
     | '/console/contact'
     | '/console/settings'
@@ -324,6 +348,8 @@ export interface RootRouteChildren {
   ApiAdvisorRoute: typeof ApiAdvisorRoute
   ApiPolishRoute: typeof ApiPolishRoute
   ApiResumeChatRoute: typeof ApiResumeChatRoute
+  ApiResumeOptimizeRoute: typeof ApiResumeOptimizeRoute
+  ApiResumeStyleRoute: typeof ApiResumeStyleRoute
   ApiAuthSplatRoute: typeof ApiAuthSplatRoute
   ApiJdIngestRoute: typeof ApiJdIngestRoute
 }
@@ -384,6 +410,20 @@ declare module '@tanstack/react-router' {
       path: '/api/resume-chat'
       fullPath: '/api/resume-chat'
       preLoaderRoute: typeof ApiResumeChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/resume-optimize': {
+      id: '/api/resume-optimize'
+      path: '/api/resume-optimize'
+      fullPath: '/api/resume-optimize'
+      preLoaderRoute: typeof ApiResumeOptimizeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/resume-style': {
+      id: '/api/resume-style'
+      path: '/api/resume-style'
+      fullPath: '/api/resume-style'
+      preLoaderRoute: typeof ApiResumeStyleRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/console/': {
@@ -560,6 +600,8 @@ const rootRouteChildren: RootRouteChildren = {
   ApiAdvisorRoute: ApiAdvisorRoute,
   ApiPolishRoute: ApiPolishRoute,
   ApiResumeChatRoute: ApiResumeChatRoute,
+  ApiResumeOptimizeRoute: ApiResumeOptimizeRoute,
+  ApiResumeStyleRoute: ApiResumeStyleRoute,
   ApiAuthSplatRoute: ApiAuthSplatRoute,
   ApiJdIngestRoute: ApiJdIngestRoute,
 }

@@ -28,6 +28,8 @@ export const resumes = sqliteTable(
     title: text().notNull(),
     content: text().notNull().default(""),
     plainText: text("plain_text").notNull().default(""),
+    /** 简历样式模板 id（见 constants/resume-templates.ts） */
+    template: text().notNull().default("classic"),
     createdAt: integer("created_at", { mode: "timestamp" }).default(
       sql`(unixepoch())`,
     ),

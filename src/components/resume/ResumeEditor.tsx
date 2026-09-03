@@ -5,8 +5,6 @@ import TaskList from "@tiptap/extension-task-list";
 import TextAlign from "@tiptap/extension-text-align";
 import { Markdown } from "@tiptap/markdown";
 import { EditorContent, useEditor } from "@tiptap/react";
-import { useState } from "react";
-import ConfirmDialog from "#/components/ConfirmDialog";
 import StarterKit from "@tiptap/starter-kit";
 import {
   AlignCenter,
@@ -30,16 +28,32 @@ import {
   Underline as UnderlineIcon,
   Undo2,
 } from "lucide-react";
+import { forwardRef, useImperativeHandle, useState } from "react";
+import ConfirmDialog from "#/components/ConfirmDialog";
 
-export default function ResumeEditor({
-  content,
-  placeholder = "开始撰写你的简历…",
-  onChange,
-}: {
-  content: string;
-  placeholder?: string;
-  onChange?: (html: string) => void;
-}) {
+export type ResumeEditorHandle = {
+  /** 用 AI 返回的 Markdown 整体替换编辑器内容（含标题/列表/加粗等排版） */
+  applyMarkdown: (markdown: string) => void;
+};
+
+const ResumeEditor = forwardRef<
+  ResumeEditorHandle,
+  {
+    content: string;
+    placeholder?: string;
+    onChange?: (html: string) => void;
+    /** 简历样式模板 id（见 constants/resume-templates.ts） */
+    template?: string;
+  }
+>(function ResumeEditor(
+  {
+    content,
+    placeholder = "开始撰写你的简历…",
+    onChange,
+    template = "classic",
+  },
+  ref,
+) {
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -67,6 +81,20 @@ export default function ResumeEditor({
 
   const [linkOpen, setLinkOpen] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      applyMarkdown(markdown: string) {
+        if (!editor) return;
+        // 用编辑器自身的 Markdown 解析（标题/列表/加粗等排版），再整体替换内容
+        const json = editor.storage.markdown.manager.parse(markdown);
+        editor.commands.setContent(json, { emitUpdate: false });
+        onChange?.(editor.getHTML());
+      },
+    }),
+    [editor, onChange],
+  );
 
   if (!editor) return null;
 
@@ -196,7 +224,10 @@ export default function ResumeEditor({
         <span className="mx-1 h-5 w-px bg-(--line)" />
         {btn(
           false,
-          () => { setLinkUrl(""); setLinkOpen(true); },
+          () => {
+            setLinkUrl("");
+            setLinkOpen(true);
+          },
           "插入链接",
           <LinkIcon className="size-4" />,
         )}
@@ -222,7 +253,9 @@ export default function ResumeEditor({
       </div>
 
       {/* A4 真实纸张：固定 A4 宽 210mm，min-height 297mm，内容超一页按页(297mm)分页 */}
-      <div className="resume-a4-paper library-paper overflow-hidden rounded-[2px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] dark:border-zinc-600">
+      <div
+        className={`resume-a4-paper library-paper resume-template-${template} overflow-hidden rounded-[2px] border border-zinc-200 bg-white shadow-[0_1px_3px_rgba(0,0,0,0.08),0_14px_34px_-14px_rgba(15,23,42,0.28)] dark:border-zinc-600`}
+      >
         <div className="px-[14mm] py-[14mm]">
           <EditorContent editor={editor} className="min-h-[269mm]" />
         </div>
@@ -279,8 +312,14 @@ export default function ResumeEditor({
         onInputChange={setLinkUrl}
         inputPlaceholder="https://…"
         confirmText="插入"
-        onConfirm={() => { if (linkUrl.trim()) editor.chain().focus().setLink({ href: linkUrl.trim() }).run(); setLinkOpen(false); }}
+        onConfirm={() => {
+          if (linkUrl.trim())
+            editor.chain().focus().setLink({ href: linkUrl.trim() }).run();
+          setLinkOpen(false);
+        }}
       />
     </div>
   );
-}
+});
+
+export default ResumeEditor;

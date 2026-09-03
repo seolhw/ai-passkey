@@ -11,11 +11,13 @@ import {
   Download,
   History,
   Loader2,
+  Palette,
   RotateCcw,
   Save,
   Send,
   Sparkles,
   Target,
+  Wand2,
   X,
 } from "lucide-react";
 import { Dialog } from "radix-ui";
@@ -24,7 +26,15 @@ import { createPortal } from "react-dom";
 import { Streamdown } from "streamdown";
 
 import ConfirmDialog from "#/components/ConfirmDialog";
-import ResumeEditor from "#/components/resume/ResumeEditor";
+import ResumeEditor, {
+  type ResumeEditorHandle,
+} from "#/components/resume/ResumeEditor";
+import TemplatePreview from "#/components/resume/TemplatePreview";
+import {
+  DEFAULT_RESUME_TEMPLATE,
+  getResumeTemplate,
+  RESUME_TEMPLATES,
+} from "#/constants/resume-templates";
 import { listCompanies, listJobs } from "#/lib/company-api";
 import {
   getResume,
@@ -85,6 +95,15 @@ function ResumeDetailPage() {
   const [targetsSaving, setTargetsSaving] = useState(false);
   const [dlOpen, setDlOpen] = useState(false);
   const [jobSearch, setJobSearch] = useState("");
+  // 一键 AI 优化
+  const [optimizing, setOptimizing] = useState(false);
+  const [optimized, setOptimized] = useState(false);
+  const editorRef = useRef<ResumeEditorHandle>(null);
+  const [template, setTemplate] = useState(
+    resume.template || DEFAULT_RESUME_TEMPLATE,
+  );
+  const [styling, setStyling] = useState(false);
+  const [styled, setStyled] = useState(false);
 
   const pending = useRef(false);
 
@@ -92,6 +111,7 @@ function ResumeDetailPage() {
     setTitle(resume.title);
     setHtml(resume.content);
     setTargetIds(new Set(selected.map((j) => j.id)));
+    setTemplate(resume.template || DEFAULT_RESUME_TEMPLATE);
   }, [resume, selected]);
 
   useEffect(() => {
@@ -155,6 +175,7 @@ function ResumeDetailPage() {
         title,
         content: html,
         plainText,
+        template,
         note: note || undefined,
       },
     });
@@ -168,6 +189,63 @@ function ResumeDetailPage() {
     }
     pending.current = false;
     setSaving(false);
+  };
+
+  /** 一键 AI 优化：重写文案并重新排版（标题/列表/加粗），直接应用到编辑器（未保存，可检查后再保存） */
+  const handleOptimize = async () => {
+    if (optimizing) return;
+    setOptimizing(true);
+    setError("");
+    setOptimized(false);
+    try {
+      const res = await fetch("/api/resume-optimize", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ resumeId: resume.id, title, content: html }),
+      });
+      const data = (await res.json()) as { markdown?: string; error?: string };
+      if (!res.ok || !data.markdown) {
+        setError(data.error || "AI 优化失败，请重试");
+        return;
+      }
+      editorRef.current?.applyMarkdown(data.markdown);
+      setOptimized(true);
+    } catch {
+      setError("网络异常，请重试");
+    } finally {
+      setOptimizing(false);
+    }
+  };
+
+  /** 按所选样式让 AI 重排简历结构（保留全部事实内容） */
+  const handleApplyStyle = async () => {
+    if (styling) return;
+    setStyling(true);
+    setError("");
+    setStyled(false);
+    try {
+      const res = await fetch("/api/resume-style", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          resumeId: resume.id,
+          template,
+          title,
+          content: html,
+        }),
+      });
+      const data = (await res.json()) as { markdown?: string; error?: string };
+      if (!res.ok || !data.markdown) {
+        setError(data.error || "AI 排版失败，请重试");
+        return;
+      }
+      editorRef.current?.applyMarkdown(data.markdown);
+      setStyled(true);
+    } catch {
+      setError("网络异常，请重试");
+    } finally {
+      setStyling(false);
+    }
   };
 
   const handleRollback = async (versionId: number) => {
@@ -230,7 +308,11 @@ function ResumeDetailPage() {
   const sendChat = async () => {
     const txt = chatInput.trim();
     if (!txt || chatLoading) return;
-    const userMsg: ChatMsg = { id: crypto.randomUUID(), role: "user", content: txt };
+    const userMsg: ChatMsg = {
+      id: crypto.randomUUID(),
+      role: "user",
+      content: txt,
+    };
     const history = [...chatMessages, userMsg];
     setChatMessages(history);
     setChatInput("");
@@ -293,11 +375,52 @@ function ResumeDetailPage() {
         </div>
       )}
 
+      {optimized && !optimizing && (
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <Sparkles className="mt-0.5 size-4 shrink-0" />
+          <p className="flex-1 leading-relaxed">
+            AI 优化已应用到编辑器，包含文案与排版优化（标题 / 列表 /
+            加粗）。请检查内容，确认后点击右侧「保存新版本」生成新版本，可在「历史版本」中随时回滚。
+          </p>
+          <button
+            type="button"
+            onClick={() => setOptimized(false)}
+            className="inline-flex size-6 shrink-0 items-center justify-center rounded-md transition hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
+            aria-label="关闭提示"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      )}
+
+      {styled && !styling && (
+        <div className="mb-4 flex items-start gap-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2.5 text-sm text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-300">
+          <Sparkles className="mt-0.5 size-4 shrink-0" />
+          <p className="flex-1 leading-relaxed">
+            已按「{getResumeTemplate(template).name}
+            」样式重排简历结构（内容事实保持不变）。确认后点「保存新版本」，可在「历史版本」回滚。
+          </p>
+          <button
+            type="button"
+            onClick={() => setStyled(false)}
+            className="inline-flex size-6 shrink-0 items-center justify-center rounded-md transition hover:bg-emerald-100 dark:hover:bg-emerald-900/60"
+            aria-label="关闭提示"
+          >
+            <X className="size-4" />
+          </button>
+        </div>
+      )}
+
       {/* 两栏布局：中间编辑器（主）+ 右侧栏 */}
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         {/* 中间主区：A4 简历编辑器 */}
         <div className="min-w-0">
-          <ResumeEditor content={resume.content} onChange={setHtml} />
+          <ResumeEditor
+            ref={editorRef}
+            content={resume.content}
+            onChange={setHtml}
+            template={template}
+          />
         </div>
 
         {/* 右侧栏 */}
@@ -370,6 +493,62 @@ function ResumeDetailPage() {
               className="h-9 w-full rounded-md border border-input bg-transparent px-3 text-sm font-medium shadow-xs outline-none focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50 dark:bg-input/30"
               placeholder="简历标题"
             />
+          </section>
+
+          {/* 简历样式 */}
+          <section className="island-shell rounded-2xl p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <Palette className="size-4 text-(--lagoon-deep)" />
+              <h2 className="text-sm font-semibold text-(--sea-ink)">
+                简历样式
+              </h2>
+            </div>
+            <p className="mb-2 text-xs text-(--sea-ink-soft)">
+              选择样式即时预览；点下方按钮让 AI 按该样式重排简历结构（内容不变）
+            </p>
+            <div className="-mx-1 flex snap-x gap-2 overflow-x-auto px-1 pb-1">
+              {RESUME_TEMPLATES.map((t) => {
+                const on = template === t.id;
+                return (
+                  <button
+                    type="button"
+                    key={t.id}
+                    onClick={() => {
+                      setTemplate(t.id);
+                      setStyled(false);
+                    }}
+                    title={t.description}
+                    className={`shrink-0 snap-start rounded-xl border-2 p-1 transition ${
+                      on
+                        ? "border-(--lagoon-deep) bg-(--lagoon-deep)/5"
+                        : "border-transparent hover:border-(--line)"
+                    }`}
+                  >
+                    <TemplatePreview templateId={t.id} />
+                    <span
+                      className={`mt-1 block text-center text-xs font-medium ${on ? "text-(--lagoon-deep)" : "text-(--sea-ink)"}`}
+                    >
+                      {t.name}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            <button
+              type="button"
+              onClick={() => void handleApplyStyle()}
+              disabled={styling}
+              className="btn-gradient mt-2 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md px-4 text-sm font-medium disabled:pointer-events-none disabled:opacity-60"
+            >
+              {styling ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Wand2 className="size-4" />
+              )}
+              {styling
+                ? "AI 排版中…"
+                : `AI 按「${getResumeTemplate(template).name}」重排`}
+            </button>
           </section>
 
           {/* 历史版本（默认展开） */}
@@ -539,6 +718,33 @@ function ResumeDetailPage() {
               ))}
             </div>
           </section>
+          {/* 一键 AI 优化 */}
+          <section className="island-shell rounded-2xl p-4">
+            <div className="mb-2 flex items-center gap-2">
+              <Wand2 className="size-4 text-(--lagoon-deep)" />
+              <h2 className="text-sm font-semibold text-(--sea-ink)">
+                一键 AI 优化
+              </h2>
+            </div>
+            <p className="mb-3 text-xs leading-relaxed text-(--sea-ink-soft)">
+              重写文案并重新排版（标题 / 列表 /
+              加粗），保留真实经历、贴合目标岗位。结果直接应用到编辑器，保存后可在「历史版本」回滚。
+            </p>
+            <button
+              type="button"
+              onClick={() => void handleOptimize()}
+              disabled={optimizing}
+              className="btn-gradient inline-flex h-9 w-full items-center justify-center gap-2 rounded-md px-4 text-sm font-medium disabled:pointer-events-none disabled:opacity-60"
+            >
+              {optimizing ? (
+                <Loader2 className="size-4 animate-spin" />
+              ) : (
+                <Wand2 className="size-4" />
+              )}
+              {optimizing ? "AI 优化中…" : "AI 优化全文"}
+            </button>
+          </section>
+
           {/* AI 修改（聊天） */}
           <section className="island-shell overflow-hidden rounded-2xl">
             <button
@@ -582,10 +788,7 @@ function ResumeDetailPage() {
                   )}
                   {chatMessages.map((m) =>
                     m.role === "user" ? (
-                      <div
-                        key={m.id}
-                        className="flex justify-end"
-                      >
+                      <div key={m.id} className="flex justify-end">
                         <div className="max-w-[85%] rounded-2xl rounded-br-md bg-(--lagoon-deep) px-3 py-2 text-sm text-white">
                           {m.content}
                         </div>
@@ -652,18 +855,19 @@ function ResumeDetailPage() {
       </div>
 
       {/* 打印区域：Portal 到 body，打印时独立于应用内容 */}
-      {createPortal(
-        <div id="print-area" className="print-area">
-          <div className="print-a4">
-            <div
-              className="print-a4-body"
-              // biome-ignore lint/security/noDangerouslySetInnerHtml: 打印区域需渲染编辑器原始 HTML
-              dangerouslySetInnerHTML={{ __html: html }}
-            />
-          </div>
-        </div>,
-        document.body,
-      )}
+      {typeof document !== "undefined" &&
+        createPortal(
+          <div id="print-area" className="print-area">
+            <div className={`print-a4 resume-template-${template}`}>
+              <div
+                className="print-a4-body"
+                // biome-ignore lint/security/noDangerouslySetInnerHtml: 打印区域需渲染编辑器原始 HTML
+                dangerouslySetInnerHTML={{ __html: html }}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
 
       <style>{`
         #print-area { display: none; }
@@ -783,7 +987,9 @@ function ResumeDetailPage() {
         message="确定回滚到该版本吗？当前内容将被替换（可再次保存生成新版本）。"
         confirmText="回滚"
         danger
-        onConfirm={() => rollbackTarget != null && void handleRollback(rollbackTarget)}
+        onConfirm={() =>
+          rollbackTarget != null && void handleRollback(rollbackTarget)
+        }
       />
     </main>
   );
