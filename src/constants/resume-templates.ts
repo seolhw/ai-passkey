@@ -28,26 +28,6 @@ export const RESUME_TEMPLATES: ResumeTemplate[] = [
     name: "经典商务",
     description: "姓名居中 + 联系行，黑色分隔线，稳重通用",
   },
-  {
-    id: "jobs",
-    name: "乔布斯手稿",
-    description: "1973 手稿风：衬线大字、稀疏分区、大量留白",
-  },
-  {
-    id: "gates",
-    name: "盖茨打字机",
-    description: "1974 打字机风：仿宋等宽、规整板块、打字机下划线",
-  },
-  {
-    id: "woz",
-    name: "沃兹奇才",
-    description: "1976 俏皮打字机：等宽字体、紫色点缀、趣味标题符",
-  },
-  {
-    id: "terminal",
-    name: "极客终端",
-    description: "终端风：等宽字体、深色姓名条、$ 提示符分区",
-  },
 ];
 
 /** 默认模板 id */
