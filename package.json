@@ -2,6 +2,8 @@
   "name": "ai-passkey",
   "private": true,
   "type": "module",
+  "version": "0.0.1",
+  "description": "A passkey-based AI chat application",
   "packageManager": "pnpm@11.5.3",
   "imports": {
     "#/*": "./src/*"
