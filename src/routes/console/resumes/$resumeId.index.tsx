@@ -93,6 +93,10 @@ function ResumeDetailPage() {
   const [targetIds, setTargetIds] = useState<Set<number>>(() => new Set());
   const [targetsModalOpen, setTargetsModalOpen] = useState(false);
   const [targetsSaving, setTargetsSaving] = useState(false);
+  // “选择目标岗位”弹窗内已收起的公司分组（默认全部展开）
+  const [targetsClosed, setTargetsClosed] = useState<Set<string>>(
+    () => new Set(),
+  );
   const [dlOpen, setDlOpen] = useState(false);
   const [jobSearch, setJobSearch] = useState("");
   // 一键 AI 优化
@@ -151,6 +155,18 @@ function ResumeDetailPage() {
     );
   }, [jobs, jobSearch]);
 
+  // 弹窗内“选择目标岗位”：先按公司分组排列（岗位多者在前）
+  const modalGroups = useMemo(() => {
+    const map = new Map<string, typeof filteredJobs>();
+    filteredJobs.forEach((job) => {
+      const name = job.company?.name ?? "未知公司";
+      const arr = map.get(name) ?? [];
+      arr.push(job);
+      map.set(name, arr);
+    });
+    return Array.from(map.entries()).sort((a, b) => b[1].length - a[1].length);
+  }, [filteredJobs]);
+
   // 热门公司：岗位数最多的前 3 家
   const hotGroups = useMemo(() => targetGroups.slice(0, 3), [targetGroups]);
 
@@ -158,6 +174,24 @@ function ResumeDetailPage() {
     const next = new Set(targetIds);
     if (next.has(jobId)) next.delete(jobId);
     else next.add(jobId);
+    setTargetIds(next);
+  };
+
+  const toggleCompanyOpen = (name: string) => {
+    const next = new Set(targetsClosed);
+    if (next.has(name)) next.delete(name);
+    else next.add(name);
+    setTargetsClosed(next);
+  };
+
+  const toggleCompanyAll = (list: typeof jobs) => {
+    const ids = list.map((j) => j.id);
+    const allSelected = ids.every((id) => targetIds.has(id));
+    const next = new Set(targetIds);
+    ids.forEach((id) => {
+      if (allSelected) next.delete(id);
+      else next.add(id);
+    });
     setTargetIds(next);
   };
 
@@ -936,41 +970,113 @@ function ResumeDetailPage() {
                 已选 <b className="text-(--lagoon-deep)">{targetIds.size}</b>
               </span>
             </div>
-            {/* 两列网格岗位卡片 */}
-            <div className="min-h-0 flex-1 overflow-y-auto p-4">
-              {filteredJobs.length === 0 ? (
+            {/* 弹窗：先按公司分组的可折叠列表 */}
+            <div className="min-h-0 flex-1 overflow-y-auto px-4 py-2">
+              {modalGroups.length === 0 ? (
                 <p className="py-10 text-center text-sm text-(--sea-ink-soft)">
                   未找到匹配岗位
                 </p>
               ) : (
-                <div className="grid gap-2 sm:grid-cols-2">
-                  {filteredJobs.map((job) => {
-                    const isOn = targetIds.has(job.id);
-                    const cities = (job.jobCities ?? [])
-                      .map((cn) => cn.city)
-                      .join("/");
+                <div className="divide-y divide-(--line)">
+                  {modalGroups.map(([name, list]) => {
+                    const closed = targetsClosed.has(name);
+                    const sel = list.filter((j) => targetIds.has(j.id)).length;
+                    const allSelected = list.length > 0 && sel === list.length;
+                    const someSelected = sel > 0 && !allSelected;
                     return (
-                      <button
-                        type="button"
-                        key={job.id}
-                        onClick={() => toggleTarget(job.id)}
-                        className={`flex items-start gap-2.5 rounded-xl border p-2.5 text-left transition ${isOn ? "border-(--lagoon-deep) bg-[rgba(124,58,237,0.08)]" : "border-(--line) bg-(--surface) hover:border-(--lagoon-deep)"}`}
-                      >
-                        <span
-                          className={`mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded border transition ${isOn ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white" : "border-input"}`}
-                        >
-                          {isOn && <span className="text-[10px]">✓</span>}
-                        </span>
-                        <span className="min-w-0">
-                          <span className="block truncate text-sm font-medium text-(--sea-ink)">
-                            {job.title}
-                          </span>
-                          <span className="mt-0.5 block truncate text-xs text-(--sea-ink-soft)">
-                            {job.company?.name ?? "未知公司"}
-                            {cities ? ` · ${cities}` : ""}
-                          </span>
-                        </span>
-                      </button>
+                      <div key={name}>
+                        {/* 公司组头：公司名 + N个岗位 + 全选/清除 + 展开/收起 */}
+                        <div className="flex w-full items-center gap-2.5 py-1">
+                          <button
+                            type="button"
+                            onClick={() => toggleCompanyOpen(name)}
+                            aria-expanded={!closed}
+                            className="flex min-w-0 flex-1 items-center gap-2.5 rounded-lg py-2 text-left transition hover:bg-(--link-bg-hover)"
+                          >
+                            <span
+                              className={`inline-flex min-w-0 shrink-0 items-center gap-1 rounded-full border px-3 py-1 text-sm font-medium transition ${
+                                allSelected
+                                  ? "border-(--lagoon-deep) bg-(--lagoon-deep)/10 text-(--lagoon-deep)"
+                                  : someSelected
+                                    ? "border-(--lagoon-deep)/60 text-(--lagoon-deep)"
+                                    : "border-input text-(--sea-ink)"
+                              }`}
+                            >
+                              <span className="truncate">{name}</span>
+                            </span>
+                            <span className="shrink-0 text-xs text-(--sea-ink-soft)">
+                              {sel > 0
+                                ? `已选 ${sel}/${list.length}`
+                                : `${list.length} 个岗位`}
+                            </span>
+                            <span className="ml-auto shrink-0 text-(--sea-ink-soft)">
+                              {closed ? (
+                                <ChevronDown className="size-4" />
+                              ) : (
+                                <ChevronUp className="size-4" />
+                              )}
+                            </span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => toggleCompanyAll(list)}
+                            className="inline-flex h-6 shrink-0 items-center rounded-full border px-2.5 text-xs font-medium text-(--sea-ink-soft) transition hover:bg-accent"
+                          >
+                            {allSelected ? "清除" : "全选"}
+                          </button>
+                        </div>
+
+                        {/* 展开后的岗位行（可多选） */}
+                        {!closed && (
+                          <div className="grid gap-2 pb-3 sm:grid-cols-2">
+                            {list.map((job) => {
+                              const isOn = targetIds.has(job.id);
+                              const cities = (job.jobCities ?? [])
+                                .map((cn) => cn.city)
+                                .join("/");
+                              return (
+                                <button
+                                  type="button"
+                                  key={job.id}
+                                  onClick={() => toggleTarget(job.id)}
+                                  title={
+                                    cities
+                                      ? `${job.company?.name ?? name} · ${job.title} · ${cities}`
+                                      : `${job.company?.name ?? name} · ${job.title}`
+                                  }
+                                  className={`flex items-start gap-2.5 rounded-xl border p-2.5 text-left transition ${
+                                    isOn
+                                      ? "border-(--lagoon-deep) bg-[rgba(124,58,237,0.08)]"
+                                      : "border-(--line) bg-(--surface) hover:border-(--lagoon-deep)"
+                                  }`}
+                                >
+                                  <span
+                                    className={`mt-0.5 flex size-4.5 shrink-0 items-center justify-center rounded border transition ${
+                                      isOn
+                                        ? "border-(--lagoon-deep) bg-(--lagoon-deep) text-white"
+                                        : "border-input"
+                                    }`}
+                                  >
+                                    {isOn && (
+                                      <span className="text-[10px]">✓</span>
+                                    )}
+                                  </span>
+                                  <span className="min-w-0">
+                                    <span className="block truncate text-sm font-medium text-(--sea-ink)">
+                                      {job.title}
+                                    </span>
+                                    {cities && (
+                                      <span className="mt-0.5 block truncate text-xs text-(--sea-ink-soft)">
+                                        {cities}
+                                      </span>
+                                    )}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        )}
+                      </div>
                     );
                   })}
                 </div>
